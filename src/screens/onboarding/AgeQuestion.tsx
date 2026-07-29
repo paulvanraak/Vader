@@ -22,7 +22,7 @@ const opties: {
     icon: Flame,
     range: '12-16',
     title: 'PUBERS',
-    hint: 'Wereld 4 tot en met 6 zijn klaar',
+    hint: 'Wereld 1 tot en met 6 zijn klaar',
   },
 ]
 

@@ -38,24 +38,21 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Hoofdnavigatie"
-      className="flex shrink-0 items-end justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
+      className="relative z-30 flex shrink-0 items-end justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
     >
       {sideTabs.map((tab) => (
         <SideTab key={tab.to} {...tab} />
       ))}
 
-      <NavLink to="/" end className="flex flex-1 flex-col items-center gap-1 px-1 py-1.5 text-center">
+      <NavLink to="/" end className="flex flex-1 flex-col items-center justify-center px-1 py-1.5 text-center">
         {({ isActive }) => (
-          <>
-            <span
-              className={`-mt-6 flex size-14 items-center justify-center rounded-full bg-primary-500 text-neutral-white shadow-[0_4px_0_0_var(--color-primary-700)] transition ${
-                isActive ? 'ring-2 ring-primary-300' : ''
-              }`}
-            >
-              <Home size={28} strokeWidth={2.5} />
-            </span>
-            <span className={`text-caption ${isActive ? 'text-primary-600' : 'text-ink-faint'}`}>Pad</span>
-          </>
+          <span
+            className={`-mt-6 flex size-14 items-center justify-center rounded-full bg-primary-500 text-neutral-white shadow-[0_4px_0_0_var(--color-primary-700)] transition ${
+              isActive ? 'ring-2 ring-primary-300' : ''
+            }`}
+          >
+            <Home size={28} strokeWidth={2.5} />
+          </span>
         )}
       </NavLink>
 

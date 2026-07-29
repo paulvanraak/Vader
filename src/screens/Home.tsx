@@ -5,13 +5,12 @@ import { worlds } from '../data/worlds'
 import { lessonsForWorld, isLessonUnlocked } from '../lib/worldProgress'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
-import { StreakNote } from '../components/StreakNote'
 
 const zigzag = [0, 56, 0, -56]
 
 export function Home() {
   const navigate = useNavigate()
-  const { todayLessonId, completedLessonIds, streakDays } = useAppState()
+  const { todayLessonId, completedLessonIds } = useAppState()
   const todayLesson = lessons.find((l) => l.id === todayLessonId) ?? lessons[0]
   const allDone = completedLessonIds.length === lessons.length
   const currentWorld = worlds.find((w) => w.id === todayLesson.world)
@@ -21,18 +20,11 @@ export function Home() {
   let lastWorldId: number | null = null
 
   return (
-    <div className="flex flex-col gap-5 px-5 py-6">
-      <div>
-        <p className="text-label text-ink-muted">Vandaag</p>
-        <h1 className="text-h2 text-ink">Fijn dat je er bent</h1>
-      </div>
-
-      <StreakNote days={streakDays} />
-
-      <div className="rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 p-5 text-neutral-white shadow-md">
+    <div className="flex flex-col">
+      <div className="sticky top-0 z-20 bg-gradient-to-br from-primary-500 to-primary-600 px-5 py-4 text-neutral-white shadow-md">
         <p className="text-caption uppercase tracking-wide text-neutral-white/70">Je bent hier</p>
-        <p className="mt-1 text-display font-extrabold leading-none">Wereld {currentWorld?.id}</p>
-        <p className="mt-2 text-body-lg font-semibold">{currentWorld?.title}</p>
+        <p className="mt-1 text-body-lg font-semibold text-neutral-white/80">Wereld {currentWorld?.id}</p>
+        <p className="text-h2 font-extrabold leading-tight">{currentWorld?.title}</p>
         {!allDone && (
           <p className="mt-1 text-caption text-neutral-white/70">
             Les {lessonPosition} van {worldLessons.length}
@@ -40,7 +32,7 @@ export function Home() {
         )}
       </div>
 
-      <div className="relative flex flex-col items-center pb-6 pt-2">
+      <div className="relative flex flex-col items-center px-5 pb-6 pt-6">
         <div
           aria-hidden="true"
           className="absolute top-2 bottom-2 left-1/2 w-px -translate-x-1/2 border-l-2 border-dashed border-surface-sunken"
@@ -61,12 +53,11 @@ export function Home() {
             <div key={lesson.id} className="flex w-full flex-col items-center">
               {showBanner && world && (
                 <div
-                  className={`z-10 my-4 w-full max-w-[280px] rounded-xl border-l-4 px-4 py-2.5 text-center shadow-sm ${style.softBg}`}
+                  className={`z-10 my-4 w-full max-w-[280px] rounded-xl border-l-4 px-4 py-3 text-center shadow-sm ${style.softBg}`}
                   style={{ borderLeftColor: style.accentVar }}
                 >
-                  <p className={`text-label ${style.text}`}>
-                    Wereld {world.id} · {world.title}
-                  </p>
+                  <p className={`text-label-sm ${style.text}`}>Wereld {world.id}</p>
+                  <p className="text-h3 font-bold text-ink">{world.title}</p>
                   <p className="text-caption text-ink-muted">{world.subtitle}</p>
                 </div>
               )}
@@ -84,7 +75,7 @@ export function Home() {
                       : isCurrent
                         ? `${style.solidBg} text-neutral-white ${style.edgeShadow} active:${style.edgeShadowActive}`
                         : unlocked
-                          ? `bg-surface ${style.text} shadow-sm ring-1 ring-surface-sunken hover:ring-2`
+                          ? `${style.softBg} ${style.text} shadow-md ring-1 ring-surface-sunken hover:ring-2`
                           : 'cursor-not-allowed bg-surface-sunken text-ink-faint'
                   }`}
                 >

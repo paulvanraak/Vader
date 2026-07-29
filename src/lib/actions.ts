@@ -1,4 +1,5 @@
 import { lessons } from '../data/lessons'
+import { isLessonUnlocked } from './worldProgress'
 
 export interface ActionItem {
   id: string
@@ -7,23 +8,26 @@ export interface ActionItem {
   lessonTitle: string
   worldId: number
   why: string
+  unlocked: boolean
 }
 
-export function getAllActions(): ActionItem[] {
+export function getAllActions(completedLessonIds: string[]): ActionItem[] {
   const items: ActionItem[] = []
-  for (const lesson of lessons) {
+  lessons.forEach((lesson, lessonIndex) => {
     const thuismissie = lesson.beats.find((b) => b.type === 'thuismissie')
     const inzicht = lesson.beats.find((b) => b.type === 'inzicht')
-    thuismissie?.acties?.forEach((actie, index) => {
+    const unlocked = isLessonUnlocked(lessonIndex, completedLessonIds)
+    thuismissie?.acties?.forEach((actie, actieIndex) => {
       items.push({
-        id: `${lesson.id}-${index}`,
+        id: `${lesson.id}-${actieIndex}`,
         action: actie,
         lessonId: lesson.id,
         lessonTitle: lesson.title,
         worldId: lesson.world,
         why: inzicht?.body ?? '',
+        unlocked,
       })
     })
-  }
+  })
   return items
 }

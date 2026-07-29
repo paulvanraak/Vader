@@ -76,6 +76,12 @@
   --color-accent-violet: #8b7ff0;
   --color-accent-violet-dark: #5f52c9;
   --color-success-700: #5f9c2a;
+  --color-accent-teal: #2fb6a8;
+  --color-accent-teal-dark: #1f8a7f;
+  --color-accent-rose: #f0618b;
+  --color-accent-rose-dark: #c73f68;
+  --color-accent-amber: #e0a02c;
+  --color-accent-amber-dark: #b57a17;
 
   /* Border radius schaal — uit Figma */
   --radius-xs: 4px;

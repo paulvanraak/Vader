@@ -5,6 +5,21 @@ export interface CompassEntry {
 
 export const compassEntries: CompassEntry[] = [
   {
+    worldId: 1,
+    background:
+      'Deze wereld gaat over de basis van het contact. Terugtrekken op de kamer is in de puberteit een normale stap in het loskomen van ouders, niet een afwijzing van jou. Gesprekken naast elkaar, tijdens een activiteit, verlagen de sociale druk die een gesprek recht tegenover elkaar juist oproept. En brede vragen kosten meer denkwerk om te beantwoorden dan specifieke, wat "gaat wel" tot het makkelijkste antwoord maakt.',
+  },
+  {
+    worldId: 2,
+    background:
+      'Deze wereld verklaart waar heftige emoties vandaan komen. Het emotionele deel van het puberbrein ontwikkelt zich sneller dan het deel dat afremt en overziet, waardoor kleine aanleidingen soms buitenproportioneel groot uitpakken. Stiltes zijn in de puberteit vaker verwerking dan geheimhouding. En frustratie wordt het vaakst afgereageerd op wie veilig aanvoelt, meestal degene die het dichtstbij staat.',
+  },
+  {
+    worldId: 3,
+    background:
+      'Deze wereld gaat over grenzen, regels en waarom hij duwt. Grenzen opzoeken is een gezonde manier om autonomie te oefenen, geen teken dat het misgaat. Vrijheid die in kleine, opbouwende stappen wordt gegeven, bouwt sneller vertrouwen dan alles ineens toestaan of alles blijven vasthouden. En hoe zwaarder eerlijkheid bestraft wordt vergeleken met de leugen zelf, hoe eerder liegen de veiligere keuze lijkt.',
+  },
+  {
     worldId: 4,
     background:
       'Deze wereld draait om waar zelfvertrouwen vandaan komt. Stoer gedrag is vaak een schild voor onzekerheid, fouten verstoppen hangt samen met de angst voor jouw reactie, en vergelijken met anderen is door social media een structureel oneerlijke wedstrijd geworden. De rode draad: blijvend zelfvertrouwen ontstaat doordat hij zich gezien voelt zoals hij is, niet doordat hij indruk maakt.',

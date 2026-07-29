@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { Check, Lightbulb } from 'lucide-react'
 import { getAllActions } from '../lib/actions'
+import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
 import { WhyModal } from '../components/WhyModal'
 
 export function ProbeerDitEens() {
-  const { doneActionIds, toggleAction } = useAppState()
+  const { doneActionIds, toggleAction, completedLessonIds } = useAppState()
   const [activeWhyId, setActiveWhyId] = useState<string | null>(null)
 
-  const actions = getAllActions()
+  const actions = getAllActions(completedLessonIds).filter((item) => item.unlocked)
   const activeItem = actions.find((item) => item.id === activeWhyId) ?? null
   const doneCount = actions.filter((item) => doneActionIds.includes(item.id)).length
 
@@ -22,6 +23,11 @@ export function ProbeerDitEens() {
         <p className="mt-1 text-caption text-ink-muted">
           {doneCount} van {actions.length} geprobeerd
         </p>
+        {actions.length === 0 && (
+          <p className="mt-3 text-body text-ink-muted">
+            Speel je eerste les op het pad vrij om hier acties te ontgrendelen.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-3">
@@ -29,15 +35,18 @@ export function ProbeerDitEens() {
           const showLessonHeader = item.lessonId !== lastLessonId
           lastLessonId = item.lessonId
           const isDone = doneActionIds.includes(item.id)
+          const style = getWorldStyle(item.worldId)
 
           return (
             <div key={item.id} className="flex flex-col gap-2">
               {showLessonHeader && (
-                <p className="mt-1 text-caption text-ink-muted">
+                <p className={`mt-1 text-caption font-semibold ${style.text}`}>
                   Wereld {item.worldId} · {item.lessonTitle}
                 </p>
               )}
-              <div className="flex items-center gap-2 rounded-xl bg-surface p-3 shadow-sm ring-1 ring-surface-sunken">
+              <div
+                className={`flex items-center gap-2 rounded-xl p-3 shadow-sm ring-1 ring-surface-sunken ${style.softBg}`}
+              >
                 <button
                   type="button"
                   onClick={() => toggleAction(item.id)}

@@ -2,6 +2,483 @@ import type { Lesson } from '../types/lesson'
 
 export const lessons: Lesson[] = [
   {
+    id: '1.1',
+    world: 1,
+    cohort: 'oud',
+    title: 'Als hij zich terugtrekt op zijn kamer',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Vroeger vertelde hij alles aan tafel. Nu verdwijnt hij meteen na het eten naar zijn kamer.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Terugtrekken in de puberteit is een normale stap in de ontwikkeling van een eigen identiteit los van het gezin, niet een afwijzing van jou. Hersenonderzoek laat zien dat pubers letterlijk meer behoefte krijgen aan privacy en autonomie doordat het zelfbeeld zich losmaakt van het ouderlijk referentiekader. Dat wil niet zeggen dat de band verdwijnt, wel dat hij op een andere manier vorm krijgt.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Trok jij je als tiener ook terug? Waar had je toen zelf behoefte aan van je ouders?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Waarom zit je toch altijd op je kamer?',
+        beter: 'Ik kom zo even langs, hou je een momentje voor me vrij?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij trekt zich weer terug na het eten. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Hem dwingen aan tafel te blijven.',
+            correct: false,
+            feedback: 'Dat maakt de kamer nog aantrekkelijker als vluchtplek.',
+          },
+          {
+            label: 'Af en toe gewoon binnenlopen zonder agenda.',
+            correct: true,
+            feedback: 'Zo blijft het contact laagdrempelig zonder druk.',
+          },
+          {
+            label: 'Hem er nooit meer over aanspreken.',
+            correct: false,
+            feedback: 'Dan verdwijnt vanzelf ieder moment van contact.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Loop vanavond even zijn kamer in zonder reden',
+          'Vraag of je iets voor hem kunt halen, zonder gesprek te forceren',
+        ],
+      },
+    ],
+  },
+  {
+    id: '1.2',
+    world: 1,
+    cohort: 'oud',
+    title: 'Waarom een goed gesprek zelden aan tafel begint',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Je probeert een gesprek te beginnen, en binnen twee zinnen krijg je alleen "ja" en "nee" terug.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Directe oogcontactgesprekken voelen voor veel pubers als een verhoor. Gesprekken die ontstaan tijdens een gedeelde activiteit, zoals autorijden, koken of wandelen, verlagen de sociale druk omdat er geen oogcontact nodig is en er een gedeeld doel is. Dat is geen truc, het is simpelweg een omgeving waarin praten minder confronterend aanvoelt.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Wanneer voel jij je zelf vrijer om iets lastigs te zeggen, oog in oog of naast elkaar?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Ga zitten, we moeten praten.',
+        beter: 'Zin om mee te rijden naar de supermarkt?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Je wil iets bespreken dat gevoelig ligt. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Hem aan de keukentafel zetten voor een gesprek.',
+            correct: false,
+            feedback: 'Dat voelt al snel als een verhoor.',
+          },
+          {
+            label: 'Het gesprek laten ontstaan tijdens een activiteit samen.',
+            correct: true,
+            feedback: 'Zonder oogcontact en met een gedeeld doel praat het makkelijker.',
+          },
+          {
+            label: 'Wachten tot hij er zelf over begint.',
+            correct: false,
+            feedback: 'Dat kan lang duren, en het moment gaat voorbij.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Stel voor om samen iets te doen zonder gesprek als doel',
+          'Begin een gesprek terwijl jullie ergens anders mee bezig zijn',
+        ],
+      },
+    ],
+  },
+  {
+    id: '1.3',
+    world: 1,
+    cohort: 'oud',
+    title: 'Als "gaat wel" het enige antwoord is',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Je vraagt hoe school was. "Gaat wel." Elke dag hetzelfde antwoord.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Brede vragen als "hoe was het" vragen om een samenvatting, wat voor een puber vaak te veel moeite kost na een lange dag. Specifieke vragen over een klein detail, zoals een vak of een persoon, vragen om een concreet antwoord en zijn makkelijker te beantwoorden. De kwaliteit van zijn antwoord zegt dus vaak meer over de vraag dan over zijn bereidheid om te praten.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Stel jij zelf ook weleens brede vragen omdat concrete vragen meer moeite kosten om te bedenken?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Hoe was school?',
+        beter: 'Hoe ging die scheikundetoets van vanochtend?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Je krijgt weer "gaat wel" te horen. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Nog een keer dezelfde brede vraag stellen.',
+            correct: false,
+            feedback: 'Dan krijg je waarschijnlijk hetzelfde antwoord.',
+          },
+          {
+            label: 'Een concrete, kleine vraag stellen over iets specifieks.',
+            correct: true,
+            feedback: 'Een klein, concreet antwoord kost minder moeite dan een samenvatting.',
+          },
+          {
+            label: 'Het gesprek maar laten rusten.',
+            correct: false,
+            feedback: 'Dan blijft het contact oppervlakkig.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          "Stel vanavond een heel specifieke vraag in plaats van 'hoe was het'",
+          'Vraag naar één klein moment van zijn dag, niet naar de hele dag',
+        ],
+      },
+    ],
+  },
+  {
+    id: '2.1',
+    world: 2,
+    cohort: 'oud',
+    title: 'Als een kleinigheid een woede-uitbarsting wordt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Zijn veter breekt en hij ontploft alsof de wereld vergaat.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Het emotieregulerende deel van het puberbrein, de prefrontale cortex, is nog volop in ontwikkeling, terwijl het emotionele systeem al op volle kracht draait. Kleine frustraties stapelen zich vaak onopgemerkt op tot er een druppel de emmer doet overlopen. De uitbarsting gaat zelden echt over de veter.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Waar merk jij dat kleine irritaties zich bij jou opstapelen voordat je zelf uit je slof schiet?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Doe niet zo overdreven, het is maar een veter.',
+        beter: 'Zwaar moment zeg. Wat speelt er nog meer vandaag?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij ontploft om iets kleins. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Zeggen dat hij overdrijft.',
+            correct: false,
+            feedback: 'Dat maakt het gevoel alleen maar kleiner gemaakt.',
+          },
+          {
+            label: 'Rustig blijven en vragen wat er verder nog speelt.',
+            correct: true,
+            feedback: 'Zo kom je bij de echte oorzaak onder de uitbarsting.',
+          },
+          {
+            label: 'De situatie negeren tot hij is gekalmeerd.',
+            correct: false,
+            feedback: 'Dan blijft de echte oorzaak onbesproken.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag na een kleine uitbarsting rustig wat er nog meer speelde die dag',
+          'Blijf zelf kalm en benoem dat je ziet dat er meer aan de hand is',
+        ],
+      },
+    ],
+  },
+  {
+    id: '2.2',
+    world: 2,
+    cohort: 'oud',
+    title: 'Waarom stiltes niet altijd iets verbergen',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij zegt al drie dagen bijna niks. Je vreest het ergste.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Stiltes bij pubers duiden lang niet altijd op een probleem; ze verwerken indrukken vaker in stilte dan hardop, in tegenstelling tot volwassenen die geneigd zijn te praten om te verwerken. Doorvragen op het verkeerde moment kan een stilte juist verlengen omdat het als druk aanvoelt.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Verwerk jij zelf dingen liever in stilte of door erover te praten? En verwacht je hetzelfde van hem?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Je zegt al dagen niks, is er iets?',
+        beter: 'Ik ben er, ook als je niks wil zeggen.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij is al dagen stil. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Net zo lang doorvragen tot hij iets zegt.',
+            correct: false,
+            feedback: 'Dat kan de stilte juist verlengen.',
+          },
+          {
+            label: 'Laten weten dat je er bent, zonder te pushen.',
+            correct: true,
+            feedback: 'Zo blijft de deur open zonder druk.',
+          },
+          {
+            label: 'Net doen of er niks aan de hand is.',
+            correct: false,
+            feedback: 'Dan voelt hij zich mogelijk nog onopgemerkter.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Laat hem weten dat je er bent, zonder te vragen wat er is',
+          'Bied gewoon je gezelschap aan, zonder gesprek te eisen',
+        ],
+      },
+    ],
+  },
+  {
+    id: '2.3',
+    world: 2,
+    cohort: 'oud',
+    title: 'Als hij jou de schuld geeft van alles',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Alles wat misgaat is opeens jouw schuld, van de wifi tot zijn humeur.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Pubers projecteren onzekerheid vaak op de veiligste persoon in hun omgeving, meestal een ouder, omdat die relatie het meest bestand is tegen kritiek. Het is een vorm van vertrouwen, ook al voelt het als een aanval. Meegaan in de discussie bevestigt vaak alleen het patroon.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Bij wie laat jij zelf je frustratie het makkelijkst vallen, ook als diegene er niks aan kan doen?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Dat is helemaal niet mijn schuld!',
+        beter: 'Ik hoor dat je gefrustreerd bent. Zullen we kijken wat er echt speelt?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij geeft je overal de schuld van. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Fel verdedigen dat het niet jouw schuld is.',
+            correct: false,
+            feedback: 'Dat voedt de discussie zonder de echte oorzaak te raken.',
+          },
+          {
+            label: 'Erkennen dat hij gefrustreerd is en vragen wat er echt speelt.',
+            correct: true,
+            feedback: 'Zo doorbreek je het patroon zonder het verwijt te bevechten.',
+          },
+          {
+            label: 'Hem straffen voor het onterechte verwijt.',
+            correct: false,
+            feedback: 'Dat bevestigt vooral dat jij de veilige plek bent om tegenaan te schoppen, zonder de frustratie te adresseren.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Erken zijn frustratie voordat je jezelf verdedigt',
+          'Vraag rustig wat er echt aan de hand is achter het verwijt',
+        ],
+      },
+    ],
+  },
+  {
+    id: '3.1',
+    world: 3,
+    cohort: 'oud',
+    title: 'Als een regel plotseling onbespreekbaar wordt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Een regel die altijd vanzelfsprekend was, wordt opeens fel bevochten.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Het testen van grenzen is een gezonde manier waarop pubers oefenen met autonomie en eigen oordeelsvorming. Regels die worden uitgelegd in plaats van opgelegd, blijken beter te beklijven omdat ze aansluiten bij zijn groeiende behoefte om zelf te begrijpen waarom iets zo is.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Leg jij regels vooral uit, of vooral op? En hoe reageerde je toen jij zelf als tiener een regel oneerlijk vond?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Omdat ik het zeg, daarom.',
+        beter: 'Laat me uitleggen waarom deze regel er is, en dan hoor ik graag wat jij ervan vindt.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Een regel wordt fel bevochten. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'De regel handhaven zonder uitleg.',
+            correct: false,
+            feedback: 'Dat voedt vooral het gevoel dat de regel willekeurig is.',
+          },
+          {
+            label: 'Uitleggen waarom de regel er is en zijn kant horen.',
+            correct: true,
+            feedback: 'Zo sluit de regel aan bij zijn behoefte om het zelf te begrijpen.',
+          },
+          {
+            label: 'De regel meteen loslaten om ruzie te voorkomen.',
+            correct: false,
+            feedback: 'Dan leert hij dat fel bevechten werkt.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Leg een keer uit waarom een regel bestaat in plaats van hem op te leggen',
+          'Vraag hoe hij zelf tegen een bestaande regel aankijkt',
+        ],
+      },
+    ],
+  },
+  {
+    id: '3.2',
+    world: 3,
+    cohort: 'oud',
+    title: 'Hoeveel vrijheid is genoeg?',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij wil later naar buiten, verder van huis, met minder controle. Jij twijfelt.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Vrijheid in kleine, beheersbare stappen geven blijkt beter te werken dan alles-of-niets beslissingen. Het laat hem oefenen met verantwoordelijkheid terwijl het risico overzichtelijk blijft, en het geeft jou concrete momenten om vertrouwen op te bouwen op basis van hoe hij ermee omgaat.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Waar baseer jij je grens op: op een concreet risico, of vooral op je eigen ongemak?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Nee, te gevaarlijk, punt uit.',
+        beter: 'Laten we een kleine stap proberen en kijken hoe het gaat.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij vraagt om meer vrijheid dan je gewend bent. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Meteen nee zeggen.',
+            correct: false,
+            feedback: 'Dan krijgt hij geen kans om vertrouwen op te bouwen.',
+          },
+          {
+            label: 'Een kleine, tijdelijke stap voorstellen om te proberen.',
+            correct: true,
+            feedback: 'Zo bouw je vertrouwen op in behapbare stappen.',
+          },
+          {
+            label: 'Meteen volledige vrijheid geven om discussie te vermijden.',
+            correct: false,
+            feedback: 'Dan mis je de kans om samen op te bouwen.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Stel een kleine, tijdelijke stap voor in plaats van meteen nee of ja',
+          'Bespreek samen waar zijn grens en die van jou vandaan komen',
+        ],
+      },
+    ],
+  },
+  {
+    id: '3.3',
+    world: 3,
+    cohort: 'oud',
+    title: 'Als hij liegt over iets kleins',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij zegt dat hij bij een vriend was. Later blijkt dat niet te kloppen.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Kleine leugens op deze leeftijd gaan vaker over het vermijden van een verwachte, felle reactie dan over een moreel probleem. Een omgeving waarin een eerlijk antwoord minder zwaar bestraft wordt dan de leugen zelf, maakt eerlijkheid op termijn waarschijnlijker.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Reageer jij op een eerlijk maar vervelend antwoord milder dan op een leugen die uitkomt?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Je hebt tegen me gelogen, daar sta je nu voor!',
+        beter: 'Fijn dat je dit nu eerlijk vertelt. Wat maakte dat je het eerst anders zei?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Je ontdekt een kleine leugen. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Hem hard straffen voor het liegen.',
+            correct: false,
+            feedback: 'Dat maakt een volgende leugen waarschijnlijker, niet minder.',
+          },
+          {
+            label: 'Vragen waarom hij dacht dat liegen nodig was.',
+            correct: true,
+            feedback: 'Zo kom je bij de reden zonder de eerlijkheid te bestraffen.',
+          },
+          {
+            label: 'Doen alsof je het niet gemerkt hebt.',
+            correct: false,
+            feedback: 'Dan blijft het patroon onbesproken.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag waarom hij dacht dat een leugen nodig was, zonder meteen te straffen',
+          'Laat een keer merken dat een eerlijk antwoord milder wordt ontvangen dan gedacht',
+        ],
+      },
+    ],
+  },
+  {
     id: '4.1',
     world: 4,
     cohort: 'oud',
