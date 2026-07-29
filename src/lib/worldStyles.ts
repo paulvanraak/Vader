@@ -1,0 +1,39 @@
+export interface WorldStyle {
+  solidBg: string
+  softBg: string
+  text: string
+  edgeShadow: string
+  edgeShadowActive: string
+  accentVar: string
+}
+
+export const worldStyles: Record<number, WorldStyle> = {
+  4: {
+    solidBg: 'bg-primary-500',
+    softBg: 'bg-primary-500/10',
+    text: 'text-primary-600',
+    edgeShadow: 'shadow-[0_4px_0_0_var(--color-primary-700)]',
+    edgeShadowActive: 'shadow-[0_1px_0_0_var(--color-primary-700)]',
+    accentVar: 'var(--color-primary-500)',
+  },
+  5: {
+    solidBg: 'bg-accent-violet',
+    softBg: 'bg-accent-violet/10',
+    text: 'text-accent-violet',
+    edgeShadow: 'shadow-[0_4px_0_0_var(--color-accent-violet-dark)]',
+    edgeShadowActive: 'shadow-[0_1px_0_0_var(--color-accent-violet-dark)]',
+    accentVar: 'var(--color-accent-violet)',
+  },
+  6: {
+    solidBg: 'bg-accent-orange',
+    softBg: 'bg-accent-orange/10',
+    text: 'text-accent-orange',
+    edgeShadow: 'shadow-[0_4px_0_0_var(--color-accent-orange-dark)]',
+    edgeShadowActive: 'shadow-[0_1px_0_0_var(--color-accent-orange-dark)]',
+    accentVar: 'var(--color-accent-orange)',
+  },
+}
+
+export function getWorldStyle(worldId: number): WorldStyle {
+  return worldStyles[worldId] ?? worldStyles[4]
+}

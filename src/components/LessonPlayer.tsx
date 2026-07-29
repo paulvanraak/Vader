@@ -59,7 +59,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-6">
+      <div key={beatIndex} className="animate-dissolve flex-1 overflow-y-auto px-5 py-6">
         {beat.type === 'haakje' && <Haakje beat={beat} />}
         {beat.type === 'inzicht' && <Inzicht beat={beat} />}
         {beat.type === 'spiegel' && <Spiegel beat={beat} />}

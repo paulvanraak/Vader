@@ -14,6 +14,8 @@ interface AppState {
   todayLessonId: string
   theme: Theme
   toggleTheme: () => void
+  doneActionIds: string[]
+  toggleAction: (actionId: string) => void
   completeOnboarding: (childGender: ChildGender, ageGroup: AgeGroup) => void
   completeLesson: (lessonId: string) => void
 }
@@ -32,6 +34,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [streakDays, setStreakDays] = useState(3)
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([])
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [doneActionIds, setDoneActionIds] = useState<string[]>([])
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -51,6 +54,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     todayLessonId,
     theme,
     toggleTheme: () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark')),
+    doneActionIds,
+    toggleAction: (actionId) => {
+      setDoneActionIds((prev) =>
+        prev.includes(actionId) ? prev.filter((id) => id !== actionId) : [...prev, actionId],
+      )
+    },
     completeOnboarding: (selectedGender, selectedAgeGroup) => {
       setChildGender(selectedGender)
       setAgeGroup(selectedAgeGroup)

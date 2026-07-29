@@ -72,6 +72,10 @@
   --color-warning-500: #ffd143;
   --color-danger-500: #eb5757;
   --color-accent-orange: #ff993a;
+  --color-accent-orange-dark: #d9761a;
+  --color-accent-violet: #8b7ff0;
+  --color-accent-violet-dark: #5f52c9;
+  --color-success-700: #5f9c2a;
 
   /* Border radius schaal — uit Figma */
   --radius-xs: 4px;
@@ -197,5 +201,45 @@ body {
   .celebration-badge,
   .celebration-confetti {
     animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes dissolve-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+.animate-dissolve {
+  animation: dissolve-in 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-dissolve {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+.typewriter-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.9s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
   }
 }

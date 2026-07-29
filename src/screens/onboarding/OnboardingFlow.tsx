@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Users, Radar, Sunrise } from 'lucide-react'
 import { IntroStep } from './IntroStep'
@@ -34,9 +34,11 @@ export function OnboardingFlow() {
   const { completeOnboarding } = useAppState()
   const navigate = useNavigate()
 
+  let content: ReactNode
+
   if (step <= 2) {
     const part = introParts[step]
-    return (
+    content = (
       <IntroStep
         icon={part.icon}
         step={step + 1}
@@ -46,10 +48,8 @@ export function OnboardingFlow() {
         onNext={() => setStep((s) => (s + 1) as Step)}
       />
     )
-  }
-
-  if (step === 3) {
-    return (
+  } else if (step === 3) {
+    content = (
       <ChildQuestion
         onNext={(selectedGender) => {
           setGender(selectedGender)
@@ -57,10 +57,8 @@ export function OnboardingFlow() {
         }}
       />
     )
-  }
-
-  if (step === 4) {
-    return (
+  } else if (step === 4) {
+    content = (
       <AgeQuestion
         onNext={(selectedAgeGroup) => {
           setAgeGroup(selectedAgeGroup)
@@ -68,14 +66,20 @@ export function OnboardingFlow() {
         }}
       />
     )
+  } else {
+    content = (
+      <HowItWorks
+        onStart={() => {
+          completeOnboarding(gender, ageGroup)
+          navigate('/')
+        }}
+      />
+    )
   }
 
   return (
-    <HowItWorks
-      onStart={() => {
-        completeOnboarding(gender, ageGroup)
-        navigate('/')
-      }}
-    />
+    <div key={step} className="animate-dissolve h-full">
+      {content}
+    </div>
   )
 }
