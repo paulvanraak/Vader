@@ -1,11 +1,4 @@
-export type BeatType =
-  | 'haakje'
-  | 'inzicht'
-  | 'spiegel'
-  | 'voorbeeld'
-  | 'oefening'
-  | 'thuismissie'
-  | 'terugkoppeling'
+export type BeatType = 'haakje' | 'inzicht' | 'spiegel' | 'voorbeeld' | 'oefening' | 'thuismissie'
 
 export interface OefeningOptie {
   label: string
@@ -23,6 +16,8 @@ export interface Beat {
   // alleen bij "oefening"
   vraag?: string
   opties?: OefeningOptie[]
+  // alleen bij "thuismissie": twee losse dingen om te proberen, gekoppeld aan het onderwerp
+  acties?: [string, string]
 }
 
 export interface Lesson {

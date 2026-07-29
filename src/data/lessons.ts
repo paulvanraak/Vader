@@ -13,7 +13,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Stoerheid is meestal geen karaktertrek maar een schild. Onder de opschepperij zit vaak onzekerheid die hij nog niet met woorden kan uitdrukken. Echt zelfvertrouwen komt van gezien worden zoals hij is, niet van indruk maken. Dat schild hoeft niet weg, maar het mag wel kleiner worden naarmate hij zich veiliger voelt.',
+        body: 'Stoerheid is zelden een karaktertrek, vaker een schild. Ontwikkelingspsychologen zien dit terug bij bijna elke puber: zolang het gevoel van eigenwaarde nog broos is, compenseert hij dat met imponeren. Onder de opschepperij zit meestal onzekerheid die hij nog niet met woorden kan vangen. Blijvend zelfvertrouwen komt niet van indruk maken, maar van het gevoel gezien te worden zoals hij werkelijk is. Dat schild hoeft niet in één keer weg, het wordt vanzelf kleiner naarmate hij zich veiliger voelt.',
       },
       {
         type: 'spiegel',
@@ -26,7 +26,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Je zoon overdrijft weer een verhaal. Wat doe je?',
+        vraag: 'Je zoon overdrijft weer een verhaal. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Hem corrigeren waar het verhaal niet klopt.',
@@ -47,11 +47,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Benoem vanavond één keer iets dat je zoon écht goed kan, zonder aanleiding nodig te hebben.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Hoe reageerde hij toen je hem een compliment gaf zonder aanleiding?',
+        acties: ['Benoem iets dat hij écht goed kan, zonder aanleiding', 'Vraag wat hem zo trots maakte op zijn verhaal'],
       },
     ],
   },
@@ -67,7 +63,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Faalangst gaat zelden over het falen zelf. Het gaat over de angst voor jouw reactie of teleurstelling. Een zoon die leert dat fouten veilig zijn om te laten zien, durft later ook grotere risico\'s te nemen. Hoe jij met je eigen missers omgaat, is het voorbeeld dat blijft hangen.',
+        body: 'Faalangst gaat zelden over het falen zelf, vaker over de verwachte reactie van de mensen van wie hij afhankelijk is. Psychologen noemen dat de behoefte aan psychologische veiligheid: pas als fouten maken veilig aanvoelt, durft iemand ze ook te laten zien. Een zoon die leert dat missers bespreekbaar zijn, durft later grotere risico\'s te nemen. En omdat kinderen vooral leren van wat ze zien, niet van wat er wordt gezegd, is de manier waarop jij met je eigen missers omgaat het voorbeeld dat blijft hangen.',
       },
       {
         type: 'spiegel',
@@ -80,7 +76,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Je ontdekt de onvoldoende in zijn tas. Wat werkt het best?',
+        vraag: 'Je ontdekt de onvoldoende in zijn tas. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Meteen vragen waarom hij het niet zei.',
@@ -101,11 +97,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Vertel vanavond zelf over een keer dat jij iets liet mislukken, en wat je ervan leerde.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Wat gebeurde er toen jij over je eigen misser vertelde?',
+        acties: [
+          'Vertel over een moment dat jij zelf iets liet mislukken',
+          'Vraag rustig wat er volgens hem misging',
+        ],
       },
     ],
   },
@@ -121,7 +116,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Vergelijken is van alle tijden, maar social media laat hem vooral de succesmomenten van honderd anderen zien, niet hun gewone dagen. Dat is een oneerlijke wedstrijd om in mee te doen. Zijn gevoel van eigenwaarde mag niet afhangen van wie er nét langsscrolt.',
+        body: 'Jezelf vergelijken met anderen is van alle tijden, de sociale-vergelijkingstheorie beschrijft het al decennia. Maar social media legt hem vooral de succesmomenten van honderden anderen voor, nooit hun gewone, onzekere dagen. Dat is statistisch al een oneerlijke wedstrijd. Eigenwaarde die is opgebouwd uit eigen waarden en ervaringen blijkt veel stabieler dan eigenwaarde die meebeweegt met wie er net langsscrolt.',
       },
       {
         type: 'spiegel',
@@ -134,7 +129,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Hij vergelijkt zich weer met een klasgenoot. Wat werkt het best?',
+        vraag: 'Hij vergelijkt zich weer met een klasgenoot. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Zeggen dat de vergelijking niet klopt.',
@@ -155,11 +150,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Benoem vanavond iets waar je zoon zelf trots op leek te zijn deze week, hoe klein ook.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Wist je iets te noemen waar hij trots op was?',
+        acties: [
+          'Noem iets waar hij deze week trots op leek',
+          'Vraag waarin hij zichzelf goed vindt, los van anderen',
+        ],
       },
     ],
   },
@@ -175,7 +169,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Erbij willen horen is in de puberteit een van de sterkste krachten die er is, sterker dan wat hij zelf goed vindt. Dat is geen zwak karakter, dat is hoe zijn brein nu prioriteert. Hij heeft geen preek nodig over ruggengraat, hij heeft oefening nodig in hardop zeggen wat hij zelf denkt.',
+        body: 'Erbij willen horen is in de puberteit een van de sterkste krachten die er bestaat, sterker vaak dan wat hij zelf goed vindt. Hersenonderzoek laat zien waarom: het beloningssysteem reageert in deze jaren extra sterk op sociale acceptatie, terwijl het deel van de hersenen dat afweegt en remt nog volop in ontwikkeling is. Dat is geen zwak karakter, dat is een brein dat nog aan het groeien is. Hij heeft dan ook geen preek nodig over ruggengraat, maar oefening in het hardop zeggen van wat hij zelf denkt.',
       },
       {
         type: 'spiegel',
@@ -188,7 +182,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Hij vertelt dat hij meedeed met iets dat niet goed voelde. Wat is je beste zet?',
+        vraag: 'Hij vertelt dat hij meedeed met iets dat niet goed voelde. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Zeggen dat hij een eigen mening moet hebben.',
@@ -209,11 +203,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Bedenk samen één zin die hij kan gebruiken als hij een volgende keer niet mee wil doen.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Kwamen jullie samen tot een zin die hij zou durven zeggen?',
+        acties: [
+          'Bedenk samen een zin voor de volgende keer dat hij niet mee wil doen',
+          'Vraag wat hem had geholpen om anders te kiezen',
+        ],
       },
     ],
   },
@@ -229,7 +222,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Zwijgen voelt veilig, maar voor wie buitengesloten wordt maakt het weinig verschil of iemand meedeed of erbij zat en niets zei. Je zoon heeft geen preek nodig over wat aardig is, hij weet dat al. Hij heeft hulp nodig om te zien dat stil blijven ook een keuze is, en dat een andere keuze mag.',
+        body: 'Zwijgen voelt veilig, maar sociaalpsychologisch onderzoek naar het omstandereffect laat zien dat voor wie buitengesloten wordt, meedoen en zwijgend toekijken vaak hetzelfde effect hebben. Je zoon weet heus wel wat aardig is, een preek daarover voegt weinig toe. Wat hij wel kan gebruiken, is het besef dat stil blijven ook een keuze is, en dat een andere keuze mag: die stap wordt kleiner naarmate hij vaker ervaart dat jij er zonder oordeel met hem over praat.',
       },
       {
         type: 'spiegel',
@@ -242,7 +235,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Je zoon vertelt over de groepsapp. Wat is je beste eerste zet?',
+        vraag: 'Je zoon vertelt over de groepsapp. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Hem meteen zeggen dat hij die persoon terug moet toevoegen.',
@@ -263,11 +256,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Vraag hem vanavond wat hij zou kunnen zeggen de volgende keer dat iemand buitengesloten dreigt te worden.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Had hij al een idee voor wat hij zou kunnen zeggen?',
+        acties: [
+          'Vraag hoe hij zich voelde toen het gebeurde',
+          'Bedenk samen wat hij kan zeggen de volgende keer',
+        ],
       },
     ],
   },
@@ -283,7 +275,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Vriendschappen verschuiven enorm in de puberteit, dat hoort bij het uitproberen van wie hij wil zijn. Het doet toch pijn, ook als hij het wegwuift. Hij hoeft het gemis niet groot te maken, maar mag het wel benoemen als jij de ruimte geeft.',
+        body: 'Vriendschappen verschuiven enorm in de puberteit. Ontwikkelingspsycholoog Erik Erikson noemde dit de zoektocht naar identiteit: vrienden wisselen mee met wie hij op dat moment probeert te zijn. Het gemis van een oude vriendschap doet daarom toch pijn, ook als hij dat wegwuift, want het is een vorm van verlies waar weinig woorden voor bestaan op die leeftijd. Hij hoeft er niet lang bij stil te staan, maar het mag wel bestaan als jij de ruimte ervoor geeft.',
       },
       {
         type: 'spiegel',
@@ -296,7 +288,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Hij vertelt terloops over zijn oude vriend die nu ergens anders bij hoort. Wat is je beste zet?',
+        vraag: 'Hij vertelt terloops over zijn oude vriend die nu ergens anders bij hoort. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Voorstellen dat hij nieuwe vrienden zoekt.',
@@ -317,11 +309,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Vraag vanavond wie hij deze week het meest heeft zien optrekken, zonder oordeel over wie dat is.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Vertelde hij iets nieuws over wie zijn vrienden nu zijn?',
+        acties: [
+          'Vraag wie hij deze week het meest zag optrekken',
+          'Benoem dat die andere groep wel wennen moet zijn',
+        ],
       },
     ],
   },
@@ -337,7 +328,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'Het algoritme leert razendsnel wat hem vasthoudt en geeft daar steeds meer van. Het puberbrein is extra gevoelig voor sociale bevestiging en sterke prikkels, dus die lus grijpt bij hem harder dan bij jou. Dit is geen slapheid van je zoon. Het is een machine die is gebouwd om te pakken.',
+        body: 'Het algoritme leert razendsnel wat hem vasthoudt en geeft daar steeds meer van, elke like en elke nieuwe video geeft een piek in het beloningssysteem. Het puberbrein is daar extra gevoelig voor: de zoektocht naar sterke prikkels en sociale bevestiging staat op zijn hoogtepunt, terwijl het vermogen om zichzelf te stoppen nog moet doorgroeien. Die combinatie maakt de lus bij hem sterker dan bij jou. Dit is geen slapheid van je zoon. Het is een systeem dat precies is gebouwd om vast te houden, tegen een brein dat nog leert om nee te zeggen.',
       },
       {
         type: 'spiegel',
@@ -350,7 +341,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Je zoon zit weer te scrollen. Wat doe je?',
+        vraag: 'Je zoon zit weer te scrollen. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Zijn telefoon afpakken.',
@@ -371,11 +362,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Vraag vanavond één keer oprecht wat hij kijkt, en kijk mee zonder commentaar.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Hoe ging het? Liet hij iets zien?',
+        acties: ['Vraag oprecht wat hij aan het kijken is', 'Kijk een keer mee, zonder commentaar'],
       },
     ],
   },
@@ -391,7 +378,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'De verleiding begint met echte, aantrekkelijke beloftes: word sterk, word rijk, hoor erbij. En glijdt daarna langzaam af naar en vrouwen zijn het probleem. De haak is de pijn eronder, namelijk onzekerheid, eenzaamheid en ergens bij willen horen. Je zoon zoekt geen haat. Hij zoekt houvast.',
+        body: 'De verleiding begint met echte, aantrekkelijke beloftes: word sterk, word rijk, hoor ergens bij. Onderzoekers naar dit soort onlinegemeenschappen noemen dat de instapfase, precies de gevoelens die op deze leeftijd toch al spelen. Pas geleidelijk glijdt de boodschap af naar vrouwen zijn het probleem. De echte haak zit niet in het vrouwbeeld, maar in de pijn eronder: onzekerheid, eenzaamheid, het verlangen om ergens bij te horen. Je zoon zoekt daar geen haat. Hij zoekt houvast, op een plek die hem dat gemakkelijk lijkt te geven.',
       },
       {
         type: 'spiegel',
@@ -404,7 +391,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'Je zoon citeert zo iemand. Wat werkt het best?',
+        vraag: 'Je zoon citeert zo iemand. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'De influencer belachelijk maken.',
@@ -425,11 +412,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Vraag hem naar één ding dat hij goed vindt aan zo\'n influencer, en luister zonder te oordelen.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Lukte het om te luisteren zonder de discussie aan te gaan?',
+        acties: [
+          'Vraag naar één ding dat hij goed vindt aan die influencer',
+          'Vraag of er ook iets is waar hij het niet mee eens is',
+        ],
       },
     ],
   },
@@ -445,7 +431,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'inzicht',
-        body: 'In het moment kalm blijven werkt beter dan een uitbrander. Een felle reactie maakt van de opmerking een machtsstrijd, en dan graaft hij zich in. Rustig doorvragen haalt de lucht eruit en laat hem zijn eigen woorden horen.',
+        body: 'In het moment kalm blijven werkt beter dan een uitbrander. Psychologen noemen het reactance: hoe feller de afkeuring, hoe steviger iemand zich vastklampt aan wat hij net zei, puur om zijn eigen standpunt te verdedigen. Rustig doorvragen haalt juist de druk eraf en laat hem zijn eigen woorden terughoren, vaak schrikt hij daar zelf het meest van.',
       },
       {
         type: 'spiegel',
@@ -458,7 +444,7 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'oefening',
-        vraag: 'De opmerking valt. Wat is je eerste zet?',
+        vraag: 'De opmerking valt. Wat zou de beste aanpak zijn?',
         opties: [
           {
             label: 'Straffen en het gesprek sluiten.',
@@ -479,11 +465,10 @@ export const lessons: Lesson[] = [
       },
       {
         type: 'thuismissie',
-        body: 'Valt er zo\'n opmerking, adem dan eerst en vraag door in plaats van te straffen. En let deze week één keer op hoe je zelf praat.',
-      },
-      {
-        type: 'terugkoppeling',
-        body: 'Lukte het om kalm te blijven? En merkte je iets aan je eigen woorden?',
+        acties: [
+          'Adem eerst, en vraag dan waar het vandaan komt',
+          'Let deze week eens op hoe je zelf over vrouwen praat',
+        ],
       },
     ],
   },
