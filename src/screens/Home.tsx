@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Check, Lock, Play } from 'lucide-react'
 import { lessons } from '../data/lessons'
 import { worlds } from '../data/worlds'
-import { lessonsForWorld, isLessonUnlocked } from '../lib/worldProgress'
+import { isLessonUnlocked } from '../lib/worldProgress'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
 
@@ -11,61 +10,21 @@ export function Home() {
   const navigate = useNavigate()
   const { todayLessonId, completedLessonIds } = useAppState()
   const todayLesson = lessons.find((l) => l.id === todayLessonId) ?? lessons[0]
-  const allDone = completedLessonIds.length === lessons.length
   const currentWorld = worlds.find((w) => w.id === todayLesson.world)
-  const worldLessons = lessonsForWorld(todayLesson.world)
-  const lessonPosition = worldLessons.findIndex((l) => l.id === todayLesson.id) + 1
-
-  const rootRef = useRef<HTMLDivElement>(null)
-  const bannerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const scrollEl = rootRef.current?.closest('.overflow-y-auto') as HTMLElement | null
-    const bannerEl = bannerRef.current
-    if (!scrollEl || !bannerEl) return
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceMotion) return
-
-    let current = 0
-    let target = 0
-    let raf = 0
-
-    function onScroll() {
-      target = Math.min(scrollEl!.scrollTop * 0.08, 14)
-    }
-    function tick() {
-      current += (target - current) * 0.15
-      bannerEl!.style.transform = `translateY(${current.toFixed(2)}px)`
-      raf = requestAnimationFrame(tick)
-    }
-
-    scrollEl.addEventListener('scroll', onScroll, { passive: true })
-    raf = requestAnimationFrame(tick)
-    return () => {
-      scrollEl.removeEventListener('scroll', onScroll)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
 
   let lastWorldId: number | null = null
 
   return (
-    <div ref={rootRef} className="flex flex-col">
-      <div
-        ref={bannerRef}
-        className="sticky top-0 z-20 rounded-b-3xl bg-gradient-to-br from-primary-500 to-primary-600 px-5 py-4 text-neutral-white shadow-xl"
-      >
-        <p className="text-caption uppercase tracking-wide text-neutral-white/70">Je bent hier</p>
-        <p className="mt-1 text-body-lg font-semibold text-neutral-white/80">Wereld {currentWorld?.id}</p>
-        <p className="text-h2 font-extrabold leading-tight">{currentWorld?.title}</p>
-        {!allDone && (
-          <p className="mt-1 text-caption text-neutral-white/70">
-            Les {lessonPosition} van {worldLessons.length}
-          </p>
-        )}
+    <div className="flex flex-col">
+      <div className="sticky top-0 z-20 bg-gradient-to-br from-primary-500 to-primary-600 px-5 py-3 text-neutral-white shadow-sm">
+        <p className="text-[10px] uppercase tracking-wide text-neutral-white/70">Je bent hier</p>
+        <div className="mt-0.5 flex items-baseline gap-2">
+          <span className="text-body-lg font-semibold text-neutral-white/80">Wereld {currentWorld?.id}</span>
+          <span className="text-h3 font-extrabold">{currentWorld?.title}</span>
+        </div>
       </div>
 
-      <div className="flex flex-col px-4 pb-6 pt-6">
+      <div className="flex flex-col py-6 pl-5 pr-3">
         {lessons.map((lesson, index) => {
           const world = worlds.find((w) => w.id === lesson.world)
           const showBanner = lesson.world !== lastWorldId
@@ -89,8 +48,8 @@ export function Home() {
                 </div>
               )}
 
-              <div className="flex w-full items-center gap-2">
-                <div className="flex w-16 shrink-0 flex-col items-center">
+              <div className="flex w-full items-center gap-1.5">
+                <div className="flex w-14 shrink-0 flex-col items-center">
                   {!showBanner && (
                     <div className="h-6 border-l-2 border-dashed" style={{ borderColor: style.accentVar }} />
                   )}
@@ -99,7 +58,7 @@ export function Home() {
                     disabled={!unlocked}
                     onClick={() => unlocked && navigate(`/les/${lesson.id}`)}
                     aria-label={`Les ${index + 1}: ${lesson.title}`}
-                    className={`flex size-16 items-center justify-center rounded-full border-4 border-transparent transition active:translate-y-[4px] ${
+                    className={`flex size-14 items-center justify-center rounded-full border-4 border-transparent transition active:translate-y-[4px] ${
                       isDone
                         ? `bg-success-500 text-neutral-white shadow-[0_5px_0_0_var(--color-success-700)] active:shadow-[0_1px_0_0_var(--color-success-700)]`
                         : isCurrent
@@ -110,17 +69,17 @@ export function Home() {
                     }`}
                   >
                     {isDone ? (
-                      <Check size={26} strokeWidth={3} />
+                      <Check size={22} strokeWidth={3} />
                     ) : isCurrent ? (
-                      <Play size={24} strokeWidth={2} fill="currentColor" />
+                      <Play size={20} strokeWidth={2} fill="currentColor" />
                     ) : unlocked ? (
-                      <span className="text-h4">{index + 1}</span>
+                      <span className="text-body-lg">{index + 1}</span>
                     ) : (
-                      <Lock size={20} strokeWidth={2} />
+                      <Lock size={18} strokeWidth={2} />
                     )}
                   </button>
                 </div>
-                <p className="flex-1 truncate text-right text-[11px] leading-tight text-ink-faint">{lesson.title}</p>
+                <p className="flex-1 truncate text-left text-[12px] leading-tight text-ink-muted">{lesson.title}</p>
               </div>
             </div>
           )

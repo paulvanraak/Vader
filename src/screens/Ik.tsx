@@ -15,7 +15,7 @@ const ageLabel: Record<string, string> = {
 }
 
 export function Ik() {
-  const { childGender, ageGroup, streakDays, completedLessonIds } = useAppState()
+  const { fatherName, childGender, ageGroup, streakDays, completedLessonIds } = useAppState()
 
   return (
     <div className="flex flex-col gap-5 px-5 py-6 pr-16">
@@ -25,7 +25,8 @@ export function Ik() {
         </div>
         <div className="min-w-0">
           <p className="text-caption text-ink-muted">Jouw profiel</p>
-          <p className="text-h4 text-ink">
+          <p className="truncate text-h4 text-ink">{fatherName ?? 'Vader'}</p>
+          <p className="text-caption text-ink-muted">
             {childGender ? genderLabel[childGender] : 'Kind'} van {ageGroup ? ageLabel[ageGroup] : 'onbekende leeftijd'}
           </p>
         </div>

@@ -7,6 +7,7 @@ export type Theme = 'light' | 'dark'
 
 interface AppState {
   onboardingComplete: boolean
+  fatherName: string | null
   childGender: ChildGender | null
   ageGroup: AgeGroup | null
   streakDays: number
@@ -16,7 +17,7 @@ interface AppState {
   toggleTheme: () => void
   doneActionIds: string[]
   toggleAction: (actionId: string) => void
-  completeOnboarding: (childGender: ChildGender, ageGroup: AgeGroup) => void
+  completeOnboarding: (fatherName: string, childGender: ChildGender, ageGroup: AgeGroup) => void
   completeLesson: (lessonId: string) => void
 }
 
@@ -29,6 +30,7 @@ function getInitialTheme(): Theme {
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [onboardingComplete, setOnboardingComplete] = useState(false)
+  const [fatherName, setFatherName] = useState<string | null>(null)
   const [childGender, setChildGender] = useState<ChildGender | null>(null)
   const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null)
   const [streakDays, setStreakDays] = useState(3)
@@ -47,6 +49,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const value: AppState = {
     onboardingComplete,
+    fatherName,
     childGender,
     ageGroup,
     streakDays,
@@ -60,7 +63,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         prev.includes(actionId) ? prev.filter((id) => id !== actionId) : [...prev, actionId],
       )
     },
-    completeOnboarding: (selectedGender, selectedAgeGroup) => {
+    completeOnboarding: (selectedFatherName, selectedGender, selectedAgeGroup) => {
+      setFatherName(selectedFatherName)
       setChildGender(selectedGender)
       setAgeGroup(selectedAgeGroup)
       setOnboardingComplete(true)

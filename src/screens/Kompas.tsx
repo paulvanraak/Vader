@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Compass, Search, ChevronDown, Lock, CircleCheck, LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
+import { Search, ChevronDown, Lock, CircleCheck, LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
 import { lessons } from '../data/lessons'
 import { worlds } from '../data/worlds'
 import { compassEntries } from '../data/compass'
@@ -7,7 +7,6 @@ import { useAppState } from '../state/AppStateContext'
 import { lessonsForWorld, isWorldComplete, isLessonUnlocked } from '../lib/worldProgress'
 import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
 import { generateLocalAnswer } from '../lib/localAdvisor'
-import { Card } from '../components/Card'
 
 type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 
@@ -111,11 +110,6 @@ export function Kompas() {
             <Send size={17} strokeWidth={2} />
           </button>
         </form>
-        {!hasChat && (
-          <p className="mt-2 text-caption text-ink-muted">
-            Deze app is geen therapie en geen crisisdienst. Bij direct gevaar bel 112.
-          </p>
-        )}
       </div>
 
       {hasChat ? (
@@ -135,13 +129,6 @@ export function Kompas() {
       ) : (
         <div className="flex-1 overflow-y-auto px-5">
           <div className="flex flex-col gap-5 pb-6">
-            <Card className="flex flex-col gap-2 bg-primary-500/10 shadow-none ring-0">
-              <Compass size={22} className="text-primary-600" strokeWidth={2} />
-              <p className="text-body text-ink">
-                Geen vaste route, wel een richting. Dit zijn de gedachten om op terug te vallen.
-              </p>
-            </Card>
-
             <div className="relative">
               <Search
                 size={16}

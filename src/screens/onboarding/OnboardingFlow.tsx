@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Users, Radar, Sunrise } from 'lucide-react'
+import { NameQuestion } from './NameQuestion'
 import { IntroStep } from './IntroStep'
 import { ChildQuestion } from './ChildQuestion'
 import { AgeQuestion } from './AgeQuestion'
@@ -25,10 +26,11 @@ const introParts = [
   },
 ]
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5
+type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export function OnboardingFlow() {
   const [step, setStep] = useState<Step>(0)
+  const [fatherName, setFatherName] = useState('')
   const [gender, setGender] = useState<ChildGender>('zoon')
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('oud')
   const { completeOnboarding } = useAppState()
@@ -36,33 +38,42 @@ export function OnboardingFlow() {
 
   let content: ReactNode
 
-  if (step <= 2) {
-    const part = introParts[step]
+  if (step === 0) {
+    content = (
+      <NameQuestion
+        onNext={(name) => {
+          setFatherName(name)
+          setStep(1)
+        }}
+      />
+    )
+  } else if (step <= 3) {
+    const part = introParts[step - 1]
     content = (
       <IntroStep
         icon={part.icon}
-        step={step + 1}
+        step={step}
         total={introParts.length}
         title={part.title}
         body={part.body}
         onNext={() => setStep((s) => (s + 1) as Step)}
       />
     )
-  } else if (step === 3) {
+  } else if (step === 4) {
     content = (
       <ChildQuestion
         onNext={(selectedGender) => {
           setGender(selectedGender)
-          setStep(4)
+          setStep(5)
         }}
       />
     )
-  } else if (step === 4) {
+  } else if (step === 5) {
     content = (
       <AgeQuestion
         onNext={(selectedAgeGroup) => {
           setAgeGroup(selectedAgeGroup)
-          setStep(5)
+          setStep(6)
         }}
       />
     )
@@ -70,7 +81,7 @@ export function OnboardingFlow() {
     content = (
       <HowItWorks
         onStart={() => {
-          completeOnboarding(gender, ageGroup)
+          completeOnboarding(fatherName, gender, ageGroup)
           navigate('/')
         }}
       />
