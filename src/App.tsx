@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
-import { PhoneFrame } from './components/PhoneFrame'
+import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
 import { OnboardingFlow } from './screens/onboarding/OnboardingFlow'
 import { Home } from './screens/Home'
 import { Leerboom } from './screens/Leerboom'
+import { WorldLessons } from './screens/WorldLessons'
 import { Kompas } from './screens/Kompas'
 import { AskScreen } from './screens/AskScreen'
 import { Ik } from './screens/Ik'
@@ -34,6 +35,7 @@ function AppRoutes() {
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/leerboom" element={<Leerboom />} />
+        <Route path="/leerboom/:worldId" element={<WorldLessons />} />
         <Route path="/kompas" element={<Kompas />} />
         <Route path="/vraag-het" element={<AskScreen />} />
         <Route path="/ik" element={<Ik />} />
@@ -46,9 +48,9 @@ function App() {
   return (
     <BrowserRouter>
       <AppStateProvider>
-        <PhoneFrame>
+        <AppShell>
           <AppRoutes />
-        </PhoneFrame>
+        </AppShell>
       </AppStateProvider>
     </BrowserRouter>
   )

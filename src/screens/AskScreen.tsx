@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { LifeBuoy, LoaderCircle, Send } from 'lucide-react'
+import { LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
+import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
+import { generateLocalAnswer } from '../lib/localAdvisor'
 
 type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 
 interface ChatMessage {
   role: MessageRole
   text: string
+  demo?: boolean
 }
 
 export function AskScreen() {
@@ -19,20 +22,30 @@ export function AskScreen() {
 
     setMessages((prev) => [...prev, { role: 'user', text: question }])
     setInput('')
-    setIsLoading(true)
 
+    // De vangrail draait client-side, meteen, vóór er ooit een model wordt
+    // aangeroepen, zodat dit ook zonder serverroute altijd werkt.
+    if (triggersGuardrail(question)) {
+      setMessages((prev) => [...prev, { role: 'referral', text: REFERRAL_TEXT }])
+      return
+    }
+
+    setIsLoading(true)
     try {
       const res = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
       })
+      if (!res.ok) throw new Error('serverroute niet beschikbaar')
       const data = (await res.json()) as { type: 'answer' | 'referral' | 'error'; text: string }
       setMessages((prev) => [...prev, { role: data.type, text: data.text }])
     } catch {
+      // Geen serverroute bereikbaar (bijvoorbeeld deze losstaande demo).
+      // Geef een eerlijk gelabeld voorbeeldantwoord in plaats van alleen een foutmelding.
       setMessages((prev) => [
         ...prev,
-        { role: 'error', text: 'Er ging iets mis bij het ophalen van een antwoord. Probeer het zo weer.' },
+        { role: 'answer', text: generateLocalAnswer(question), demo: true },
       ])
     } finally {
       setIsLoading(false)
@@ -122,14 +135,22 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   }
 
   return (
-    <p
-      className={`max-w-[85%] self-start rounded-2xl px-4 py-3 text-body-lg shadow-xs ring-1 ${
-        message.role === 'error'
-          ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
-          : 'bg-neutral-white text-neutral-900 ring-neutral-100'
-      }`}
-    >
-      {message.text}
-    </p>
+    <div className="flex max-w-[85%] flex-col gap-1 self-start">
+      {message.demo && (
+        <span className="flex items-center gap-1 text-caption text-neutral-300">
+          <Sparkles size={12} strokeWidth={2} />
+          Voorbeeldantwoord, geen live verbinding
+        </span>
+      )}
+      <p
+        className={`rounded-2xl px-4 py-3 text-body-lg shadow-xs ring-1 ${
+          message.role === 'error'
+            ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
+            : 'bg-neutral-white text-neutral-900 ring-neutral-100'
+        }`}
+      >
+        {message.text}
+      </p>
+    </div>
   )
 }

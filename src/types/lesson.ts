@@ -32,3 +32,9 @@ export interface Lesson {
   title: string
   beats: Beat[]
 }
+
+export interface World {
+  id: number
+  title: string
+  subtitle: string
+}

@@ -25,11 +25,9 @@ export function Home() {
       <Card className="flex flex-col gap-4">
         <div className="flex items-center gap-2 text-caption text-neutral-300">
           <Clock size={14} strokeWidth={2} />
-          <span>Drie minuten · Wereld 6</span>
+          <span>Drie minuten · Wereld {todayLesson.world}</span>
         </div>
-        <h2 className="text-h3 text-neutral-900">
-          {allDone ? 'Alle lessen van Wereld 6 zijn klaar' : todayLesson.title}
-        </h2>
+        <h2 className="text-h3 text-neutral-900">{allDone ? 'Alle werelden zijn klaar' : todayLesson.title}</h2>
         {!allDone && (
           <Button onClick={() => navigate(`/les/${todayLesson.id}`)}>
             <PlayCircle size={18} strokeWidth={2} />

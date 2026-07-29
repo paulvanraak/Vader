@@ -1,7 +1,8 @@
 /**
  * Signaalwoordenlijst voor de vangrail. Losstaand en makkelijk uitbreidbaar,
- * per de instructie in CLAUDE.md deel 7. Controle gebeurt server-side,
- * vóór elke aanroep van het model.
+ * per de instructie in CLAUDE.md deel 7. Gedeeld tussen client en server zodat
+ * de controle altijd draait vóór het model wordt aangeroepen, ook wanneer er
+ * geen serverroute beschikbaar is (bijvoorbeeld in een losstaande demo).
  */
 export const SIGNAL_WORDS: string[] = [
   // Zelfbeschadiging / zelfdoding

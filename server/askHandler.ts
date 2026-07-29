@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { SYSTEM_PROMPT } from './systemPrompt.ts'
-import { triggersGuardrail, REFERRAL_TEXT } from './guardrail.ts'
+import { triggersGuardrail, REFERRAL_TEXT } from '../src/lib/guardrail.ts'
 
 export type AskResult =
   | { type: 'answer'; text: string }
