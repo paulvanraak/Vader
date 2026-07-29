@@ -10,7 +10,7 @@ const base =
 
 const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-primary-500 text-neutral-white shadow-sm hover:bg-primary-600',
-  secondary: 'bg-neutral-white text-neutral-900 shadow-xs ring-1 ring-neutral-100 hover:bg-neutral-50',
+  secondary: 'bg-surface text-ink shadow-xs ring-1 ring-surface-sunken hover:bg-surface-sunken',
 }
 
 export function Button({ variant = 'primary', className = '', children, ...props }: ButtonProps) {

@@ -20,7 +20,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Hoofdnavigatie"
-      className="flex shrink-0 items-stretch justify-between border-t border-neutral-100 bg-neutral-white px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
+      className="flex shrink-0 items-stretch justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
     >
       {tabs.map(({ to, label, icon: Icon }) => (
         <NavLink
@@ -29,7 +29,7 @@ export function BottomNav() {
           end={to === '/'}
           className={({ isActive }) =>
             `flex min-w-0 flex-1 flex-col items-center gap-1 rounded-lg px-1 py-1.5 text-center transition ${
-              isActive ? 'text-primary-600' : 'text-neutral-400'
+              isActive ? 'text-primary-600' : 'text-ink-faint'
             }`
           }
         >

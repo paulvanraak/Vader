@@ -44,7 +44,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
           type="button"
           onClick={handleClose}
           aria-label="Sluit de les"
-          className="flex size-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-100"
+          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
         >
           <X size={18} strokeWidth={2} />
         </button>
@@ -52,7 +52,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
           {lesson.beats.map((b, i) => (
             <div
               key={`${b.type}-${i}`}
-              className={`h-1.5 flex-1 rounded-full ${i <= beatIndex ? 'bg-primary-500' : 'bg-neutral-100'}`}
+              className={`h-1.5 flex-1 rounded-full ${i <= beatIndex ? 'bg-primary-500' : 'bg-surface-sunken'}`}
             />
           ))}
         </div>

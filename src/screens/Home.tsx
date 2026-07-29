@@ -16,18 +16,18 @@ export function Home() {
   return (
     <div className="flex flex-col gap-5 px-5 py-6">
       <div>
-        <p className="text-label text-neutral-300">Vandaag</p>
-        <h1 className="text-h2 text-neutral-900">Fijn dat je er bent</h1>
+        <p className="text-label text-ink-muted">Vandaag</p>
+        <h1 className="text-h2 text-ink">Fijn dat je er bent</h1>
       </div>
 
       <StreakNote days={streakDays} />
 
       <Card className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 text-caption text-neutral-300">
+        <div className="flex items-center gap-2 text-caption text-ink-muted">
           <Clock size={14} strokeWidth={2} />
           <span>Drie minuten · Wereld {todayLesson.world}</span>
         </div>
-        <h2 className="text-h3 text-neutral-900">{allDone ? 'Alle werelden zijn klaar' : todayLesson.title}</h2>
+        <h2 className="text-h3 text-ink">{allDone ? 'Alle werelden zijn klaar' : todayLesson.title}</h2>
         {!allDone && (
           <Button onClick={() => navigate(`/les/${todayLesson.id}`)}>
             <PlayCircle size={18} strokeWidth={2} />

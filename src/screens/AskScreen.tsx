@@ -55,16 +55,16 @@ export function AskScreen() {
   return (
     <div className="flex h-full flex-col">
       <div className="shrink-0 px-5 pb-3 pt-6">
-        <p className="text-label text-neutral-300">Vraag het</p>
-        <h1 className="text-h2 text-neutral-900">Wat speelt er?</h1>
-        <p className="mt-2 text-caption text-neutral-300">
+        <p className="text-label text-ink-muted">Vraag het</p>
+        <h1 className="text-h2 text-ink">Wat speelt er?</h1>
+        <p className="mt-2 text-caption text-ink-muted">
           Deze app is geen therapie en geen crisisdienst. Bij direct gevaar bel 112.
         </p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-5">
         {messages.length === 0 && (
-          <p className="mt-4 text-body-lg text-neutral-300">
+          <p className="mt-4 text-body-lg text-ink-muted">
             Beschrijf de situatie in je eigen woorden. Je krijgt een kort, concreet antwoord.
           </p>
         )}
@@ -74,7 +74,7 @@ export function AskScreen() {
             <ChatBubble key={index} message={message} />
           ))}
           {isLoading && (
-            <div className="flex items-center gap-2 self-start rounded-2xl bg-neutral-white px-4 py-3 text-body text-neutral-300 shadow-xs ring-1 ring-neutral-100">
+            <div className="flex items-center gap-2 self-start rounded-2xl bg-surface px-4 py-3 text-body text-ink-muted shadow-xs ring-1 ring-surface-sunken">
               <LoaderCircle size={16} className="animate-spin" strokeWidth={2} />
               Denkt na
             </div>
@@ -87,7 +87,7 @@ export function AskScreen() {
           e.preventDefault()
           void handleSubmit()
         }}
-        className="flex shrink-0 items-end gap-2 border-t border-neutral-100 bg-neutral-white px-4 py-3"
+        className="flex shrink-0 items-end gap-2 border-t border-surface-sunken bg-surface px-4 py-3"
       >
         <textarea
           value={input}
@@ -101,7 +101,7 @@ export function AskScreen() {
           rows={1}
           placeholder="Beschrijf de situatie…"
           aria-label="Beschrijf de situatie"
-          className="max-h-24 flex-1 resize-none rounded-xl bg-neutral-100 px-4 py-3 text-body text-neutral-900 outline-none placeholder:text-neutral-400 focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="max-h-24 flex-1 resize-none rounded-xl bg-surface-sunken px-4 py-3 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
         />
         <button
           type="submit"
@@ -129,7 +129,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
     return (
       <div className="flex max-w-[85%] items-start gap-3 self-start rounded-2xl bg-warning-500/15 px-4 py-3 ring-1 ring-warning-500/40">
         <LifeBuoy size={20} className="mt-0.5 shrink-0 text-accent-orange" strokeWidth={2} />
-        <p className="text-body text-neutral-900">{message.text}</p>
+        <p className="text-body text-ink">{message.text}</p>
       </div>
     )
   }
@@ -137,7 +137,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   return (
     <div className="flex max-w-[85%] flex-col gap-1 self-start">
       {message.demo && (
-        <span className="flex items-center gap-1 text-caption text-neutral-300">
+        <span className="flex items-center gap-1 text-caption text-ink-muted">
           <Sparkles size={12} strokeWidth={2} />
           Voorbeeldantwoord, geen live verbinding
         </span>
@@ -146,7 +146,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         className={`rounded-2xl px-4 py-3 text-body-lg shadow-xs ring-1 ${
           message.role === 'error'
             ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
-            : 'bg-neutral-white text-neutral-900 ring-neutral-100'
+            : 'bg-surface text-ink ring-surface-sunken'
         }`}
       >
         {message.text}

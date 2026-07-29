@@ -12,8 +12,8 @@ export function Leerboom() {
   return (
     <div className="flex flex-col gap-5 px-5 py-6">
       <div>
-        <p className="text-label text-neutral-300">Leerboom</p>
-        <h1 className="text-h2 text-neutral-900">Werelden</h1>
+        <p className="text-label text-ink-muted">Leerboom</p>
+        <h1 className="text-h2 text-ink">Werelden</h1>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -48,7 +48,7 @@ export function Leerboom() {
                     ? 'bg-success-500/15 text-success-500'
                     : unlocked
                       ? 'bg-primary-500/10 text-primary-600'
-                      : 'bg-neutral-100 text-neutral-400'
+                      : 'bg-surface-sunken text-ink-faint'
                 }`}
               >
                 {complete ? (
@@ -60,13 +60,13 @@ export function Leerboom() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-caption text-neutral-300">
+                <p className="text-caption text-ink-muted">
                   Wereld {world.id} · {done}/{worldLessons.length} lessen
                 </p>
-                <p className="truncate text-body-lg text-neutral-900">{world.title}</p>
-                <p className="truncate text-caption text-neutral-300">{world.subtitle}</p>
+                <p className="truncate text-body-lg text-ink">{world.title}</p>
+                <p className="truncate text-caption text-ink-muted">{world.subtitle}</p>
               </div>
-              {unlocked && <ChevronRight size={18} className="shrink-0 text-neutral-300" strokeWidth={2} />}
+              {unlocked && <ChevronRight size={18} className="shrink-0 text-ink-muted" strokeWidth={2} />}
             </Card>
           )
         })}

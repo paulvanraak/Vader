@@ -27,13 +27,13 @@ export function WorldLessons() {
           type="button"
           onClick={() => navigate('/leerboom')}
           aria-label="Terug naar werelden"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-100"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
         >
           <ArrowLeft size={18} strokeWidth={2} />
         </button>
         <div className="min-w-0">
-          <p className="text-label text-neutral-300">Wereld {world.id}</p>
-          <h1 className="truncate text-h2 text-neutral-900">{world.title}</h1>
+          <p className="text-label text-ink-muted">Wereld {world.id}</p>
+          <h1 className="truncate text-h2 text-ink">{world.title}</h1>
         </div>
       </div>
 
@@ -57,11 +57,11 @@ export function WorldLessons() {
               {isDone ? (
                 <CircleCheck size={22} className="shrink-0 text-success-500" strokeWidth={2} />
               ) : (
-                <Circle size={22} className="shrink-0 text-neutral-400" strokeWidth={2} />
+                <Circle size={22} className="shrink-0 text-ink-faint" strokeWidth={2} />
               )}
               <div className="min-w-0">
-                <p className="text-caption text-neutral-300">Les {index + 1}</p>
-                <p className="truncate text-body-lg text-neutral-900">{lesson.title}</p>
+                <p className="text-caption text-ink-muted">Les {index + 1}</p>
+                <p className="truncate text-body-lg text-ink">{lesson.title}</p>
               </div>
             </Card>
           )

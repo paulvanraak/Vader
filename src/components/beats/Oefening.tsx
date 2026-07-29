@@ -12,11 +12,11 @@ export function Oefening({ beat, selectedIndex, onSelect }: OefeningProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2 text-label text-neutral-300">
+      <div className="flex items-center gap-2 text-label text-ink-muted">
         <ClipboardList size={16} strokeWidth={2} />
         <span>Oefening</span>
       </div>
-      <p className="text-h4 text-neutral-900">{beat.vraag}</p>
+      <p className="text-h4 text-ink">{beat.vraag}</p>
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={beat.vraag}>
         {beat.opties?.map((optie, index) => {
           const isSelected = selectedIndex === index
@@ -32,7 +32,7 @@ export function Oefening({ beat, selectedIndex, onSelect }: OefeningProps) {
                   ? optie.correct
                     ? 'border-success-500 bg-success-500/10'
                     : 'border-primary-500 bg-primary-500/10'
-                  : 'border-neutral-100 bg-neutral-white hover:border-neutral-300'
+                  : 'border-surface-sunken bg-surface hover:border-ink-faint'
               }`}
             >
               {optie.label}
@@ -41,7 +41,7 @@ export function Oefening({ beat, selectedIndex, onSelect }: OefeningProps) {
         })}
       </div>
       {hasAnswered && (
-        <p className="text-body text-neutral-300">{beat.opties?.[selectedIndex].feedback}</p>
+        <p className="text-body text-ink-muted">{beat.opties?.[selectedIndex].feedback}</p>
       )}
     </div>
   )

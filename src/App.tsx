@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
+import { Splash } from './screens/Splash'
 import { OnboardingFlow } from './screens/onboarding/OnboardingFlow'
 import { Home } from './screens/Home'
 import { Leerboom } from './screens/Leerboom'
@@ -24,6 +26,11 @@ function TabLayout() {
 
 function AppRoutes() {
   const { onboardingComplete } = useAppState()
+  const [showSplash, setShowSplash] = useState(true)
+
+  if (showSplash) {
+    return <Splash onDone={() => setShowSplash(false)} />
+  }
 
   if (!onboardingComplete) {
     return <OnboardingFlow />

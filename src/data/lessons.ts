@@ -110,6 +110,60 @@ export const lessons: Lesson[] = [
     ],
   },
   {
+    id: '4.3',
+    world: 4,
+    cohort: 'oud',
+    title: 'Als hij zichzelf vergelijkt met iedereen',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij zucht dat een klasgenoot alles beter kan: sportiever, populairder, slimmer. Zelf voelt hij zich dan klein.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Vergelijken is van alle tijden, maar social media laat hem vooral de succesmomenten van honderd anderen zien, niet hun gewone dagen. Dat is een oneerlijke wedstrijd om in mee te doen. Zijn gevoel van eigenwaarde mag niet afhangen van wie er nét langsscrolt.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Vergelijk jij jezelf ook weleens met anderen, en laat je dat weleens merken aan hem?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Iedereen is toch ergens goed in, jij ook.',
+        beter: 'Waarin voel jij je zelf wél goed, los van wat een ander kan?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij vergelijkt zich weer met een klasgenoot. Wat werkt het best?',
+        opties: [
+          {
+            label: 'Zeggen dat de vergelijking niet klopt.',
+            correct: false,
+            feedback: 'Dan ga je in discussie over feiten, niet over zijn gevoel.',
+          },
+          {
+            label: 'Vragen waar hij zelf trots op is.',
+            correct: true,
+            feedback: 'Zo verschuift het gesprek van vergelijken naar eigen waarde.',
+          },
+          {
+            label: 'Zeggen dat vergelijken zinloos is.',
+            correct: false,
+            feedback: 'Dat klopt, maar het stopt het gevoel niet.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        body: 'Benoem vanavond iets waar je zoon zelf trots op leek te zijn deze week, hoe klein ook.',
+      },
+      {
+        type: 'terugkoppeling',
+        body: 'Wist je iets te noemen waar hij trots op was?',
+      },
+    ],
+  },
+  {
     id: '5.1',
     world: 5,
     cohort: 'oud',
@@ -214,6 +268,60 @@ export const lessons: Lesson[] = [
       {
         type: 'terugkoppeling',
         body: 'Had hij al een idee voor wat hij zou kunnen zeggen?',
+      },
+    ],
+  },
+  {
+    id: '5.3',
+    world: 5,
+    cohort: 'oud',
+    title: 'Als een vriendschap uit elkaar groeit',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Zijn beste vriend van vroeger trekt nu met een andere groep op. Je zoon doet alsof het hem niks doet.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Vriendschappen verschuiven enorm in de puberteit, dat hoort bij het uitproberen van wie hij wil zijn. Het doet toch pijn, ook als hij het wegwuift. Hij hoeft het gemis niet groot te maken, maar mag het wel benoemen als jij de ruimte geeft.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Ben jij zelf weleens een vriendschap kwijtgeraakt in die jaren? Hoe voelde dat, en wat had je toen nodig?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Maak toch gewoon nieuwe vrienden.',
+        beter: 'Dat moet toch wel wennen zijn, die andere groep.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij vertelt terloops over zijn oude vriend die nu ergens anders bij hoort. Wat is je beste zet?',
+        opties: [
+          {
+            label: 'Voorstellen dat hij nieuwe vrienden zoekt.',
+            correct: false,
+            feedback: 'Dat lost iets op wat nog niet erkend is.',
+          },
+          {
+            label: 'Benoemen dat dat toch wennen moet zijn.',
+            correct: true,
+            feedback: 'Zo mag het gevoel er zijn zonder dat je het groter maakt dan het is.',
+          },
+          {
+            label: 'Er niet op ingaan, het is maar een vriendschap.',
+            correct: false,
+            feedback: 'Voor hem is het waarschijnlijk meer dan dat.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        body: 'Vraag vanavond wie hij deze week het meest heeft zien optrekken, zonder oordeel over wie dat is.',
+      },
+      {
+        type: 'terugkoppeling',
+        body: 'Vertelde hij iets nieuws over wie zijn vrienden nu zijn?',
       },
     ],
   },

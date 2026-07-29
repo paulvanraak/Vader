@@ -52,13 +52,19 @@
   --color-primary-500: #369fff;
   --color-primary-600: #006ed3;
 
+  /* Vast, verandert niet met het thema: puur wit/donker voor tekst op
+     gekleurde knoppen en de vaste donkere spiegel-kaart. */
   --color-neutral-white: #ffffff;
-  --color-neutral-50: #f7f7f7;
-  --color-neutral-100: #f0f0f0;
-  --color-neutral-300: #8ea3b7;
-  --color-neutral-400: #bdbdbd;
   --color-neutral-900: #303030;
-  --color-neutral-page: #f8fafc;
+
+  /* Thema-afhankelijke tokens. Lichte waarden hier, donkere waarden verderop
+     onder prefers-color-scheme en [data-theme]. */
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+  --color-ink: #303030;
+  --color-ink-muted: #8ea3b7;
+  --color-ink-faint: #bdbdbd;
 
   --color-success-500: #8ac53e;
   --color-warning-500: #ffd143;
@@ -91,6 +97,40 @@
   --shadow-3xl: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
 }
 
+/* Volgt de systeemvoorkeur zolang de gebruiker niet zelf heeft gewisseld. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #0f1115;
+    --color-surface: #1b1f24;
+    --color-surface-sunken: #262b31;
+    --color-ink: #f2f3f5;
+    --color-ink-muted: #9aa7b5;
+    --color-ink-faint: #5b6470;
+    --color-primary-600: #6cb8ff;
+  }
+}
+
+/* Handmatige keuze wint altijd, in beide richtingen. */
+:root[data-theme="dark"] {
+  --color-page: #0f1115;
+  --color-surface: #1b1f24;
+  --color-surface-sunken: #262b31;
+  --color-ink: #f2f3f5;
+  --color-ink-muted: #9aa7b5;
+  --color-ink-faint: #5b6470;
+  --color-primary-600: #6cb8ff;
+}
+
+:root[data-theme="light"] {
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+  --color-ink: #303030;
+  --color-ink-muted: #8ea3b7;
+  --color-ink-faint: #bdbdbd;
+  --color-primary-600: #006ed3;
+}
+
 html,
 body,
 #root {
@@ -99,7 +139,8 @@ body,
 
 body {
   margin: 0;
-  background-color: var(--color-neutral-100);
+  background-color: var(--color-surface-sunken);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  color-scheme: light dark;
 }
