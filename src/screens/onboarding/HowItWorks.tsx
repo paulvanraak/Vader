@@ -4,18 +4,18 @@ import { Button } from '../../components/Button'
 const stappen = [
   {
     icon: Clock,
-    title: 'Elke dag drie minuten',
-    body: 'Eén klein stukje per dag, geen lange cursus.',
+    title: 'Dagelijks, in drie minuten',
+    body: 'Compact en gericht, geen cursus die tijd vraagt die er niet is.',
   },
   {
     icon: MirrorRectangular,
     title: 'Een spiegelmoment',
-    body: 'Elke les laat je even stilstaan bij je eigen gedrag.',
+    body: 'Elke les koppelt het gedrag van je kind aan je eigen aandeel daarin.',
   },
   {
     icon: CalendarCheck,
-    title: 'Eén ding voor vanavond',
-    body: 'Concreet en klein, iets dat je meteen kunt doen.',
+    title: 'Eén concrete actie',
+    body: 'Direct toepasbaar, zonder verdere voorbereiding.',
   },
 ]
 
@@ -25,7 +25,7 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
       <div className="flex flex-1 flex-col gap-6">
         <div>
           <p className="text-label text-ink-muted">Zo werkt het</p>
-          <h1 className="mt-2 text-h1 text-ink">Drie minuten, drie stappen</h1>
+          <h1 className="mt-2 text-h1 font-extrabold text-ink">Kort, gefocust, blijvend</h1>
         </div>
         <div className="flex flex-col gap-4">
           {stappen.map(({ icon: Icon, title, body }) => (
@@ -34,8 +34,8 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
                 <Icon size={20} strokeWidth={2} />
               </div>
               <div>
-                <p className="text-label text-ink">{title}</p>
-                <p className="text-body text-ink-muted">{body}</p>
+                <p className="text-label font-bold text-ink">{title}</p>
+                <p className="text-body font-semibold text-ink-muted">{body}</p>
               </div>
             </div>
           ))}

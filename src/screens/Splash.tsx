@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Waves } from 'lucide-react'
 
 export function Splash({ onDone }: { onDone: () => void }) {
   useEffect(() => {
@@ -7,9 +8,13 @@ export function Splash({ onDone }: { onDone: () => void }) {
   }, [onDone])
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-2 bg-primary-600 px-6 text-center">
-      <p className="text-display text-neutral-white">Vaderschap</p>
-      <p className="text-caption uppercase tracking-wide text-neutral-white/70">Werktitel</p>
+    <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#0f1115] px-6 text-center">
+      <div className="flex size-16 items-center justify-center rounded-2xl bg-primary-500 shadow-lg">
+        <Waves size={32} strokeWidth={2.5} className="text-neutral-white" />
+      </div>
+      <p className="text-display text-neutral-white">
+        Father<span className="text-primary-500">Flow</span>
+      </p>
     </div>
   )
 }

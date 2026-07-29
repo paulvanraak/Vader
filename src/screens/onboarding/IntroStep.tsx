@@ -20,8 +20,8 @@ export function IntroStep({ icon: Icon, step, total, title, body, onNext }: Intr
         <p className="text-label text-ink-muted">
           {step} van {total}
         </p>
-        <h1 className="text-h1 text-ink">{title}</h1>
-        <p className="text-body-lg text-ink-muted">{body}</p>
+        <h1 className="text-h1 font-extrabold text-ink">{title}</h1>
+        <p className="text-body-lg font-semibold text-ink-muted">{body}</p>
       </div>
       <Button onClick={onNext}>Verder</Button>
     </div>

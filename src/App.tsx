@@ -32,7 +32,11 @@ function AppRoutes() {
   }
 
   if (!onboardingComplete) {
-    return <OnboardingFlow />
+    return (
+      <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+        <OnboardingFlow />
+      </div>
+    )
   }
 
   return (

@@ -1,4 +1,4 @@
-# Vaderfiguur — klikbare demo
+# FatherFlow — klikbare demo
 
 Een mobiele demo (React + TypeScript + Vite + Tailwind) die vaders helpt hun puberzoon te
 begrijpen en weg te houden bij de manosfeer, in dagelijkse porties van drie minuten.
@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Open de getoonde localhost-URL. De app rendert in een telefoonframe op ongeveer 390px breed.
+Open de getoonde localhost-URL.
 
 ## Vraag het (Claude API)
 
@@ -34,12 +34,12 @@ in plaats van een antwoord (de vangrail zelf werkt altijd, ook zonder sleutel).
 
 ## Structuur
 
-- `src/data/lessons.ts` — de drie lessen van Wereld 6 als data (`Lesson`/`Beat`-model).
-- `src/components/beats/` — de zeven beat-presentatiecomponenten, met `Spiegel.tsx` als het
-  vaste, herkenbare handtekeningmoment.
+- `src/data/lessons.ts` — de lessen van Wereld 4, 5 en 6 als data (`Lesson`/`Beat`-model).
+- `src/components/beats/` — de beat-presentatiecomponenten, met `Spiegel.tsx` als het vaste,
+  herkenbare handtekeningmoment.
 - `src/components/LessonPlayer.tsx` — speelt de beats van een les na elkaar af.
-- `src/screens/` — onboarding, Vandaag, Leerboom, Kompas, Vraag het, Ik.
+- `src/screens/` — onboarding, Vandaag, Leerboom (leerpad), Kompas, Vraag het, Ik.
 - `server/` — systeeminstructie, vangrail (signaalwoorden) en de Claude-aanroep.
 
-Staat (streak, voltooide lessen, band) leeft alleen in het geheugen van de sessie, zoals
-bedoeld voor deze demo.
+Staat (streak, voltooide lessen) leeft alleen in het geheugen van de sessie, zoals bedoeld
+voor deze demo.

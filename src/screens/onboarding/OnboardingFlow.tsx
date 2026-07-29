@@ -10,18 +10,18 @@ import { useAppState, type ChildGender, type AgeGroup } from '../../state/AppSta
 const introParts = [
   {
     icon: Users,
-    title: 'Wat is Vaderschap?',
-    body: 'Vaderschap is de werktitel van een app die je helpt je kind te begrijpen, juist nu de wereld daarbuiten sneller verandert dan ooit.',
+    title: 'Wat is FatherFlow?',
+    body: 'FatherFlow helpt je je kind stap voor stap beter te begrijpen. Geen grote veranderingen in één keer, maar kleine, haalbare stappen om op te verbeteren.',
   },
   {
     icon: Radar,
-    title: 'Waarom dit nodig is',
-    body: 'Algoritmes en influencers praten soms harder mee dan jij kunt. Vaderschap geeft je taal en inzicht om het gesprek aan te gaan, zonder preek.',
+    title: 'Waarom kleine stappen',
+    body: 'Tussen werk, huishouden en de waan van de dag is er zelden ruimte voor een groot gesprek. Daarom werkt FatherFlow met stappen die er altijd zijn, ook op een drukke dag.',
   },
   {
     icon: Sunrise,
     title: 'Hoe het voelt',
-    body: 'Geen cursus, geen huiswerk. Elke dag een klein moment, gebouwd zodat jij en je kind dichter bij elkaar komen te staan.',
+    body: 'Geen cursus, geen huiswerk. Elke dag een klein moment dat past tussen alle andere dingen door, gebouwd om jullie band te versterken.',
   },
 ]
 

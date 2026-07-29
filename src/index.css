@@ -51,6 +51,8 @@
   /* Kleuren — uit Figma-variabelen */
   --color-primary-500: #369fff;
   --color-primary-600: #006ed3;
+  /* Vast (niet thema-afhankelijk): de "dikte"-rand onderin knoppen. */
+  --color-primary-700: #0058a8;
 
   /* Vast, verandert niet met het thema: puur wit/donker voor tekst op
      gekleurde knoppen en de vaste donkere spiegel-kaart. */
@@ -129,6 +131,18 @@
   --color-ink-muted: #8ea3b7;
   --color-ink-faint: #bdbdbd;
   --color-primary-600: #006ed3;
+}
+
+/* Scoped dark: de onboarding is altijd donker, ongeacht de app-instelling. */
+.force-dark {
+  --color-page: #0f1115;
+  --color-surface: #1b1f24;
+  --color-surface-sunken: #262b31;
+  --color-ink: #f2f3f5;
+  --color-ink-muted: #9aa7b5;
+  --color-ink-faint: #5b6470;
+  --color-primary-600: #6cb8ff;
+  color-scheme: dark;
 }
 
 html,

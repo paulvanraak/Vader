@@ -51,13 +51,11 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
         >
           <X size={18} strokeWidth={2} />
         </button>
-        <div className="flex flex-1 gap-1.5">
-          {lesson.beats.map((b, i) => (
-            <div
-              key={`${b.type}-${i}`}
-              className={`h-1.5 flex-1 rounded-full ${i <= beatIndex ? 'bg-primary-500' : 'bg-surface-sunken'}`}
-            />
-          ))}
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-sunken">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-primary-500 to-accent-orange transition-all duration-500"
+            style={{ width: `${((beatIndex + 1) / lesson.beats.length) * 100}%` }}
+          />
         </div>
       </div>
 
