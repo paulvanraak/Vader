@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, useLocation, NavLink } from 'react-router-dom'
+import { User } from 'lucide-react'
 import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
@@ -7,7 +8,6 @@ import { Splash } from './screens/Splash'
 import { OnboardingFlow } from './screens/onboarding/OnboardingFlow'
 import { Home } from './screens/Home'
 import { Kompas } from './screens/Kompas'
-import { AskScreen } from './screens/AskScreen'
 import { ProbeerDitEens } from './screens/ProbeerDitEens'
 import { Ik } from './screens/Ik'
 import { Les } from './screens/Les'
@@ -15,7 +15,18 @@ import { Les } from './screens/Les'
 function TabLayout() {
   const location = useLocation()
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div className="relative flex h-full flex-col overflow-hidden">
+      <NavLink
+        to="/ik"
+        aria-label="Jouw profiel"
+        className={({ isActive }) =>
+          `absolute right-4 top-4 z-40 flex size-10 items-center justify-center rounded-full bg-surface/90 text-ink shadow-md ring-1 ring-surface-sunken backdrop-blur transition ${
+            isActive ? 'ring-2 ring-primary-500' : ''
+          }`
+        }
+      >
+        <User size={18} strokeWidth={2} />
+      </NavLink>
       <div key={location.pathname} className="animate-dissolve flex-1 overflow-y-auto overflow-x-hidden">
         <Outlet />
       </div>
@@ -46,7 +57,6 @@ function AppRoutes() {
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/kompas" element={<Kompas />} />
-        <Route path="/vraag-het" element={<AskScreen />} />
         <Route path="/probeer-dit-eens" element={<ProbeerDitEens />} />
         <Route path="/ik" element={<Ik />} />
       </Route>

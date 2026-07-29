@@ -1,19 +1,22 @@
 import { ClipboardList } from 'lucide-react'
 import type { Beat } from '../../types/lesson'
+import { getWorldStyle } from '../../lib/worldStyles'
 import { BeatHeader } from './BeatHeader'
 
 interface OefeningProps {
   beat: Beat
+  worldId: number
   selectedIndex: number | null
   onSelect: (index: number) => void
 }
 
-export function Oefening({ beat, selectedIndex, onSelect }: OefeningProps) {
+export function Oefening({ beat, worldId, selectedIndex, onSelect }: OefeningProps) {
   const hasAnswered = selectedIndex !== null
+  const style = getWorldStyle(worldId)
 
   return (
     <div className="flex flex-col gap-6">
-      <BeatHeader icon={ClipboardList} title="Oefening" />
+      <BeatHeader icon={ClipboardList} title="Oefening" worldId={worldId} />
       <div className="flex flex-col gap-4">
         <p className="text-left text-h4 text-ink">{beat.vraag}</p>
         <div className="flex flex-col gap-2" role="radiogroup" aria-label={beat.vraag}>
@@ -26,12 +29,9 @@ export function Oefening({ beat, selectedIndex, onSelect }: OefeningProps) {
                 role="radio"
                 aria-checked={isSelected}
                 onClick={() => onSelect(index)}
+                style={isSelected ? { borderColor: style.accentVar } : undefined}
                 className={`rounded-xl border p-4 text-left text-body transition ${
-                  isSelected
-                    ? optie.correct
-                      ? 'border-success-500 bg-success-500/10'
-                      : 'border-primary-500 bg-primary-500/10'
-                    : 'border-surface-sunken bg-surface hover:border-ink-faint'
+                  isSelected ? style.softBg : 'border-surface-sunken bg-surface hover:border-ink-faint'
                 }`}
               >
                 {optie.label}

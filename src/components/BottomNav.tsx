@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom'
-import { Home, Compass, MessageCircleQuestion, ListChecks, User } from 'lucide-react'
+import { Home, Compass, ListChecks } from 'lucide-react'
 import type { ComponentType } from 'react'
+import { lessons } from '../data/lessons'
+import { getWorldStyle } from '../lib/worldStyles'
+import { useAppState } from '../state/AppStateContext'
 
 interface Tab {
   to: string
@@ -8,15 +11,8 @@ interface Tab {
   icon: ComponentType<{ size?: number; strokeWidth?: number }>
 }
 
-const sideTabs: Tab[] = [
-  { to: '/kompas', label: 'Kompas', icon: Compass },
-  { to: '/vraag-het', label: 'Vraag het', icon: MessageCircleQuestion },
-]
-
-const rightTabs: Tab[] = [
-  { to: '/probeer-dit-eens', label: 'Probeer', icon: ListChecks },
-  { to: '/ik', label: 'Ik', icon: User },
-]
+const leftTab: Tab = { to: '/kompas', label: 'Kompas', icon: Compass }
+const rightTab: Tab = { to: '/probeer-dit-eens', label: 'Probeer', icon: ListChecks }
 
 function SideTab({ to, label, icon: Icon }: Tab) {
   return (
@@ -35,30 +31,30 @@ function SideTab({ to, label, icon: Icon }: Tab) {
 }
 
 export function BottomNav() {
+  const { todayLessonId } = useAppState()
+  const todayLesson = lessons.find((l) => l.id === todayLessonId) ?? lessons[0]
+  const style = getWorldStyle(todayLesson.world)
+
   return (
     <nav
       aria-label="Hoofdnavigatie"
       className="relative z-30 flex shrink-0 items-end justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
     >
-      {sideTabs.map((tab) => (
-        <SideTab key={tab.to} {...tab} />
-      ))}
+      <SideTab {...leftTab} />
 
       <NavLink to="/" end className="flex flex-1 flex-col items-center justify-center px-1 py-1.5 text-center">
         {({ isActive }) => (
           <span
-            className={`-mt-6 flex size-14 items-center justify-center rounded-full bg-primary-500 text-neutral-white shadow-[0_4px_0_0_var(--color-primary-700)] transition ${
-              isActive ? 'ring-2 ring-primary-300' : ''
+            className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition ${style.solidBg} ${style.edgeShadow} ${
+              isActive ? 'ring-2 ring-surface' : ''
             }`}
           >
-            <Home size={28} strokeWidth={2.5} />
+            <Home size={30} strokeWidth={2.5} />
           </span>
         )}
       </NavLink>
 
-      {rightTabs.map((tab) => (
-        <SideTab key={tab.to} {...tab} />
-      ))}
+      <SideTab {...rightTab} />
     </nav>
   )
 }

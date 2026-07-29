@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { X } from 'lucide-react'
 import type { Lesson } from '../types/lesson'
 import { useAppState } from '../state/AppStateContext'
+import { getWorldStyle } from '../lib/worldStyles'
 import { Button } from './Button'
 import { Celebration } from './Celebration'
 import { Haakje } from './beats/Haakje'
@@ -22,6 +23,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
   const beat = lesson.beats[beatIndex]
   const isLastBeat = beatIndex === lesson.beats.length - 1
   const canAdvance = beat.type !== 'oefening' || oefeningAnswer !== null
+  const style = getWorldStyle(lesson.world)
 
   function handleNext() {
     setBeatIndex((i) => i + 1)
@@ -59,15 +61,24 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
         </div>
       </div>
 
+      <p
+        className="shrink-0 px-8 pt-3 text-center text-body font-bold leading-snug"
+        style={{ color: style.accentVar }}
+      >
+        {lesson.title}
+      </p>
+
       <div key={beatIndex} className="animate-dissolve flex-1 overflow-y-auto px-5 py-6">
-        {beat.type === 'haakje' && <Haakje beat={beat} />}
-        {beat.type === 'inzicht' && <Inzicht beat={beat} />}
-        {beat.type === 'spiegel' && <Spiegel beat={beat} />}
-        {beat.type === 'voorbeeld' && <Voorbeeld beat={beat} />}
+        {beat.type === 'haakje' && <Haakje beat={beat} worldId={lesson.world} />}
+        {beat.type === 'inzicht' && <Inzicht beat={beat} worldId={lesson.world} />}
+        {beat.type === 'spiegel' && <Spiegel beat={beat} worldId={lesson.world} />}
+        {beat.type === 'voorbeeld' && <Voorbeeld beat={beat} worldId={lesson.world} />}
         {beat.type === 'oefening' && (
-          <Oefening beat={beat} selectedIndex={oefeningAnswer} onSelect={setOefeningAnswer} />
+          <Oefening beat={beat} worldId={lesson.world} selectedIndex={oefeningAnswer} onSelect={setOefeningAnswer} />
         )}
-        {beat.type === 'thuismissie' && <Thuismissie beat={beat} onChoose={handleChooseAction} />}
+        {beat.type === 'thuismissie' && (
+          <Thuismissie beat={beat} worldId={lesson.world} onChoose={handleChooseAction} />
+        )}
       </div>
 
       {!isLastBeat && (

@@ -83,6 +83,11 @@
   --color-accent-amber: #e0a02c;
   --color-accent-amber-dark: #b57a17;
 
+  /* Zachte lichtblauw/lavendel gradient-achtergrond, alleen in lichte modus. */
+  --page-bg-image:
+    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
+    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
+
   /* Border radius schaal — uit Figma */
   --radius-xs: 4px;
   --radius-sm: 8px;
@@ -119,6 +124,7 @@
     --color-ink-muted: #9aa7b5;
     --color-ink-faint: #5b6470;
     --color-primary-600: #6cb8ff;
+    --page-bg-image: none;
   }
 }
 
@@ -131,6 +137,7 @@
   --color-ink-muted: #9aa7b5;
   --color-ink-faint: #5b6470;
   --color-primary-600: #6cb8ff;
+  --page-bg-image: none;
 }
 
 :root[data-theme="light"] {
@@ -141,6 +148,9 @@
   --color-ink-muted: #8ea3b7;
   --color-ink-faint: #bdbdbd;
   --color-primary-600: #006ed3;
+  --page-bg-image:
+    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
+    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
 }
 
 /* Scoped dark: de onboarding is altijd donker, ongeacht de app-instelling. */
@@ -152,6 +162,7 @@
   --color-ink-muted: #9aa7b5;
   --color-ink-faint: #5b6470;
   --color-primary-600: #6cb8ff;
+  --page-bg-image: none;
   color-scheme: dark;
 }
 
@@ -164,6 +175,11 @@ body,
 body {
   margin: 0;
   background-color: var(--color-surface-sunken);
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   color-scheme: light dark;
@@ -229,6 +245,30 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-dissolve {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes type-word-in {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.type-word-in {
+  display: inline-block;
+  animation: type-word-in 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .type-word-in {
     animation-duration: 0.01ms !important;
   }
 }

@@ -18,12 +18,12 @@ export function Ik() {
   const { childGender, ageGroup, streakDays, completedLessonIds } = useAppState()
 
   return (
-    <div className="flex flex-col gap-5 px-5 py-6">
+    <div className="flex flex-col gap-5 px-5 py-6 pr-16">
       <div className="flex items-center gap-3">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
+        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
           <User size={24} strokeWidth={2} />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-caption text-ink-muted">Jouw profiel</p>
           <p className="text-h4 text-ink">
             {childGender ? genderLabel[childGender] : 'Kind'} van {ageGroup ? ageLabel[ageGroup] : 'onbekende leeftijd'}

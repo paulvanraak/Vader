@@ -40,7 +40,7 @@ export function ProbeerDitEens() {
           return (
             <div key={item.id} className="flex flex-col gap-2">
               {showLessonHeader && (
-                <p className={`mt-1 text-caption font-semibold ${style.text}`}>
+                <p className={`mt-1 text-body-lg font-bold ${style.text}`}>
                   Wereld {item.worldId} · {item.lessonTitle}
                 </p>
               )}
