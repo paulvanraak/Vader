@@ -25,7 +25,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
   const [draftAge, setDraftAge] = useState<AgeGroup | null>(null)
 
   function addChild() {
-    if (!draftGender || !draftAge) return
+    if (!draftName.trim() || !draftGender || !draftAge) return
     setAdded((prev) => [
       ...prev,
       { id: makeDraftId(), name: draftName.trim(), gender: draftGender, ageGroup: draftAge },
@@ -50,6 +50,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
 
         {added.length > 0 && (
           <div className="flex flex-col gap-2">
+            <p className="text-label font-semibold text-ink-muted">Bevestigd</p>
             {added.map((child) => (
               <div
                 key={child.id}
@@ -76,8 +77,11 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
         )}
 
         <div className="flex flex-col gap-4 rounded-md border border-dashed border-surface-sunken p-4">
+          <p className="text-label font-semibold text-ink-muted">
+            {added.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
+          </p>
           <div>
-            <p className="mb-2 text-label text-ink-muted">Naam (optioneel)</p>
+            <p className="mb-2 text-label text-ink-muted">Naam</p>
             <input
               type="text"
               value={draftName}
@@ -150,11 +154,11 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
           <button
             type="button"
             onClick={addChild}
-            disabled={!draftGender || !draftAge}
+            disabled={!draftName.trim() || !draftGender || !draftAge}
             className="flex items-center justify-center gap-2 rounded-md border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
           >
             <Plus size={18} strokeWidth={2.5} />
-            Kind toevoegen
+            Bevestigen
           </button>
         </div>
       </div>
