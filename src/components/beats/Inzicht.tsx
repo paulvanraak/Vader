@@ -6,7 +6,7 @@ import { TypewriterText } from '../TypewriterText'
 export function Inzicht({ beat, worldId }: { beat: Beat; worldId: number }) {
   const style = getWorldStyle(worldId)
   return (
-    <div className="rounded-md p-6 text-neutral-white shadow-lg" style={{ backgroundColor: style.dark }}>
+    <div>
       <div className="flex flex-col items-center gap-3 text-center">
         <span
           className="flex size-14 items-center justify-center rounded-full bg-neutral-white/10"
