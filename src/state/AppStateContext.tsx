@@ -1,81 +1,153 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { lessons } from '../data/lessons'
+import type { Lesson } from '../types/lesson'
+import { lessonPath } from '../lib/worldProgress'
 
 export type ChildGender = 'zoon' | 'dochter'
 export type AgeGroup = 'jong' | 'oud'
 export type Theme = 'light' | 'dark'
 
+export interface ChildProfile {
+  id: string
+  gender: ChildGender
+  ageGroup: AgeGroup
+}
+
+interface ChildProgress {
+  completedLessonIds: string[]
+  doneActionIds: string[]
+  streakDays: number
+}
+
+function emptyProgress(): ChildProgress {
+  return { completedLessonIds: [], doneActionIds: [], streakDays: 0 }
+}
+
+function makeChildId(): string {
+  return `child-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 interface AppState {
   onboardingComplete: boolean
+  pinVerified: boolean
+  verifyPin: (pin: string) => boolean
   fatherName: string | null
-  childGender: ChildGender | null
-  ageGroup: AgeGroup | null
+  children: ChildProfile[]
+  activeChildId: string | null
+  activeChild: ChildProfile | null
+  setActiveChildId: (id: string) => void
+  path: Lesson[]
   streakDays: number
   completedLessonIds: string[]
-  todayLessonId: string
+  todayLessonId: string | null
   theme: Theme
   toggleTheme: () => void
   doneActionIds: string[]
   toggleAction: (actionId: string) => void
-  completeOnboarding: (fatherName: string, childGender: ChildGender, ageGroup: AgeGroup) => void
+  completeOnboarding: (fatherName: string, children: ChildProfile[]) => void
   completeLesson: (lessonId: string) => void
+  logout: () => void
 }
 
 const AppStateContext = createContext<AppState | null>(null)
+
+const PIN_CODE = '12345'
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined' || !window.matchMedia) return 'light'
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-export function AppStateProvider({ children }: { children: ReactNode }) {
+export function AppStateProvider({ children: providerChildren }: { children: ReactNode }) {
   const [onboardingComplete, setOnboardingComplete] = useState(false)
+  const [pinVerified, setPinVerified] = useState(false)
   const [fatherName, setFatherName] = useState<string | null>(null)
-  const [childGender, setChildGender] = useState<ChildGender | null>(null)
-  const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null)
-  const [streakDays, setStreakDays] = useState(3)
-  const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([])
+  const [childList, setChildList] = useState<ChildProfile[]>([])
+  const [activeChildId, setActiveChildId] = useState<string | null>(null)
+  const [progressByChild, setProgressByChild] = useState<Record<string, ChildProgress>>({})
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
-  const [doneActionIds, setDoneActionIds] = useState<string[]>([])
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
 
+  const activeChild = childList.find((c) => c.id === activeChildId) ?? null
+  const progress = (activeChildId && progressByChild[activeChildId]) || emptyProgress()
+
+  const path = useMemo(() => {
+    if (!activeChild || activeChild.gender !== 'zoon') return []
+    return lessonPath(activeChild.ageGroup)
+  }, [activeChild])
+
   const todayLessonId = useMemo(() => {
-    const next = lessons.find((lesson) => !completedLessonIds.includes(lesson.id))
-    return (next ?? lessons[0]).id
-  }, [completedLessonIds])
+    if (path.length === 0) return null
+    const next = path.find((lesson) => !progress.completedLessonIds.includes(lesson.id))
+    return (next ?? path[0]).id
+  }, [path, progress.completedLessonIds])
+
+  function updateActiveProgress(updater: (prev: ChildProgress) => ChildProgress) {
+    if (!activeChildId) return
+    setProgressByChild((prev) => ({
+      ...prev,
+      [activeChildId]: updater(prev[activeChildId] ?? emptyProgress()),
+    }))
+  }
 
   const value: AppState = {
     onboardingComplete,
+    pinVerified,
+    verifyPin: (pin) => {
+      const ok = pin === PIN_CODE
+      if (ok) setPinVerified(true)
+      return ok
+    },
     fatherName,
-    childGender,
-    ageGroup,
-    streakDays,
-    completedLessonIds,
+    children: childList,
+    activeChildId,
+    activeChild,
+    setActiveChildId,
+    path,
+    streakDays: progress.streakDays,
+    completedLessonIds: progress.completedLessonIds,
     todayLessonId,
     theme,
     toggleTheme: () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark')),
-    doneActionIds,
+    doneActionIds: progress.doneActionIds,
     toggleAction: (actionId) => {
-      setDoneActionIds((prev) =>
-        prev.includes(actionId) ? prev.filter((id) => id !== actionId) : [...prev, actionId],
-      )
+      updateActiveProgress((prev) => ({
+        ...prev,
+        doneActionIds: prev.doneActionIds.includes(actionId)
+          ? prev.doneActionIds.filter((id) => id !== actionId)
+          : [...prev.doneActionIds, actionId],
+      }))
     },
-    completeOnboarding: (selectedFatherName, selectedGender, selectedAgeGroup) => {
+    completeOnboarding: (selectedFatherName, selectedChildren) => {
+      const withIds = selectedChildren.map((c) => ({ ...c, id: c.id || makeChildId() }))
       setFatherName(selectedFatherName)
-      setChildGender(selectedGender)
-      setAgeGroup(selectedAgeGroup)
+      setChildList(withIds)
+      setActiveChildId(withIds[0]?.id ?? null)
+      setProgressByChild(Object.fromEntries(withIds.map((c) => [c.id, emptyProgress()])))
       setOnboardingComplete(true)
     },
     completeLesson: (lessonId) => {
-      setCompletedLessonIds((prev) => (prev.includes(lessonId) ? prev : [...prev, lessonId]))
-      setStreakDays((prev) => prev + 1)
+      updateActiveProgress((prev) => ({
+        ...prev,
+        completedLessonIds: prev.completedLessonIds.includes(lessonId)
+          ? prev.completedLessonIds
+          : [...prev.completedLessonIds, lessonId],
+        streakDays: prev.streakDays + 1,
+      }))
+    },
+    logout: () => {
+      setOnboardingComplete(false)
+      setPinVerified(false)
+      setFatherName(null)
+      setChildList([])
+      setActiveChildId(null)
+      setProgressByChild({})
     },
   }
 
-  return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>
+  return <AppStateContext.Provider value={value}>{providerChildren}</AppStateContext.Provider>
 }
 
 export function useAppState(): AppState {

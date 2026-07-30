@@ -1,4 +1,4 @@
-import { lessons } from '../data/lessons'
+import type { Lesson } from '../types/lesson'
 import { isLessonUnlocked } from './worldProgress'
 
 export interface ActionItem {
@@ -11,12 +11,12 @@ export interface ActionItem {
   unlocked: boolean
 }
 
-export function getAllActions(completedLessonIds: string[]): ActionItem[] {
+export function getAllActions(path: Lesson[], completedLessonIds: string[]): ActionItem[] {
   const items: ActionItem[] = []
-  lessons.forEach((lesson, lessonIndex) => {
+  path.forEach((lesson, lessonIndex) => {
     const thuismissie = lesson.beats.find((b) => b.type === 'thuismissie')
     const inzicht = lesson.beats.find((b) => b.type === 'inzicht')
-    const unlocked = isLessonUnlocked(lessonIndex, completedLessonIds)
+    const unlocked = isLessonUnlocked(path, lessonIndex, completedLessonIds)
     thuismissie?.acties?.forEach((actie, actieIndex) => {
       items.push({
         id: `${lesson.id}-${actieIndex}`,

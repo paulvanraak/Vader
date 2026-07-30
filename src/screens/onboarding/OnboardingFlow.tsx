@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { Users, Radar, Sunrise } from 'lucide-react'
 import { NameQuestion } from './NameQuestion'
 import { IntroStep } from './IntroStep'
-import { ChildQuestion } from './ChildQuestion'
-import { AgeQuestion } from './AgeQuestion'
+import { ChildrenQuestion } from './ChildrenQuestion'
 import { HowItWorks } from './HowItWorks'
-import { useAppState, type ChildGender, type AgeGroup } from '../../state/AppStateContext'
+import { useAppState, type ChildProfile } from '../../state/AppStateContext'
 
 const introParts = [
   {
@@ -26,13 +25,12 @@ const introParts = [
   },
 ]
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6
+type Step = 0 | 1 | 2 | 3 | 4 | 5
 
 export function OnboardingFlow() {
   const [step, setStep] = useState<Step>(0)
   const [fatherName, setFatherName] = useState('')
-  const [gender, setGender] = useState<ChildGender>('zoon')
-  const [ageGroup, setAgeGroup] = useState<AgeGroup>('oud')
+  const [children, setChildren] = useState<ChildProfile[]>([])
   const { completeOnboarding } = useAppState()
   const navigate = useNavigate()
 
@@ -61,19 +59,10 @@ export function OnboardingFlow() {
     )
   } else if (step === 4) {
     content = (
-      <ChildQuestion
-        onNext={(selectedGender) => {
-          setGender(selectedGender)
+      <ChildrenQuestion
+        onNext={(selectedChildren) => {
+          setChildren(selectedChildren)
           setStep(5)
-        }}
-      />
-    )
-  } else if (step === 5) {
-    content = (
-      <AgeQuestion
-        onNext={(selectedAgeGroup) => {
-          setAgeGroup(selectedAgeGroup)
-          setStep(6)
         }}
       />
     )
@@ -81,7 +70,7 @@ export function OnboardingFlow() {
     content = (
       <HowItWorks
         onStart={() => {
-          completeOnboarding(fatherName, gender, ageGroup)
+          completeOnboarding(fatherName, children)
           navigate('/')
         }}
       />

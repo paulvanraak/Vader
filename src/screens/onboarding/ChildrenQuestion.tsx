@@ -1,0 +1,146 @@
+import { useState } from 'react'
+import { User, Star, Flame, X, Plus } from 'lucide-react'
+import { Button } from '../../components/Button'
+import type { ChildGender, AgeGroup, ChildProfile } from '../../state/AppStateContext'
+import { childLabel } from '../../lib/child'
+
+const genderOpties: { value: ChildGender; label: string }[] = [
+  { value: 'zoon', label: 'Zoon' },
+  { value: 'dochter', label: 'Dochter' },
+]
+
+const ageOpties: { value: AgeGroup; label: string; range: string; icon: typeof Star }[] = [
+  { value: 'jong', label: "NOVA's", range: '8-11', icon: Star },
+  { value: 'oud', label: 'PUBERS', range: '12-16', icon: Flame },
+]
+
+function makeDraftId(): string {
+  return `draft-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]) => void }) {
+  const [added, setAdded] = useState<ChildProfile[]>([])
+  const [draftGender, setDraftGender] = useState<ChildGender | null>(null)
+  const [draftAge, setDraftAge] = useState<AgeGroup | null>(null)
+
+  function addChild() {
+    if (!draftGender || !draftAge) return
+    setAdded((prev) => [...prev, { id: makeDraftId(), gender: draftGender, ageGroup: draftAge }])
+    setDraftGender(null)
+    setDraftAge(null)
+  }
+
+  function removeChild(id: string) {
+    setAdded((prev) => prev.filter((c) => c.id !== id))
+  }
+
+  return (
+    <div className="flex h-full flex-col justify-between px-6 py-10">
+      <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
+        <div>
+          <p className="text-label text-ink-muted">Even kennismaken</p>
+          <h1 className="mt-2 text-h1 font-extrabold text-ink">Over wie gaat het?</h1>
+          <p className="mt-2 text-body text-ink-muted">Voeg één of meerdere kinderen toe.</p>
+        </div>
+
+        {added.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {added.map((child) => (
+              <div
+                key={child.id}
+                className="flex items-center gap-3 rounded-xl border border-surface-sunken bg-surface p-3"
+              >
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
+                  <User size={18} strokeWidth={2} />
+                </span>
+                <p className="flex-1 text-body-lg font-semibold text-ink">{childLabel(child)}</p>
+                <button
+                  type="button"
+                  onClick={() => removeChild(child.id)}
+                  aria-label={`Verwijder ${childLabel(child)}`}
+                  className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+                >
+                  <X size={16} strokeWidth={2} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-4 rounded-xl border border-dashed border-surface-sunken p-4">
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Zoon of dochter?</p>
+            <div className="flex gap-2" role="radiogroup" aria-label="Zoon of dochter?">
+              {genderOpties.map((optie) => {
+                const isSelected = draftGender === optie.value
+                return (
+                  <button
+                    key={optie.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setDraftGender(optie.value)}
+                    className={`flex-1 rounded-xl border p-3 text-center text-body-lg font-semibold transition ${
+                      isSelected
+                        ? 'border-primary-500 bg-primary-500/10 text-primary-600'
+                        : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
+                    }`}
+                  >
+                    {optie.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Hoe oud?</p>
+            <div className="flex gap-2" role="radiogroup" aria-label="Hoe oud?">
+              {ageOpties.map((optie) => {
+                const isSelected = draftAge === optie.value
+                const Icon = optie.icon
+                return (
+                  <button
+                    key={optie.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setDraftAge(optie.value)}
+                    className={`flex flex-1 flex-col items-center gap-1 rounded-xl border p-3 text-center transition ${
+                      isSelected
+                        ? 'border-primary-500 bg-primary-500/10 text-primary-600'
+                        : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
+                    }`}
+                  >
+                    <Icon size={18} strokeWidth={2} />
+                    <span className="text-body-lg font-semibold">{optie.label}</span>
+                    <span className="text-caption text-ink-muted">{optie.range} jaar</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {draftGender === 'dochter' && (
+            <p className="text-caption text-ink-muted">
+              Deze demo is nu nog gericht op zonen. Een versie voor dochters komt eraan.
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={addChild}
+            disabled={!draftGender || !draftAge}
+            className="flex items-center justify-center gap-2 rounded-xl border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
+          >
+            <Plus size={18} strokeWidth={2.5} />
+            Kind toevoegen
+          </button>
+        </div>
+      </div>
+      <Button onClick={() => added.length > 0 && onNext(added)} disabled={added.length === 0}>
+        Verder
+      </Button>
+    </div>
+  )
+}

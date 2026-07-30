@@ -168,7 +168,7 @@ export const lessons: Lesson[] = [
     beats: [
       {
         type: 'haakje',
-        body: 'Zijn veter breekt en hij ontploft alsof de wereld vergaat.',
+        body: 'Zijn veter breekt en hij ontploft alsof het een ramp is.',
       },
       {
         type: 'inzicht',
@@ -945,6 +945,960 @@ export const lessons: Lesson[] = [
         acties: [
           'Adem eerst, en vraag dan waar het vandaan komt',
           'Let deze week eens op hoe je zelf over vrouwen praat',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j1.1',
+    world: 1,
+    cohort: 'jong',
+    title: 'Als hij ineens niks meer vertelt over school',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Vroeger ratelde hij de hele autorit door over zijn dag. Nu krijg je bij het ophalen alleen een schouderophaal.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Rond deze leeftijd leert een kind onderscheid te maken tussen wat hij thuis deelt en wat hij voor zichzelf houdt, een vroege vorm van een eigen binnenwereld opbouwen. Dat is geen geheimzinnigheid, het is een teken dat hij zich aan het losmaken is van het idee dat ouders alles moeten weten. Een schouderophaal is dan vaker onwennigheid dan onwil.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Vraag jij vooral hoe zijn dag was, of ook weleens iets kleins en concreets?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Hoe was school? Vertel eens alles.',
+        beter: 'Wie zat er vandaag naast je bij het knutselen?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij geeft bij het ophalen alleen een schouderophaal. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Blijven doorvragen tot hij iets vertelt.',
+            correct: false,
+            feedback: 'Dat voelt al snel als druk, en dan klapt hij verder dicht.',
+          },
+          {
+            label: 'Een klein, concreet dingetje vragen in plaats van "hoe was het".',
+            correct: true,
+            feedback: 'Een specifieke vraag is makkelijker te beantwoorden dan een samenvatting.',
+          },
+          {
+            label: 'Er verder niet meer naar vragen.',
+            correct: false,
+            feedback: 'Dan mist hij de kans om het toch even kwijt te kunnen.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag vanavond naar één klein, concreet moment van zijn dag',
+          'Vertel eerst zelf iets kleins over jouw dag, zonder iets terug te vragen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j1.2',
+    world: 1,
+    cohort: 'jong',
+    title: 'Waarom knuffelen ineens ongemakkelijk voelt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Je wil hem even knuffelen zoals altijd, en hij duwt je met een lachje weg.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Rond deze leeftijd begint een kind zich bewuster te worden van zijn eigen lichaam en van hoe hij overkomt op anderen, ook thuis. Fysieke nabijheid die eerst vanzelfsprekend was, kan daardoor ineens ongemakkelijk aanvoelen, zonder dat de behoefte aan liefde is afgenomen. Het is een teken van een groeiend zelfbeeld, geen afwijzing van jou.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Merk je dat je zelf ook wat onwennig wordt zodra hij fysiek afstand neemt?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Doe niet zo raar, ik mag jou toch wel knuffelen?',
+        beter: 'Goed dat je aangeeft wat wel en niet fijn voelt.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij duwt je knuffel weg met een lachje. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Doorzetten, want knuffelen hoort er gewoon bij.',
+            correct: false,
+            feedback: 'Dat negeert wat hij net aangeeft over zijn eigen grens.',
+          },
+          {
+            label: 'Zijn grens accepteren en een andere manier van nabijheid zoeken.',
+            correct: true,
+            feedback: 'Zo blijft de warmte, zonder over zijn grens heen te gaan.',
+          },
+          {
+            label: 'Er beledigd op reageren.',
+            correct: false,
+            feedback: 'Dan voelt zijn grens aangeven ineens als iets fout.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Geef vanavond een high five in plaats van een knuffel',
+          'Vraag hem zelf wat voor hem nu fijn voelt als begroeting',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j1.3',
+    world: 1,
+    cohort: 'jong',
+    title: 'Als "niks" het enige antwoord is',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Je vraagt wat hij gedaan heeft op school. "Niks." Elke dag hetzelfde ene woord.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Voor een kind van deze leeftijd is een hele dag samenvatten in een paar zinnen best lastig, het denken in overzichten is nog volop in ontwikkeling. "Niks" is dan vaak geen ontwijking, maar het makkelijkste antwoord op een moeilijke vraag. Een klein, concreet moment teruggeven werkt vaak beter dan doorvragen.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Zou jij zelf in twee zinnen kunnen samenvatten wat je vandaag allemaal hebt meegemaakt?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Er moet toch iets gebeurd zijn, vertel nou.',
+        beter: 'Was de gymples buiten of binnen vandaag?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Je krijgt weer "niks" als antwoord op je vraag. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Net zo lang doorvragen tot er meer uitkomt.',
+            correct: false,
+            feedback: 'Dat maakt het antwoorden juist zwaarder, niet lichter.',
+          },
+          {
+            label: 'Een klein, concreet momentje van de dag noemen om op te reageren.',
+            correct: true,
+            feedback: 'Een specifiek aanknopingspunt is makkelijker dan een open vraag.',
+          },
+          {
+            label: 'Het gewoon laten zitten voor vandaag.',
+            correct: false,
+            feedback: 'Dat kan, maar dan mis je wel elk contactmoment.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Noem een concreet momentje van school in plaats van "hoe was het"',
+          'Deel eerst zelf een klein detail van jouw dag',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j2.1',
+    world: 2,
+    cohort: 'jong',
+    title: 'Als een klein dingetje een driftbui wordt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Zijn boterham is doormidden gesneden in plaats van heel, en hij is in tranen.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Op deze leeftijd is het deel van de hersenen dat helpt om grote gevoelens in verhouding te zien nog volop in ontwikkeling. Een kleine tegenslag kan daardoor heel groot aanvoelen, ook al lijkt het voor jou niets. Meegaan in het gevoel werkt vaak beter dan meteen uitleggen dat het "maar" een boterham is.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Reageer jij op zo\'n bui vooral op de boterham, of op het gevoel erachter?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Doe niet zo raar, het is maar een boterham.',
+        beter: 'Wat balen dat hij anders was dan je wilde.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij is in tranen om zijn doormidden gesneden boterham. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Uitleggen dat het maar een boterham is.',
+            correct: false,
+            feedback: 'Dat gevoel wordt er niet kleiner van, eerder groter.',
+          },
+          {
+            label: 'Eerst het gevoel benoemen, dan pas de boterham oplossen.',
+            correct: true,
+            feedback: 'Erkenning van het gevoel maakt de bui vaak sneller voorbij.',
+          },
+          {
+            label: 'Hem laten uithuilen zonder iets te zeggen.',
+            correct: false,
+            feedback: 'Dat kan, maar een klein woordje erkenning helpt meestal sneller.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Benoem bij de volgende bui eerst het gevoel, voor je iets oplost',
+          'Vraag na afloop rustig wat er precies zo vervelend aan was',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j2.2',
+    world: 2,
+    cohort: 'jong',
+    title: 'Waarom hij soms ineens stil wordt na school',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij komt thuis, zegt niets en gaat stil op de bank zitten met zijn knuffel.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Een schooldag vraagt best veel van een kind: stilzitten, opletten, aardig zijn tegen klasgenoten. Stil worden na school is vaak een manier om weer op te laden, niet een teken dat er iets mis is. Ruimte geven om even niks te hoeven, werkt vaak beter dan meteen vragen stellen.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Heb jij na een drukke werkdag ook even niks nodig voor je kan vertellen?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Kom op, vertel eens wat er is, je bent zo stil.',
+        beter: 'Ik ben er, neem gerust even je tijd.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij is stil op de bank na school. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Meteen vragen wat er precies is.',
+            correct: false,
+            feedback: 'Dat vraagt juist meer energie op een moment dat hij weinig heeft.',
+          },
+          {
+            label: 'Even rustig naast hem gaan zitten zonder iets te vragen.',
+            correct: true,
+            feedback: 'Zo voelt hij zich niet alleen, zonder dat er iets van hem gevraagd wordt.',
+          },
+          {
+            label: 'Hem meteen aan iets anders zetten om hem op te vrolijken.',
+            correct: false,
+            feedback: 'Dan krijgt hij niet de kans om eerst even bij te komen.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Ga vanavond gewoon even stil naast hem zitten, zonder vragen',
+          'Bied een rustig momentje aan voor hij iets hoeft te vertellen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j2.3',
+    world: 2,
+    cohort: 'jong',
+    title: 'Als hij jou overal de schuld van geeft',
+    beats: [
+      {
+        type: 'haakje',
+        body: '"Het is jouw schuld dat ik te laat ben!", roept hij, terwijl hij zelf niet op wilde staan.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Een kind van deze leeftijd is nog volop aan het leren om het eigen aandeel in iets te zien naast dat van een ander. De makkelijkste plek om frustratie neer te leggen is vaak bij wie het dichtstbij en het veiligst is, meestal een ouder. Het zegt dus meer over waar hij zijn frustratie kwijt kan dan over wie er echt gelijk heeft.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Leg jij je eigen frustratie ook weleens bij iemand anders neer dan waar hij vandaan komt?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Dat is helemaal niet mijn schuld, jij stond zelf niet op.',
+        beter: 'Balen dat we nu moeten haasten. Wat zouden we morgen anders kunnen doen?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij geeft jou de schuld van zijn eigen te late opstaan. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Meteen rechtzetten wie er precies schuld heeft.',
+            correct: false,
+            feedback: 'Dat maakt er al snel een welles-nietes van.',
+          },
+          {
+            label: 'De frustratie erkennen en daarna samen naar een oplossing kijken.',
+            correct: true,
+            feedback: 'Zo hoeft het niet meteen over schuld te gaan.',
+          },
+          {
+            label: 'Hem er meteen op wijzen dat dit zijn eigen schuld is.',
+            correct: false,
+            feedback: 'Dat klopt misschien, maar maakt de ochtend feller in plaats van rustiger.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Erken de volgende keer eerst het gevoel, voor je iets rechtzet',
+          'Bedenk samen een klein trucje om morgenochtend soepeler te laten lopen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j3.1',
+    world: 3,
+    cohort: 'jong',
+    title: 'Als een regel ineens "niet eerlijk" is',
+    beats: [
+      {
+        type: 'haakje',
+        body: '"Niet eerlijk!" roept hij, omdat zijn vriendje wel later naar bed mag.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Rond deze leeftijd begint een kind bewuster te vergelijken met anderen en te toetsen of regels wel kloppen. Dat is een teken dat hij nadenkt over rechtvaardigheid, niet dat hij expres lastig doet. Kort uitleggen waarom een regel er is, werkt vaak beter dan alleen "omdat ik het zeg".',
+      },
+      {
+        type: 'spiegel',
+        body: 'Leg jij zelf weleens uit waarom een regel er is, of verwacht je vooral dat hij hem volgt?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Het maakt niet uit wat zijn ouders doen, bij ons is het zo.',
+        beter: 'Bij ons werkt dit bedtijdje het beste voor je energie, daarom houden we eraan vast.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij vindt de bedtijd-regel niet eerlijk vergeleken met zijn vriendje. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Zeggen dat het nu eenmaal de regel is en klaar.',
+            correct: false,
+            feedback: 'Dat voedt het gevoel van oneerlijkheid, zonder het op te lossen.',
+          },
+          {
+            label: 'Kort uitleggen waarom deze regel er voor hem is.',
+            correct: true,
+            feedback: 'Een korte uitleg maakt een regel makkelijker te accepteren.',
+          },
+          {
+            label: 'De regel meteen aanpassen aan wat het vriendje mag.',
+            correct: false,
+            feedback: 'Dan verdwijnt de regel juist op het verkeerde moment.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Leg bij de volgende "niet eerlijk" kort uit waarom de regel er is',
+          'Vraag hem wat hij zelf een eerlijke regel zou vinden',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j3.2',
+    world: 3,
+    cohort: 'jong',
+    title: 'Hoeveel vrijheid past bij deze leeftijd?',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij wil alleen naar het pleintje verderop fietsen, zonder dat jij meegaat.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Kleine stukjes zelfstandigheid, passend bij de leeftijd, helpen een kind te oefenen met verantwoordelijkheid nemen. Té veel vrijheid ineens kan overweldigend zijn, té weinig kan frustratie opleveren. Vrijheid in kleine, behapbare stapjes uitbreiden bouwt vertrouwen op, in beide richtingen.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Vind jij het moeilijker om vrijheid te geven, of om die weer een beetje terug te nemen?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Nee, je bent nog te klein om alleen te fietsen.',
+        beter: 'Laten we een klein stukje afspreken waar je alleen naartoe mag.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij wil alleen naar het pleintje fietsen. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Het gewoon niet toestaan, voor de zekerheid.',
+            correct: false,
+            feedback: 'Dan mist hij de kans om te oefenen met een stukje zelfstandigheid.',
+          },
+          {
+            label: 'Een klein, behapbaar stukje vrijheid afspreken met duidelijke grenzen.',
+            correct: true,
+            feedback: 'Zo oefent hij veilig met verantwoordelijkheid.',
+          },
+          {
+            label: 'Hem meteen helemaal zijn eigen gang laten gaan.',
+            correct: false,
+            feedback: 'Dat kan te veel ineens zijn voor deze leeftijd.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Spreek een klein, duidelijk afgebakend stukje vrijheid af',
+          'Bespreek samen wat hij nodig heeft om dat stukje veilig te doen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j3.3',
+    world: 3,
+    cohort: 'jong',
+    title: 'Als hij een leugentje om bestwil vertelt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij zegt dat hij zijn tanden al heeft gepoetst. Je ruikt van niet.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Een klein leugentje op deze leeftijd is vaak een eerste, onhandige poging om een vervelend gevolg te ontlopen, geen teken van een oneerlijk karakter. Streng straffen om het leugentje zelf, harder dan om het poetsen dat werd overgeslagen, kan liegen juist aantrekkelijker maken de volgende keer.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Reageer jij zelf harder op het leugentje, of op wat er niet gedaan is?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Je liegt tegen me, dat is heel erg!',
+        beter: 'Ik merk dat je tanden nog niet gepoetst zijn, zullen we dat samen doen?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij beweert dat hij zijn tanden al heeft gepoetst, maar dat klopt niet. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Vooral boos worden over het feit dat hij loog.',
+            correct: false,
+            feedback: 'Dat maakt de fout groter dan het achterliggende poetsen zelf.',
+          },
+          {
+            label: 'Rustig samen alsnog de tanden poetsen, zonder er een groot punt van te maken.',
+            correct: true,
+            feedback: 'Zo blijft eerlijkheid de veiligere keuze dan liegen.',
+          },
+          {
+            label: 'Hem er niet meer op aanspreken om ruzie te voorkomen.',
+            correct: false,
+            feedback: 'Dan mist hij het signaal dat eerlijk zijn de moeite waard is.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Reageer bij het volgende leugentje eerst rustig, voor je iets zegt over de leugen',
+          'Benoem hardop dat eerlijk zijn nooit een probleem is bij jou',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j4.1',
+    world: 4,
+    cohort: 'jong',
+    title: 'Als hij zich groter voordoet dan hij zich voelt',
+    beats: [
+      {
+        type: 'haakje',
+        body: '"Ik ben nergens bang voor!", roept hij, terwijl je merkt dat hij eigenlijk best onzeker is.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Stoer doen op deze leeftijd is vaak een manier om een onzeker gevoel te verbergen, ook voor zichzelf. Hoe steviger hij zich groter voordoet, hoe vaker er onder de motorkap juist iets kwetsbaars zit. Nieuwsgierig vragen naar wat er precies speelt, werkt vaak beter dan het stoere gedrag meteen ontkrachten.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Doe jij zelf ook weleens groter dan je je voelt, om niet kwetsbaar over te komen?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Doe niet zo stoer, ik weet dat je best bang bent.',
+        beter: 'Wat zou het minst leuke deel hiervan voor je kunnen zijn?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij doet stoerder dan hij zich waarschijnlijk voelt. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Hem meteen vertellen dat je doorhebt dat hij bang is.',
+            correct: false,
+            feedback: 'Dan voelt het stoere schild ontmaskerd, en klapt hij dicht.',
+          },
+          {
+            label: 'Nieuwsgierig vragen wat er precies door hem heen gaat.',
+            correct: true,
+            feedback: 'Zo krijgt hij ruimte om het zelf te laten zakken, in zijn eigen tempo.',
+          },
+          {
+            label: 'Meegaan in het stoere verhaal zonder verder te vragen.',
+            correct: false,
+            feedback: 'Dan blijft het onzekere gevoel onbesproken.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag rustig wat het spannendste deel van iets voor hem is',
+          'Vertel een keer een moment waarop jij zelf ergens onzeker over was',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j4.2',
+    world: 4,
+    cohort: 'jong',
+    title: 'Waarom hij zijn fouten verstopt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Er ligt een gebroken beker verstopt achter de vuilnisbak, en niemand zegt er iets over.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Een fout verstoppen hangt vaak samen met angst voor de reactie die erop volgt, niet met de fout zelf. Hoe feller de reactie op een klein foutje, hoe groter de kans dat een volgende keer verstopt wordt in plaats van verteld. Rustig reageren op een eerlijk verteld foutje maakt eerlijkheid de aantrekkelijkste keuze.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Hoe reageer jij zelf op je eigen foutjes, hard of mild?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Wie heeft dit gedaan? Dit is toch niet zomaar kapot?',
+        beter: 'Er is iets kapot, wat zou jij nu graag willen dat we doen?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Je vindt een verstopte gebroken beker. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Op zoek gaan naar wie de schuldige is.',
+            correct: false,
+            feedback: 'Dat maakt verstoppen bij een volgende fout waarschijnlijker.',
+          },
+          {
+            label: 'Rustig het gesprek openen zonder eerst te zoeken naar een schuldige.',
+            correct: true,
+            feedback: 'Zo wordt eerlijk vertellen makkelijker dan verstoppen.',
+          },
+          {
+            label: 'Doen alsof je het niet gezien hebt.',
+            correct: false,
+            feedback: 'Dan mist hij de kans om te leren dat een foutje bespreekbaar is.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Reageer rustig op het eerstvolgende foutje dat hij zelf vertelt',
+          'Vertel een klein voorbeeld van een fout die jij ooit maakte',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j4.3',
+    world: 4,
+    cohort: 'jong',
+    title: 'Als vergelijken met een vriendje pijn doet',
+    beats: [
+      {
+        type: 'haakje',
+        body: '"Waarom kan hij dat wel en ik niet?", vraagt hij verdrietig na het voetballen.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Op deze leeftijd begint een kind zichzelf steeds bewuster te vergelijken met leeftijdsgenootjes, op sport, uiterlijk en vaardigheden. Dat hoort bij het ontdekken van de eigen plek in een groep. Zijn eigen sterke kanten benoemen, los van de vergelijking, helpt om het zelfbeeld steviger te maken.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Vergelijk jij hem zelf weleens hardop met een ander kind, ook onbedoeld?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Hij oefent vast meer dan jij, daarom kan hij dat beter.',
+        beter: 'Jij bent juist heel goed in dat ene stukje van het spel.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij is verdrietig omdat een vriendje iets beter kan dan hij. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Uitleggen waarom het vriendje daar beter in is.',
+            correct: false,
+            feedback: 'Dat bevestigt de vergelijking in plaats van hem te helpen ermee om te gaan.',
+          },
+          {
+            label: 'Zijn eigen sterke kant benoemen, los van het vriendje.',
+            correct: true,
+            feedback: 'Zo verschuift de aandacht van vergelijken naar zijn eigen waarde.',
+          },
+          {
+            label: 'Zeggen dat het er niet toe doet wie beter is.',
+            correct: false,
+            feedback: 'Dat klopt, maar voelt voor hem als het gevoel wegwuiven.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Benoem vanavond één ding waar hij zelf goed in is',
+          'Vraag wat hij zelf het leukst vindt aan het spel, los van winnen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j5.1',
+    world: 5,
+    cohort: 'jong',
+    title: 'Als hij per se hetzelfde wil als zijn vrienden',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij wil ineens per se dezelfde schoenen als zijn beste vriendje, en niets anders is goed genoeg.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Rond deze leeftijd wordt erbij horen bij een groepje steeds belangrijker voor het zelfbeeld. Hetzelfde willen als vriendjes is een manier om zich verbonden te voelen, geen bevlieging zonder reden. Meedenken in plaats van meteen afwijzen houdt het gesprek open, ook als het antwoord uiteindelijk nee is.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Herken je bij jezelf ook de neiging om mee te gaan met wat een groep om je heen draagt of doet?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Nee, die schoenen zijn veel te duur, punt uit.',
+        beter: 'Ik snap dat je hetzelfde wil als hij, laten we kijken wat wel kan.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij wil per se dezelfde schoenen als zijn vriendje. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Meteen nee zeggen zonder verdere uitleg.',
+            correct: false,
+            feedback: 'Dan voelt hij zich niet gehoord in waarom het hem zoveel doet.',
+          },
+          {
+            label: 'Zijn wens erkennen en samen naar een haalbare optie zoeken.',
+            correct: true,
+            feedback: 'Zo blijft de behoefte achter de wens bespreekbaar.',
+          },
+          {
+            label: 'Precies geven wat hij vraagt om gezeur te voorkomen.',
+            correct: false,
+            feedback: 'Dat leert hem niet om met een nee om te gaan.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag waarom deze ene wens hem nu zoveel doet',
+          'Zoek samen een tussenoplossing die voor jullie beiden werkt',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j5.2',
+    world: 5,
+    cohort: 'jong',
+    title: 'Waarom buitensluiten al op deze leeftijd gebeurt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij vertelt luchtig dat een klasgenootje vandaag niet mocht meedoen met hun spel.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Groepjes vormen en iemand buitensluiten komt al vroeg voor, als een manier om te ontdekken wie erbij hoort. Voor het kind dat meedoet met uitsluiten voelt het vaak onschuldig, terwijl de impact op wie buitengesloten wordt groot kan zijn. Vragen hoe het voor de ander voelde, opent het perspectief zonder meteen te veroordelen.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Hoe reageerde jij vroeger als een vriendje buitengesloten werd, deed je mee of stond je ertussen?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Dat is echt gemeen, dat mag je nooit meer doen.',
+        beter: 'Hoe zou dat voor hem gevoeld hebben, denk je?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij vertelt luchtig over een klasgenootje dat niet mocht meedoen. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Meteen streng zeggen dat dit niet mag.',
+            correct: false,
+            feedback: 'Dan sluit het gesprek zich, zonder dat hij het zelf doorvoelt.',
+          },
+          {
+            label: 'Vragen hoe hij denkt dat het voor de ander voelde.',
+            correct: true,
+            feedback: 'Zo leert hij het perspectief van de ander meenemen, uit zichzelf.',
+          },
+          {
+            label: 'Er verder niets van zeggen, kinderen doen dat nu eenmaal.',
+            correct: false,
+            feedback: 'Dan mist hij de kans om erover na te denken.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag hoe hij denkt dat het buitengesloten klasgenootje zich voelde',
+          'Bespreek samen wat hij een volgende keer zou kunnen doen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j5.3',
+    world: 5,
+    cohort: 'jong',
+    title: 'Als een vriendschap ineens verandert',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Zijn beste vriendje van jaren speelt ineens veel met een ander kind, en hij is daar stil verdrietig over.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Vriendschappen op deze leeftijd verschuiven nog volop, en dat kan hard aankomen terwijl het voor het andere kind vaak niets persoonlijks is. Het verlies van een vriendschap voelt voor een kind soms net zo zwaar als voor een volwassene het verlies van een relatie. Het verdriet serieus nemen, zonder het meteen te bagatelliseren, helpt het te verwerken.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Herinner je je zelf nog een vriendschap die vroeger veranderde, en hoe dat voor jou voelde?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Maak je niet druk, je maakt heus wel nieuwe vriendjes.',
+        beter: 'Dat is echt jammer, ik snap dat je dat mist.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij is verdrietig omdat zijn beste vriendje nu met een ander kind speelt. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Zeggen dat hij snel weer een nieuw vriendje zal hebben.',
+            correct: false,
+            feedback: 'Dat maakt het huidige verdriet minder waard in zijn beleving.',
+          },
+          {
+            label: 'Het verdriet erkennen en er gewoon bij blijven zitten.',
+            correct: true,
+            feedback: 'Zo voelt hij zich serieus genomen in wat voor hem een echt verlies is.',
+          },
+          {
+            label: 'Meteen voorstellen om zelf een nieuw vriendje voor hem te zoeken.',
+            correct: false,
+            feedback: 'Dat slaat de stap over waarin hij het verdriet mag voelen.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag wat hij het meeste mist aan die vriendschap',
+          'Bied een nieuwe activiteit aan zonder het als vervanging te noemen',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j6.1',
+    world: 6,
+    cohort: 'jong',
+    title: 'Als schermtijd de enige ruzie van de dag wordt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Elke avond hetzelfde gevecht: de tablet moet uit, en elke avond wordt het een strijd.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Stoppen met een scherm is voor een kind van deze leeftijd nog echt moeilijk, het vermogen om zelf een leuke activiteit af te breken is nog in ontwikkeling. Een vast, voorspelbaar moment met een korte waarschuwing vooraf werkt vaak beter dan een abrupt "nu uit". Voorspelbaarheid vermindert de strijd meer dan strengheid.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Vind jij het zelf ook lastig om op tijd te stoppen met scrollen, ook als volwassene?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Nu meteen uit, ik heb er genoeg van!',
+        beter: 'Nog vijf minuutjes, en dan sluiten we samen af.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Het is elke avond weer een gevecht om de tablet uit te zetten. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Abrupt zeggen dat het nu meteen uit moet.',
+            correct: false,
+            feedback: 'Dat geeft hem geen moment om zich mentaal los te maken van het scherm.',
+          },
+          {
+            label: 'Een korte waarschuwing vooraf geven op een vast moment.',
+            correct: true,
+            feedback: 'Voorspelbaarheid maakt stoppen een stuk makkelijker voor hem.',
+          },
+          {
+            label: 'Steeds langer laten schermen om ruzie te voorkomen.',
+            correct: false,
+            feedback: 'Dan verschuift de grens elke avond een stukje verder.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Geef vanavond een duidelijke waarschuwing vijf minuten van tevoren',
+          'Bedenk samen een vast, voorspelbaar afsluitmomentje',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j6.2',
+    world: 6,
+    cohort: 'jong',
+    title: 'Waarom filmpjes kijken nooit "klaar" voelt',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Je zegt "nog één filmpje", en een uur later kijkt hij nog steeds, zonder dat hij het zelf doorheeft.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Korte filmpjes worden bewust zo gemaakt dat het volgende filmpje automatisch en aantrekkelijk aansluit, zonder een natuurlijk stoppunt. Voor een kind is het daardoor extra lastig om zelf te bepalen wanneer het genoeg is. Samen vooraf een aantal filmpjes afspreken geeft een duidelijker stoppunt dan "nog even".',
+      },
+      {
+        type: 'spiegel',
+        body: 'Merk jij zelf ook dat het ene filmpje naadloos overgaat in het volgende, zonder dat je het besluit?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Zei ik niet dat het na dit ene filmpje klaar was?',
+        beter: 'We hadden vijf filmpjes afgesproken, dit is nummer vijf.',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij blijft filmpjes kijken zonder zelf te stoppen. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Vooraf een concreet aantal filmpjes afspreken.',
+            correct: true,
+            feedback: 'Een telbaar aantal is een duidelijker stoppunt dan een tijdsgevoel.',
+          },
+          {
+            label: 'Zeggen dat hij zelf beter moet opletten op de tijd.',
+            correct: false,
+            feedback: 'Dat is voor deze leeftijd nog een lastige vaardigheid om zelf te doen.',
+          },
+          {
+            label: 'Het scherm afpakken zodra jij vindt dat het genoeg is.',
+            correct: false,
+            feedback: 'Dat voelt onvoorspelbaar en vergroot de weerstand.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Spreek vooraf een concreet aantal filmpjes af',
+          'Tel samen hardop mee hoeveel er nog gaan',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'j6.3',
+    world: 6,
+    cohort: 'jong',
+    title: 'Als hij dingen napraat die hij online zag',
+    beats: [
+      {
+        type: 'haakje',
+        body: 'Hij gebruikt ineens een grapje of gebaar dat je niet herkent, en zegt dat het van een filmpje komt.',
+      },
+      {
+        type: 'inzicht',
+        body: 'Kinderen van deze leeftijd nemen makkelijk gedrag, taal en grapjes over van wat ze online zien, zonder dat ze de bedoeling erachter altijd doorzien. Fel afkeuren maakt het vaak juist extra interessant. Nieuwsgierig vragen waar iets vandaan komt, opent een gesprek zonder het meteen te verbieden.',
+      },
+      {
+        type: 'spiegel',
+        body: 'Weet jij eigenlijk wat hij precies bekijkt, of hoor je het vooral achteraf?',
+      },
+      {
+        type: 'voorbeeld',
+        fout: 'Waar heb je dat nou weer vandaan, dat mag je nooit meer zeggen.',
+        beter: 'Wat grappig, van welk filmpje komt dat?',
+      },
+      {
+        type: 'oefening',
+        vraag: 'Hij zegt of doet iets dat hij duidelijk ergens online heeft opgepikt. Wat zou de beste aanpak zijn?',
+        opties: [
+          {
+            label: 'Fel reageren en het meteen verbieden.',
+            correct: false,
+            feedback: 'Dat maakt het stiekem napraten waarschijnlijker, niet minder.',
+          },
+          {
+            label: 'Nieuwsgierig vragen waar hij het vandaan heeft.',
+            correct: true,
+            feedback: 'Zo blijft het gesprek open, en leer je ook wat hij precies bekijkt.',
+          },
+          {
+            label: 'Doen alsof je het niet gehoord hebt.',
+            correct: false,
+            feedback: 'Dan mis je de kans om te weten wat hem online bezighoudt.',
+          },
+        ],
+      },
+      {
+        type: 'thuismissie',
+        acties: [
+          'Vraag rustig van welk filmpje of account iets afkomstig is',
+          'Bekijk een keer samen wat hij normaal gesproken kijkt',
         ],
       },
     ],

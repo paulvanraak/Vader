@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { Home, Compass, ListChecks } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { lessons } from '../data/lessons'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
 
@@ -12,7 +11,7 @@ interface Tab {
 }
 
 const leftTab: Tab = { to: '/kompas', label: 'Kompas', icon: Compass }
-const rightTab: Tab = { to: '/probeer-dit-eens', label: 'Probeer', icon: ListChecks }
+const rightTab: Tab = { to: '/probeer-dit-eens', label: 'Checklist', icon: ListChecks }
 
 function SideTab({ to, label, icon: Icon }: Tab) {
   return (
@@ -31,9 +30,9 @@ function SideTab({ to, label, icon: Icon }: Tab) {
 }
 
 export function BottomNav() {
-  const { todayLessonId } = useAppState()
-  const todayLesson = lessons.find((l) => l.id === todayLessonId) ?? lessons[0]
-  const style = getWorldStyle(todayLesson.world)
+  const { path, todayLessonId } = useAppState()
+  const todayLesson = path.find((l) => l.id === todayLessonId) ?? null
+  const style = getWorldStyle(todayLesson?.world ?? 4)
 
   return (
     <nav

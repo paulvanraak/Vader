@@ -31,7 +31,7 @@ const scenarios: Scenario[] = [
   {
     keywords: ['ruzie', 'boos', 'schreeuw', 'snapt niks'],
     answer:
-      'Een ruzie als deze voelt vaak zwaarder dan hij is. Op deze leeftijd zoekt hij vooral erkenning voor zijn eigen wereld, niet per se gelijk. Hem gelijk geven op het stukje dat klopt, en vragen het je te laten zien in plaats van uit te leggen, kan de deur weer openen. Wat zou de beste aanpak zijn: reageer je op de inhoud, of vooral op de toon?',
+      'Een ruzie als deze voelt vaak zwaarder dan hij is. Op deze leeftijd zoekt hij vooral erkenning voor zijn eigen kijk op de zaak, niet per se gelijk. Hem gelijk geven op het stukje dat klopt, en vragen het je te laten zien in plaats van uit te leggen, kan de deur weer openen. Wat zou de beste aanpak zijn: reageer je op de inhoud, of vooral op de toon?',
   },
   {
     keywords: ['vriend', 'groep', 'buitensluiten', 'pesten', 'appgroep'],

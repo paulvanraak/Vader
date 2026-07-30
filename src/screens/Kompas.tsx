@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Search, ChevronDown, Lock, CircleCheck, LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
-import { lessons } from '../data/lessons'
 import { worlds } from '../data/worlds'
 import { compassEntries } from '../data/compass'
 import { useAppState } from '../state/AppStateContext'
 import { lessonsForWorld, isWorldComplete, isLessonUnlocked } from '../lib/worldProgress'
 import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
 import { generateLocalAnswer } from '../lib/localAdvisor'
+import { ChildSwitcher } from '../components/ChildSwitcher'
 
 type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 
@@ -17,7 +17,7 @@ interface ChatMessage {
 }
 
 export function Kompas() {
-  const { completedLessonIds } = useAppState()
+  const { path, completedLessonIds } = useAppState()
   const [query, setQuery] = useState('')
   const [expandedWorldId, setExpandedWorldId] = useState<number | null>(null)
 
@@ -65,7 +65,7 @@ export function Kompas() {
   const filteredWorlds = orderedWorlds.filter((world) => {
     if (!normalizedQuery) return true
     const entry = compassEntries.find((e) => e.worldId === world.id)
-    const worldLessons = lessonsForWorld(world.id)
+    const worldLessons = lessonsForWorld(path, world.id)
     const haystack = [world.title, world.subtitle, entry?.background ?? '', ...worldLessons.map((l) => l.title)]
       .join(' ')
       .toLowerCase()
@@ -79,7 +79,9 @@ export function Kompas() {
         <h1 className="text-h2 text-ink">Waar je op koerst</h1>
       </div>
 
-      <div className="shrink-0 px-5 pb-3">
+      <ChildSwitcher />
+
+      <div className="shrink-0 px-5 pb-3 pt-4">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -148,10 +150,10 @@ export function Kompas() {
             <div className="flex flex-col gap-3">
               {filteredWorlds.map((world) => {
                 const entry = compassEntries.find((e) => e.worldId === world.id)
-                const worldLessons = lessonsForWorld(world.id)
-                const firstLessonIndex = lessons.findIndex((l) => l.world === world.id)
-                const unlocked = isLessonUnlocked(firstLessonIndex, completedLessonIds)
-                const complete = isWorldComplete(world.id, completedLessonIds)
+                const worldLessons = lessonsForWorld(path, world.id)
+                const firstLessonIndex = path.findIndex((l) => l.world === world.id)
+                const unlocked = firstLessonIndex === -1 ? false : isLessonUnlocked(path, firstLessonIndex, completedLessonIds)
+                const complete = isWorldComplete(path, world.id, completedLessonIds)
                 const isExpanded = expandedWorldId === world.id
 
                 return (
@@ -183,9 +185,7 @@ export function Kompas() {
                         )}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-caption text-ink-muted">
-                          Wereld {world.id} {!unlocked && '· nog op slot'}
-                        </p>
+                        {!unlocked && <p className="text-caption text-ink-muted">Nog op slot</p>}
                         <p className="truncate text-body-lg text-ink">{world.title}</p>
                       </div>
                       <ChevronDown
@@ -199,7 +199,7 @@ export function Kompas() {
                       <div className="flex flex-col gap-3 border-t border-surface-sunken px-4 pb-4 pt-3">
                         <p className="text-body text-ink-muted">{entry?.background}</p>
                         <div className="flex flex-col gap-1.5">
-                          <p className="text-label text-ink">Lessen in deze wereld</p>
+                          <p className="text-label text-ink">Lessen in dit onderdeel</p>
                           {worldLessons.map((lesson, index) => (
                             <p key={lesson.id} className="text-caption text-ink-muted">
                               {index + 1}. {lesson.title}

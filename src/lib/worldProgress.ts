@@ -1,16 +1,24 @@
+import type { Lesson } from '../types/lesson'
 import { lessons } from '../data/lessons'
+import type { AgeGroup } from '../state/AppStateContext'
 
-export function lessonsForWorld(worldId: number) {
-  return lessons.filter((lesson) => lesson.world === worldId)
+export function lessonPath(ageGroup: AgeGroup): Lesson[] {
+  return lessons
+    .filter((lesson) => lesson.cohort === ageGroup)
+    .sort((a, b) => a.world - b.world || a.id.localeCompare(b.id))
 }
 
-export function isWorldComplete(worldId: number, completedLessonIds: string[]): boolean {
-  const worldLessons = lessonsForWorld(worldId)
+export function lessonsForWorld(path: Lesson[], worldId: number): Lesson[] {
+  return path.filter((lesson) => lesson.world === worldId)
+}
+
+export function isWorldComplete(path: Lesson[], worldId: number, completedLessonIds: string[]): boolean {
+  const worldLessons = lessonsForWorld(path, worldId)
   return worldLessons.length > 0 && worldLessons.every((lesson) => completedLessonIds.includes(lesson.id))
 }
 
-export function isLessonUnlocked(lessonIndex: number, completedLessonIds: string[]): boolean {
+export function isLessonUnlocked(path: Lesson[], lessonIndex: number, completedLessonIds: string[]): boolean {
   if (lessonIndex <= 0) return true
-  const previousLesson = lessons[lessonIndex - 1]
-  return completedLessonIds.includes(previousLesson.id)
+  const previousLesson = path[lessonIndex - 1]
+  return previousLesson ? completedLessonIds.includes(previousLesson.id) : true
 }
