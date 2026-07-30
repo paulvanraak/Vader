@@ -24,7 +24,7 @@ export function NameQuestion({ onNext }: { onNext: (name: string) => void }) {
           }}
           placeholder="Jouw naam"
           aria-label="Jouw naam"
-          className="w-full max-w-xs rounded-xl bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="w-full max-w-xs rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
         />
       </div>
       <Button onClick={() => name.trim() && onNext(name.trim())} disabled={!name.trim()}>

@@ -30,7 +30,7 @@ export function Oefening({ beat, worldId, selectedIndex, onSelect }: OefeningPro
                 aria-checked={isSelected}
                 onClick={() => onSelect(index)}
                 style={isSelected ? { borderColor: style.accentVar } : undefined}
-                className={`rounded-xl border p-4 text-left text-body transition ${
+                className={`rounded-md border p-4 text-left text-body transition ${
                   isSelected ? style.softBg : 'border-surface-sunken bg-surface hover:border-ink-faint'
                 }`}
               >

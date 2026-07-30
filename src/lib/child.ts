@@ -11,6 +11,10 @@ const ageRange: Record<ChildProfile['ageGroup'], string> = {
 }
 
 export function childLabel(child: ChildProfile): string {
+  return child.name || genderLabel[child.gender]
+}
+
+export function childSubLabel(child: ChildProfile): string {
   return `${genderLabel[child.gender]} · ${ageRange[child.ageGroup]}`
 }
 

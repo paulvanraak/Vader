@@ -1,7 +1,7 @@
 import { User } from 'lucide-react'
 import { useAppState } from '../state/AppStateContext'
 import { Card } from '../components/Card'
-import { childLabel } from '../lib/child'
+import { childLabel, childSubLabel } from '../lib/child'
 
 export function Ik() {
   const { fatherName, children, activeChildId, setActiveChildId, streakDays, completedLessonIds, path } =
@@ -29,15 +29,18 @@ export function Ik() {
                 key={child.id}
                 type="button"
                 onClick={() => setActiveChildId(child.id)}
-                className={`flex items-center justify-between rounded-xl border p-3 text-left transition ${
+                className={`flex items-center justify-between rounded-md border p-3 text-left transition ${
                   isActive
                     ? 'border-primary-500 bg-primary-500/10'
                     : 'border-surface-sunken bg-surface hover:border-ink-faint'
                 }`}
               >
-                <span className={`text-body-lg font-semibold ${isActive ? 'text-primary-600' : 'text-ink'}`}>
-                  {childLabel(child)}
-                </span>
+                <div>
+                  <p className={`text-body-lg font-semibold ${isActive ? 'text-primary-600' : 'text-ink'}`}>
+                    {childLabel(child)}
+                  </p>
+                  <p className="text-caption text-ink-muted">{childSubLabel(child)}</p>
+                </div>
                 {isActive && <span className="text-caption font-semibold text-primary-600">Actief</span>}
               </button>
             )

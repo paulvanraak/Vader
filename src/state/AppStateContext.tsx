@@ -8,6 +8,7 @@ export type Theme = 'light' | 'dark'
 
 export interface ChildProfile {
   id: string
+  name: string
   gender: ChildGender
   ageGroup: AgeGroup
 }

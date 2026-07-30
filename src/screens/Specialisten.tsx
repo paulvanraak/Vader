@@ -54,7 +54,7 @@ export function Specialisten() {
         {specialisten.map((specialist) => (
           <div
             key={specialist.name}
-            className="flex items-start gap-3 rounded-xl bg-surface p-4 shadow-sm ring-1 ring-surface-sunken"
+            className="flex items-start gap-3 rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken"
           >
             <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
               <UserRound size={22} strokeWidth={2} />

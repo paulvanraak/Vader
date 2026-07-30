@@ -19,7 +19,7 @@ export function OverFatherFlow() {
       </div>
 
       <div className="flex flex-col gap-5 px-5 py-6">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-primary-500 shadow-sm">
+        <div className="flex size-14 items-center justify-center rounded-md bg-primary-500 shadow-sm">
           <Waves size={26} strokeWidth={2.5} className="text-neutral-white" />
         </div>
         <p className="text-body-lg leading-relaxed text-ink">

@@ -18,51 +18,45 @@ export function AppMenu({ onClose }: AppMenuProps) {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/60 p-4" onClick={onClose}>
-      <div
-        role="menu"
-        aria-label="Menu"
-        onClick={(e) => e.stopPropagation()}
-        className="force-dark animate-dissolve mt-14 w-full max-w-[260px] overflow-hidden rounded-2xl bg-surface text-ink shadow-2xl"
-      >
-        <div className="flex items-center justify-between px-4 py-3">
-          <p className="text-label font-bold text-ink-muted">Menu</p>
+    <div className="animate-dissolve fixed inset-0 z-50 flex flex-col bg-page">
+      <div className="flex shrink-0 items-center justify-between px-5 pt-5">
+        <p className="text-h3 font-bold text-ink">Menu</p>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Sluiten"
+          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+        >
+          <X size={20} strokeWidth={2} />
+        </button>
+      </div>
+
+      <div className="flex flex-1 flex-col justify-center gap-3 px-6">
+        {items.map(({ label, icon: Icon, onClick }) => (
           <button
-            type="button"
-            onClick={onClose}
-            aria-label="Sluiten"
-            className="flex size-8 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-          >
-            <X size={16} strokeWidth={2} />
-          </button>
-        </div>
-        <div className="flex flex-col border-t border-surface-sunken">
-          {items.map(({ label, icon: Icon, onClick }) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => {
-                onClick()
-                onClose()
-              }}
-              className="flex items-center gap-3 px-4 py-3 text-left text-body-lg text-ink transition hover:bg-surface-sunken"
-            >
-              <Icon size={18} strokeWidth={2} />
-              {label}
-            </button>
-          ))}
-          <button
+            key={label}
             type="button"
             onClick={() => {
-              logout()
+              onClick()
               onClose()
             }}
-            className="flex items-center gap-3 border-t border-surface-sunken px-4 py-3 text-left text-body-lg text-danger-500 transition hover:bg-surface-sunken"
+            className="flex items-center gap-4 rounded-md bg-surface px-5 py-4 text-left text-body-lg font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            <LogOut size={18} strokeWidth={2} />
-            Log uit
+            <Icon size={20} strokeWidth={2} />
+            {label}
           </button>
-        </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            logout()
+            onClose()
+          }}
+          className="flex items-center gap-4 rounded-md bg-surface px-5 py-4 text-left text-body-lg font-semibold text-danger-500 transition hover:bg-surface-sunken"
+        >
+          <LogOut size={20} strokeWidth={2} />
+          Log uit
+        </button>
       </div>
     </div>
   )

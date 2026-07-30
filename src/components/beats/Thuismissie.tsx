@@ -22,7 +22,7 @@ export function Thuismissie({ beat, worldId, onChoose }: ThuismissieProps) {
               key={actie}
               type="button"
               onClick={() => onChoose(actie)}
-              className="rounded-xl border border-surface-sunken bg-surface p-4 text-left text-body-lg text-ink transition"
+              className="rounded-md border border-surface-sunken bg-surface p-4 text-left text-body-lg text-ink transition"
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = style.accentVar
                 e.currentTarget.style.backgroundColor = `color-mix(in oklab, ${style.accentVar} 10%, transparent)`

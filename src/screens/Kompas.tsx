@@ -87,7 +87,7 @@ export function Kompas() {
             e.preventDefault()
             void handleSubmit()
           }}
-          className="flex items-end gap-2 rounded-2xl bg-surface p-2 shadow-sm ring-1 ring-surface-sunken"
+          className="flex items-end gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken"
         >
           <textarea
             value={input}
@@ -98,16 +98,16 @@ export function Kompas() {
                 void handleSubmit()
               }
             }}
-            rows={1}
+            rows={3}
             placeholder="Vraag iets, bijvoorbeeld: hij sluit zich steeds meer af"
             aria-label="Beschrijf de situatie"
-            className="max-h-24 flex-1 resize-none rounded-xl bg-surface-sunken px-3 py-2.5 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="max-h-32 flex-1 resize-none rounded-md bg-surface px-3 py-2.5 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
             aria-label="Verstuur"
-            className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-neutral-white transition hover:bg-primary-600 disabled:opacity-50"
+            className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-500 text-neutral-white transition hover:bg-primary-600 disabled:opacity-50"
           >
             <Send size={17} strokeWidth={2} />
           </button>
@@ -121,7 +121,7 @@ export function Kompas() {
               <ChatBubble key={index} message={message} />
             ))}
             {isLoading && (
-              <div className="flex items-center gap-2 self-start rounded-2xl bg-surface px-4 py-3 text-body text-ink-muted shadow-xs ring-1 ring-surface-sunken">
+              <div className="flex items-center gap-2 self-start rounded-md bg-surface px-4 py-3 text-body text-ink-muted shadow-xs ring-1 ring-surface-sunken">
                 <LoaderCircle size={16} className="animate-spin" strokeWidth={2} />
                 Denkt na
               </div>
@@ -143,7 +143,7 @@ export function Kompas() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Zoek op onderwerp, bijvoorbeeld scherm of vergelijken"
                 aria-label="Zoek in het kompas"
-                className="w-full rounded-xl bg-surface-sunken py-3 pl-10 pr-4 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+                className="w-full rounded-md bg-surface-sunken py-3 pl-10 pr-4 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
               />
             </div>
 
@@ -159,7 +159,7 @@ export function Kompas() {
                 return (
                   <div
                     key={world.id}
-                    className="flex flex-col overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-surface-sunken"
+                    className="flex flex-col overflow-hidden rounded-md bg-surface shadow-sm ring-1 ring-surface-sunken"
                   >
                     <button
                       type="button"
@@ -226,7 +226,7 @@ export function Kompas() {
 function ChatBubble({ message }: { message: ChatMessage }) {
   if (message.role === 'user') {
     return (
-      <p className="max-w-[85%] self-end rounded-2xl bg-primary-500 px-4 py-3 text-body-lg text-neutral-white">
+      <p className="max-w-[85%] self-end rounded-md bg-primary-500 px-4 py-3 text-body-lg text-neutral-white">
         {message.text}
       </p>
     )
@@ -234,7 +234,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
   if (message.role === 'referral') {
     return (
-      <div className="flex max-w-[85%] items-start gap-3 self-start rounded-2xl bg-warning-500/15 px-4 py-3 ring-1 ring-warning-500/40">
+      <div className="flex max-w-[85%] items-start gap-3 self-start rounded-md bg-warning-500/15 px-4 py-3 ring-1 ring-warning-500/40">
         <LifeBuoy size={20} className="mt-0.5 shrink-0 text-accent-orange" strokeWidth={2} />
         <p className="text-body text-ink">{message.text}</p>
       </div>
@@ -250,7 +250,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         </span>
       )}
       <p
-        className={`rounded-2xl px-4 py-3 text-body-lg shadow-xs ring-1 ${
+        className={`rounded-md px-4 py-3 text-body-lg shadow-xs ring-1 ${
           message.role === 'error'
             ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
             : 'bg-surface text-ink ring-surface-sunken'

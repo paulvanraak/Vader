@@ -14,7 +14,7 @@ export function IntroStep({ icon: Icon, step, total, title, body, onNext }: Intr
   return (
     <div className="flex h-full flex-col justify-between px-6 py-10">
       <div className="flex flex-1 flex-col justify-center gap-4">
-        <div className="flex size-12 items-center justify-center rounded-xl bg-primary-500/10 text-primary-600">
+        <div className="flex size-12 items-center justify-center rounded-md bg-primary-500/10 text-primary-600">
           <Icon size={24} strokeWidth={2} />
         </div>
         <p className="text-label text-ink-muted">

@@ -30,7 +30,7 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
         <div className="flex flex-col gap-4">
           {stappen.map(({ icon: Icon, title, body }) => (
             <div key={title} className="flex items-start gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-600">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-500/10 text-primary-600">
                 <Icon size={20} strokeWidth={2} />
               </div>
               <div>

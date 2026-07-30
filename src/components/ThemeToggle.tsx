@@ -5,12 +5,12 @@ export function ThemeToggle() {
   const { theme, toggleTheme } = useAppState()
 
   return (
-    <div className="flex items-center gap-1 rounded-xl bg-surface-sunken p-1">
+    <div className="flex items-center gap-1 rounded-md bg-surface-sunken p-1">
       <button
         type="button"
         onClick={() => theme !== 'light' && toggleTheme()}
         aria-pressed={theme === 'light'}
-        className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-label transition ${
+        className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-label transition ${
           theme === 'light' ? 'bg-surface text-ink shadow-xs' : 'text-ink-muted'
         }`}
       >
@@ -21,7 +21,7 @@ export function ThemeToggle() {
         type="button"
         onClick={() => theme !== 'dark' && toggleTheme()}
         aria-pressed={theme === 'dark'}
-        className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-label transition ${
+        className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-label transition ${
           theme === 'dark' ? 'bg-surface text-ink shadow-xs' : 'text-ink-muted'
         }`}
       >

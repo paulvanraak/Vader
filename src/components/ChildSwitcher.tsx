@@ -15,7 +15,7 @@ export function ChildSwitcher() {
             key={child.id}
             type="button"
             onClick={() => setActiveChildId(child.id)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-caption font-semibold transition ${
+            className={`shrink-0 rounded-md px-3.5 py-2 text-body font-bold transition ${
               isActive ? 'bg-primary-500 text-neutral-white' : 'bg-surface-sunken text-ink-muted'
             }`}
           >

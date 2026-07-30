@@ -18,7 +18,7 @@ function SideTab({ to, label, icon: Icon }: Tab) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex min-w-0 flex-1 flex-col items-center gap-1 rounded-lg px-1 py-1.5 text-center transition ${
+        `flex min-w-0 flex-1 flex-col items-center gap-1 rounded-md px-1 py-1.5 text-center transition ${
           isActive ? 'text-primary-600' : 'text-ink-faint'
         }`
       }

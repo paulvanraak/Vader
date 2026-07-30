@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { User, Star, Flame, X, Plus } from 'lucide-react'
 import { Button } from '../../components/Button'
 import type { ChildGender, AgeGroup, ChildProfile } from '../../state/AppStateContext'
-import { childLabel } from '../../lib/child'
+import { childLabel, childSubLabel } from '../../lib/child'
 
 const genderOpties: { value: ChildGender; label: string }[] = [
   { value: 'zoon', label: 'Zoon' },
@@ -20,12 +20,17 @@ function makeDraftId(): string {
 
 export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]) => void }) {
   const [added, setAdded] = useState<ChildProfile[]>([])
+  const [draftName, setDraftName] = useState('')
   const [draftGender, setDraftGender] = useState<ChildGender | null>(null)
   const [draftAge, setDraftAge] = useState<AgeGroup | null>(null)
 
   function addChild() {
     if (!draftGender || !draftAge) return
-    setAdded((prev) => [...prev, { id: makeDraftId(), gender: draftGender, ageGroup: draftAge }])
+    setAdded((prev) => [
+      ...prev,
+      { id: makeDraftId(), name: draftName.trim(), gender: draftGender, ageGroup: draftAge },
+    ])
+    setDraftName('')
     setDraftGender(null)
     setDraftAge(null)
   }
@@ -48,12 +53,15 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
             {added.map((child) => (
               <div
                 key={child.id}
-                className="flex items-center gap-3 rounded-xl border border-surface-sunken bg-surface p-3"
+                className="flex items-center gap-3 rounded-md border border-surface-sunken bg-surface p-3"
               >
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
                   <User size={18} strokeWidth={2} />
                 </span>
-                <p className="flex-1 text-body-lg font-semibold text-ink">{childLabel(child)}</p>
+                <div className="flex-1">
+                  <p className="text-body-lg font-semibold text-ink">{childLabel(child)}</p>
+                  <p className="text-caption text-ink-muted">{childSubLabel(child)}</p>
+                </div>
                 <button
                   type="button"
                   onClick={() => removeChild(child.id)}
@@ -67,7 +75,19 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
           </div>
         )}
 
-        <div className="flex flex-col gap-4 rounded-xl border border-dashed border-surface-sunken p-4">
+        <div className="flex flex-col gap-4 rounded-md border border-dashed border-surface-sunken p-4">
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Naam (optioneel)</p>
+            <input
+              type="text"
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              placeholder="Bijvoorbeeld Sam"
+              aria-label="Naam van je kind"
+              className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+
           <div>
             <p className="mb-2 text-label text-ink-muted">Zoon of dochter?</p>
             <div className="flex gap-2" role="radiogroup" aria-label="Zoon of dochter?">
@@ -80,7 +100,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setDraftGender(optie.value)}
-                    className={`flex-1 rounded-xl border p-3 text-center text-body-lg font-semibold transition ${
+                    className={`flex-1 rounded-md border p-3 text-center text-body-lg font-semibold transition ${
                       isSelected
                         ? 'border-primary-500 bg-primary-500/10 text-primary-600'
                         : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
@@ -106,7 +126,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setDraftAge(optie.value)}
-                    className={`flex flex-1 flex-col items-center gap-1 rounded-xl border p-3 text-center transition ${
+                    className={`flex flex-1 flex-col items-center gap-1 rounded-md border p-3 text-center transition ${
                       isSelected
                         ? 'border-primary-500 bg-primary-500/10 text-primary-600'
                         : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
@@ -131,7 +151,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
             type="button"
             onClick={addChild}
             disabled={!draftGender || !draftAge}
-            className="flex items-center justify-center gap-2 rounded-xl border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
+            className="flex items-center justify-center gap-2 rounded-md border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
           >
             <Plus size={18} strokeWidth={2.5} />
             Kind toevoegen

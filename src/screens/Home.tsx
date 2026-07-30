@@ -32,7 +32,7 @@ export function Home() {
   return (
     <div className="flex flex-col">
       <ChildSwitcher />
-      <div className="flex flex-col py-6 pl-5 pr-3">
+      <div className="flex flex-col py-5 pl-5 pr-3">
         {path.map((lesson, index) => {
           const world = worlds.find((w) => w.id === lesson.world)
           const showBanner = lesson.world !== lastWorldId
@@ -47,7 +47,7 @@ export function Home() {
             <div key={lesson.id} className="flex w-full flex-col">
               {showBanner && world && (
                 <div
-                  className={`z-10 my-4 flex w-full items-center justify-between rounded-[10px] border-l-4 py-2.5 pl-7 pr-4 shadow-sm ${style.softBg}`}
+                  className="z-10 my-6 flex w-full items-center justify-between rounded-md border-l-4 bg-surface py-2 pl-7 pr-4 shadow-sm"
                   style={{ borderLeftColor: style.accentVar }}
                 >
                   <div className="text-left">

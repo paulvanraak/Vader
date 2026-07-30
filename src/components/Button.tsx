@@ -6,7 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const base =
-  'mx-auto flex w-[88%] max-w-[340px] items-center justify-center gap-2 rounded-lg px-5 py-3.5 text-label transition-[transform,box-shadow,background-color] duration-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:pointer-events-none'
+  'mx-auto flex w-[88%] max-w-[340px] items-center justify-center gap-2 rounded-md px-5 py-3.5 text-label transition-[transform,box-shadow,background-color] duration-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:pointer-events-none'
 
 const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary:

@@ -44,9 +44,7 @@ export function ProbeerDitEens() {
                 {showLessonHeader && (
                   <p className={`mt-1 text-body-lg font-bold ${style.text}`}>{item.lessonTitle}</p>
                 )}
-                <div
-                  className={`flex items-center gap-2 rounded-xl p-3 shadow-sm ring-1 ring-surface-sunken ${style.softBg}`}
-                >
+                <div className="flex items-center gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken">
                   <button
                     type="button"
                     onClick={() => toggleAction(item.id)}
