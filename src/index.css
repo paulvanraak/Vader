@@ -49,10 +49,10 @@
   --text-caption--font-weight: 500;
 
   /* Kleuren — uit Figma-variabelen */
-  --color-primary-500: #369fff;
-  --color-primary-600: #006ed3;
+  --color-primary-500: #4c6fff;
+  --color-primary-600: #2541b8;
   /* Vast (niet thema-afhankelijk): de "dikte"-rand onderin knoppen. */
-  --color-primary-700: #0058a8;
+  --color-primary-700: #1b3690;
 
   /* Vast, verandert niet met het thema: puur wit/donker voor tekst op
      gekleurde knoppen en de vaste donkere spiegel-kaart. */
@@ -91,7 +91,7 @@
   /* Border radius schaal — uit Figma */
   --radius-xs: 4px;
   --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-md: 18px;
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-2xl: 24px;
@@ -103,9 +103,9 @@
   /* Shadows — uit Figma-effecten */
   --shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   --shadow-sm:
-    0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+    0px 2px 6px 0px rgba(16, 24, 40, 0.08), 0px 1px 3px 0px rgba(16, 24, 40, 0.05);
   --shadow-md:
-    0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.1);
+    0px 4px 10px -2px rgba(16, 24, 40, 0.08), 0px 6px 14px -4px rgba(16, 24, 40, 0.1);
   --shadow-lg:
     0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
   --shadow-xl:
@@ -123,7 +123,7 @@
     --color-ink: #f2f3f5;
     --color-ink-muted: #9aa7b5;
     --color-ink-faint: #5b6470;
-    --color-primary-600: #6cb8ff;
+    --color-primary-600: #93a5ff;
     --page-bg-image: none;
   }
 }
@@ -136,7 +136,7 @@
   --color-ink: #f2f3f5;
   --color-ink-muted: #9aa7b5;
   --color-ink-faint: #5b6470;
-  --color-primary-600: #6cb8ff;
+  --color-primary-600: #93a5ff;
   --page-bg-image: none;
 }
 
@@ -147,7 +147,7 @@
   --color-ink: #303030;
   --color-ink-muted: #8ea3b7;
   --color-ink-faint: #bdbdbd;
-  --color-primary-600: #006ed3;
+  --color-primary-600: #2541b8;
   --page-bg-image:
     radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
     radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
@@ -161,7 +161,7 @@
   --color-ink: #f2f3f5;
   --color-ink-muted: #9aa7b5;
   --color-ink-faint: #5b6470;
-  --color-primary-600: #6cb8ff;
+  --color-primary-600: #93a5ff;
   --page-bg-image: none;
   color-scheme: dark;
 }
