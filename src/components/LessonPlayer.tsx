@@ -34,7 +34,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
     navigate('/')
   }
 
-  function handleChooseAction() {
+  function handleFinishLesson() {
     completeLesson(lesson.id)
     setIsCelebrating(true)
   }
@@ -85,7 +85,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
           <Oefening beat={beat} worldId={lesson.world} selectedIndex={oefeningAnswer} onSelect={setOefeningAnswer} />
         )}
         {beat.type === 'thuismissie' && (
-          <Thuismissie beat={beat} worldId={lesson.world} onChoose={handleChooseAction} />
+          <Thuismissie beat={beat} worldId={lesson.world} onDone={handleFinishLesson} />
         )}
       </div>
 

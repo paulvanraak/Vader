@@ -6,7 +6,7 @@ interface TypewriterTextProps {
   speedMs?: number
 }
 
-export function TypewriterText({ text, className = '', speedMs = 65 }: TypewriterTextProps) {
+export function TypewriterText({ text, className = '', speedMs = 75 }: TypewriterTextProps) {
   const words = useMemo(() => text.split(' '), [text])
   const [count, setCount] = useState(0)
 

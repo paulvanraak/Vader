@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { User, Star, Flame, X, Plus } from 'lucide-react'
+import { User, Star, Flame, X, Plus, Check } from 'lucide-react'
 import { Button } from '../../components/Button'
 import type { ChildGender, AgeGroup, ChildProfile } from '../../state/AppStateContext'
 import { childLabel, childSubLabel } from '../../lib/child'
@@ -41,7 +41,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
 
   return (
     <div className="flex h-full flex-col justify-between px-6 py-10">
-      <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
+      <div className="flex flex-1 flex-col gap-8 overflow-y-auto text-left">
         <div>
           <p className="text-label text-ink-muted">Even kennismaken</p>
           <h1 className="mt-2 text-h1 font-extrabold text-ink">Over wie gaat het?</h1>
@@ -49,13 +49,9 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
         </div>
 
         {added.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <p className="text-label font-semibold text-ink-muted">Bevestigd</p>
+          <div className="flex flex-col divide-y divide-surface-sunken border-y border-surface-sunken">
             {added.map((child) => (
-              <div
-                key={child.id}
-                className="flex items-center gap-3 rounded-md border border-surface-sunken bg-surface p-3"
-              >
+              <div key={child.id} className="flex items-center gap-3 py-3">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
                   <User size={18} strokeWidth={2} />
                 </span>
@@ -76,10 +72,11 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
           </div>
         )}
 
-        <div className="flex flex-col gap-4 rounded-md border border-dashed border-surface-sunken p-4">
+        <div className="flex flex-col gap-5">
           <p className="text-label font-semibold text-ink-muted">
             {added.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
           </p>
+
           <div>
             <p className="mb-2 text-label text-ink-muted">Naam</p>
             <input
@@ -94,7 +91,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
 
           <div>
             <p className="mb-2 text-label text-ink-muted">Zoon of dochter?</p>
-            <div className="flex gap-2" role="radiogroup" aria-label="Zoon of dochter?">
+            <div className="flex flex-col gap-2" role="radiogroup" aria-label="Zoon of dochter?">
               {genderOpties.map((optie) => {
                 const isSelected = draftGender === optie.value
                 return (
@@ -104,13 +101,14 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setDraftGender(optie.value)}
-                    className={`flex-1 rounded-md border p-3 text-center text-body-lg font-semibold transition ${
+                    className={`flex items-center justify-between rounded-md border px-4 py-3 text-left text-body-lg font-semibold transition ${
                       isSelected
                         ? 'border-primary-500 bg-primary-500/10 text-primary-600'
                         : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
                     }`}
                   >
                     {optie.label}
+                    {isSelected && <Check size={18} strokeWidth={2.5} />}
                   </button>
                 )
               })}
@@ -119,7 +117,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
 
           <div>
             <p className="mb-2 text-label text-ink-muted">Hoe oud?</p>
-            <div className="flex gap-2" role="radiogroup" aria-label="Hoe oud?">
+            <div className="flex flex-col gap-2" role="radiogroup" aria-label="Hoe oud?">
               {ageOpties.map((optie) => {
                 const isSelected = draftAge === optie.value
                 const Icon = optie.icon
@@ -130,15 +128,18 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => setDraftAge(optie.value)}
-                    className={`flex flex-1 flex-col items-center gap-1 rounded-md border p-3 text-center transition ${
+                    className={`flex items-center gap-3 rounded-md border px-4 py-3 text-left transition ${
                       isSelected
                         ? 'border-primary-500 bg-primary-500/10 text-primary-600'
                         : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
                     }`}
                   >
                     <Icon size={18} strokeWidth={2} />
-                    <span className="text-body-lg font-semibold">{optie.label}</span>
-                    <span className="text-caption text-ink-muted">{optie.range} jaar</span>
+                    <span className="flex-1">
+                      <span className="block text-body-lg font-semibold">{optie.label}</span>
+                      <span className="block text-caption text-ink-muted">{optie.range} jaar</span>
+                    </span>
+                    {isSelected && <Check size={18} strokeWidth={2.5} />}
                   </button>
                 )
               })}

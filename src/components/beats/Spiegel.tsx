@@ -11,16 +11,16 @@ export function Spiegel({ beat, worldId }: { beat: Beat; worldId: number }) {
   const style = getWorldStyle(worldId)
   return (
     <div>
-      <div className="flex flex-col items-center gap-3 text-center">
+      <div className="flex flex-col items-center gap-4 text-center">
         <span
           className="flex size-14 items-center justify-center rounded-full bg-neutral-white/10"
           style={{ color: style.accentVar }}
         >
           <MirrorRectangular size={26} strokeWidth={2} />
         </span>
-        <p className="text-h3 font-extrabold uppercase tracking-wide">Spiegel</p>
+        <p className="text-h1 font-extrabold uppercase leading-relaxed tracking-wide">Spiegel</p>
       </div>
-      <TypewriterText key={beat.body} text={beat.body ?? ''} className="mt-6 text-left text-h4 leading-snug" />
+      <TypewriterText key={beat.body} text={beat.body ?? ''} className="mt-8 text-left text-h4 leading-relaxed" />
     </div>
   )
 }

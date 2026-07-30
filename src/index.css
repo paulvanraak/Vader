@@ -267,8 +267,8 @@ body {
 @keyframes type-word-in {
   from {
     opacity: 0;
-    filter: blur(3px);
-    transform: translateY(3px);
+    filter: blur(4px);
+    transform: translateY(5px);
   }
   to {
     opacity: 1;
@@ -279,7 +279,7 @@ body {
 
 .type-word-in {
   display: inline-block;
-  animation: type-word-in 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: type-word-in 0.6s cubic-bezier(0.16, 0.7, 0.24, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

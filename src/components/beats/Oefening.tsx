@@ -1,6 +1,5 @@
-import { ClipboardList } from 'lucide-react'
+import { Check, ClipboardList, X } from 'lucide-react'
 import type { Beat } from '../../types/lesson'
-import { getWorldStyle } from '../../lib/worldStyles'
 import { BeatHeader } from './BeatHeader'
 
 interface OefeningProps {
@@ -12,7 +11,7 @@ interface OefeningProps {
 
 export function Oefening({ beat, worldId, selectedIndex, onSelect }: OefeningProps) {
   const hasAnswered = selectedIndex !== null
-  const style = getWorldStyle(worldId)
+  const selectedOptie = hasAnswered ? beat.opties?.[selectedIndex] : null
 
   return (
     <div className="flex flex-col gap-6">
@@ -28,19 +27,42 @@ export function Oefening({ beat, worldId, selectedIndex, onSelect }: OefeningPro
                 type="button"
                 role="radio"
                 aria-checked={isSelected}
+                disabled={hasAnswered}
                 onClick={() => onSelect(index)}
-                style={isSelected ? { borderColor: style.accentVar } : undefined}
-                className={`rounded-md border p-4 text-left text-body transition ${
-                  isSelected ? style.softBg : 'border-surface-sunken bg-surface hover:border-ink-faint'
+                className={`flex items-center justify-between gap-3 rounded-md border p-4 text-left text-body transition ${
+                  isSelected
+                    ? optie.correct
+                      ? 'border-success-500 bg-success-500/10 text-ink'
+                      : 'border-danger-500 bg-danger-500/10 text-ink'
+                    : `border-surface-sunken bg-surface text-ink hover:border-ink-faint ${
+                        hasAnswered ? 'opacity-50' : ''
+                      }`
                 }`}
               >
-                {optie.label}
+                <span>{optie.label}</span>
+                {isSelected && (
+                  <span
+                    className={`flex size-6 shrink-0 items-center justify-center rounded-full text-neutral-white ${
+                      optie.correct ? 'bg-success-500' : 'bg-danger-500'
+                    }`}
+                  >
+                    {optie.correct ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
+                  </span>
+                )}
               </button>
             )
           })}
         </div>
-        {hasAnswered && (
-          <p className="text-body text-ink-muted">{beat.opties?.[selectedIndex].feedback}</p>
+        {hasAnswered && selectedOptie && (
+          <div
+            className={`rounded-md border-l-4 p-4 text-body-lg font-semibold leading-relaxed ${
+              selectedOptie.correct
+                ? 'border-success-500 bg-success-500/10 text-ink'
+                : 'border-danger-500 bg-danger-500/10 text-ink'
+            }`}
+          >
+            {selectedOptie.feedback}
+          </div>
         )}
       </div>
     </div>
