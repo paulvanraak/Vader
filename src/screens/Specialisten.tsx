@@ -9,7 +9,7 @@ interface Specialist {
 
 const specialisten: Specialist[] = [
   {
-    name: 'Dr. Marieke van Dongen',
+    name: 'Dia Jonas Dreessen',
     role: 'Klinisch psycholoog',
     bio: 'Gespecialiseerd in gezinsdynamiek en de overgang van kindertijd naar puberteit.',
   },
