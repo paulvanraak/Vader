@@ -1,37 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { X, UserRound } from 'lucide-react'
-
-interface Specialist {
-  name: string
-  role: string
-  bio: string
-}
-
-const specialisten: Specialist[] = [
-  {
-    name: 'Dia Jonas Dreessen',
-    role: 'Klinisch psycholoog',
-    bio: 'Gespecialiseerd in gezinsdynamiek en de overgang van kindertijd naar puberteit.',
-  },
-  {
-    name: 'Drs. Thomas Bakker',
-    role: 'Kinderpsycholoog',
-    bio: 'Werkt met kinderen van acht tot zestien jaar rond emotieregulatie en zelfvertrouwen.',
-  },
-  {
-    name: 'Dr. Sanne Verhoeven',
-    role: 'Gedragswetenschapper',
-    bio: 'Onderzoekt hoe puberbreinen reageren op grenzen, groepsdruk en sociale media.',
-  },
-  {
-    name: 'Drs. Youssef El Amrani',
-    role: 'Orthopedagoog',
-    bio: 'Adviseert ouders over opvoedstijl, communicatie en het versterken van de ouder-kindband.',
-  },
-]
+import { useContent } from '../state/ContentContext'
 
 export function Specialisten() {
   const navigate = useNavigate()
+  const { specialists } = useContent()
 
   return (
     <div className="flex h-full flex-col">
@@ -51,9 +24,9 @@ export function Specialisten() {
         <p className="mb-2 text-body text-ink-muted">
           De inzichten in FatherFlow zijn opgesteld met input van dit fictieve panel, ter illustratie van de demo.
         </p>
-        {specialisten.map((specialist) => (
+        {specialists.map((specialist) => (
           <div
-            key={specialist.name}
+            key={specialist.id}
             className="flex items-start gap-3 rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken"
           >
             <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">

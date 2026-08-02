@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Lesson } from '../types/lesson'
 import { lessonPath } from '../lib/worldProgress'
+import { useContent } from './ContentContext'
 
 export type ChildGender = 'zoon' | 'dochter'
 export type AgeGroup = 'jong' | 'oud'
@@ -59,6 +60,7 @@ function getInitialTheme(): Theme {
 }
 
 export function AppStateProvider({ children: providerChildren }: { children: ReactNode }) {
+  const { lessons } = useContent()
   const [onboardingComplete, setOnboardingComplete] = useState(false)
   const [pinVerified, setPinVerified] = useState(false)
   const [fatherName, setFatherName] = useState<string | null>(null)
@@ -76,8 +78,8 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
 
   const path = useMemo(() => {
     if (!activeChild || activeChild.gender !== 'zoon') return []
-    return lessonPath(activeChild.ageGroup)
-  }, [activeChild])
+    return lessonPath(lessons, activeChild.ageGroup)
+  }, [activeChild, lessons])
 
   const todayLessonId = useMemo(() => {
     if (path.length === 0) return null

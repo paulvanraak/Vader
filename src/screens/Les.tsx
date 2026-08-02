@@ -1,9 +1,10 @@
 import { Navigate, useParams } from 'react-router-dom'
-import { lessons } from '../data/lessons'
+import { useContent } from '../state/ContentContext'
 import { LessonPlayer } from '../components/LessonPlayer'
 
 export function Les() {
   const { id } = useParams<{ id: string }>()
+  const { lessons } = useContent()
   const lesson = lessons.find((l) => l.id === id)
 
   if (!lesson) {

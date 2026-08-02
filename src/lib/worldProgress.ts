@@ -1,11 +1,10 @@
 import type { Lesson } from '../types/lesson'
-import { lessons } from '../data/lessons'
 import type { AgeGroup } from '../state/AppStateContext'
 
-export function lessonPath(ageGroup: AgeGroup): Lesson[] {
-  return lessons
+export function lessonPath(allLessons: Lesson[], ageGroup: AgeGroup): Lesson[] {
+  return allLessons
     .filter((lesson) => lesson.cohort === ageGroup)
-    .sort((a, b) => a.world - b.world || a.id.localeCompare(b.id))
+    .sort((a, b) => a.world - b.world || a.sortOrder - b.sortOrder)
 }
 
 export function lessonsForWorld(path: Lesson[], worldId: number): Lesson[] {

@@ -25,6 +25,7 @@ export interface Lesson {
   world: number
   cohort: 'jong' | 'oud'
   title: string
+  sortOrder: number
   beats: Beat[]
 }
 

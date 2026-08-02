@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import { Check, Lock, Play, Clock } from 'lucide-react'
-import { worlds } from '../data/worlds'
 import { isLessonUnlocked } from '../lib/worldProgress'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
+import { useContent } from '../state/ContentContext'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 
 export function Home() {
   const navigate = useNavigate()
   const { activeChild, path, todayLessonId, completedLessonIds } = useAppState()
+  const { worlds } = useContent()
 
   if (activeChild && activeChild.gender === 'dochter') {
     return (

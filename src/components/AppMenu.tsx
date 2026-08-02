@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { User, Settings, Info, Stethoscope, LogOut, X } from 'lucide-react'
+import { User, Settings, Info, Stethoscope, LayoutGrid, LogOut, X } from 'lucide-react'
 import { useAppState } from '../state/AppStateContext'
 
 interface AppMenuProps {
@@ -15,6 +15,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
     { label: 'Instellingen', icon: Settings, onClick: () => navigate('/instellingen') },
     { label: 'Over FatherFlow', icon: Info, onClick: () => navigate('/over') },
     { label: 'Specialisten', icon: Stethoscope, onClick: () => navigate('/specialisten') },
+    { label: 'CMS', icon: LayoutGrid, onClick: () => navigate('/admin') },
   ]
 
   return (

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-
 import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
+import { ContentProvider } from './state/ContentContext'
 import { Splash } from './screens/Splash'
 import { PinScreen } from './screens/PinScreen'
 import { OnboardingFlow } from './screens/onboarding/OnboardingFlow'
@@ -15,6 +16,8 @@ import { Instellingen } from './screens/Instellingen'
 import { OverFatherFlow } from './screens/OverFatherFlow'
 import { Specialisten } from './screens/Specialisten'
 import { Les } from './screens/Les'
+import { AdminWorlds } from './screens/admin/AdminWorlds'
+import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
 
 function TabLayout() {
   const location = useLocation()
@@ -54,6 +57,8 @@ function AppRoutes() {
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
+      <Route path="/admin" element={<AdminWorlds />} />
+      <Route path="/admin/worlds/:worldId" element={<AdminWorldLessons />} />
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/kompas" element={<Kompas />} />
@@ -68,11 +73,13 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AppStateProvider>
-        <AppShell>
-          <AppRoutes />
-        </AppShell>
-      </AppStateProvider>
+      <ContentProvider>
+        <AppStateProvider>
+          <AppShell>
+            <AppRoutes />
+          </AppShell>
+        </AppStateProvider>
+      </ContentProvider>
     </BrowserRouter>
   )
 }

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Search, ChevronDown, Lock, CircleCheck } from 'lucide-react'
-import { worlds } from '../data/worlds'
-import { compassEntries } from '../data/compass'
 import { useAppState } from '../state/AppStateContext'
+import { useContent } from '../state/ContentContext'
 import { lessonsForWorld, isWorldComplete, isLessonUnlocked } from '../lib/worldProgress'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 
 export function Kompas() {
   const { path, completedLessonIds } = useAppState()
+  const { worlds, compassEntries } = useContent()
   const [query, setQuery] = useState('')
   const [expandedWorldId, setExpandedWorldId] = useState<number | null>(null)
 
