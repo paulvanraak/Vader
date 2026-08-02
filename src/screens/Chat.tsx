@@ -9,12 +9,23 @@ type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 interface ChatMessage {
   role: MessageRole
   text: string
+  parts: string[]
   demo?: boolean
 }
 
 interface ApiMessage {
   role: 'user' | 'assistant'
   content: string
+}
+
+// Het model splitst een langer antwoord soms op in 2-3 losse berichten,
+// gescheiden door een regel met alleen "|||", zodat het als losse appjes
+// aanvoelt in plaats van één lange alinea.
+function splitParts(text: string): string[] {
+  return text
+    .split(/\n?\|\|\|\n?/)
+    .map((part) => part.trim())
+    .filter(Boolean)
 }
 
 function toApiMessages(msgs: ChatMessage[]): ApiMessage[] {
@@ -45,14 +56,14 @@ export function Chat() {
     const question = input.trim()
     if (!question || isLoading) return
 
-    const nextMessages: ChatMessage[] = [...messages, { role: 'user', text: question }]
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', text: question, parts: [question] }]
     setMessages(nextMessages)
     setInput('')
 
     // De vangrail draait client-side, meteen, vóór er ooit een model wordt
     // aangeroepen, zodat dit ook zonder serverroute altijd werkt.
     if (triggersGuardrail(question)) {
-      setMessages((prev) => [...prev, { role: 'referral', text: REFERRAL_TEXT }])
+      setMessages((prev) => [...prev, { role: 'referral', text: REFERRAL_TEXT, parts: [REFERRAL_TEXT] }])
       return
     }
 
@@ -65,11 +76,13 @@ export function Chat() {
       })
       if (!res.ok) throw new Error('serverroute niet beschikbaar')
       const data = (await res.json()) as { type: 'answer' | 'referral' | 'error'; text: string }
-      setMessages((prev) => [...prev, { role: data.type, text: data.text }])
+      const parts = data.type === 'answer' ? splitParts(data.text) : [data.text]
+      setMessages((prev) => [...prev, { role: data.type, text: data.text, parts }])
     } catch {
       // Geen serverroute bereikbaar (bijvoorbeeld deze losstaande demo).
       // Geef een eerlijk gelabeld voorbeeldantwoord in plaats van alleen een foutmelding.
-      setMessages((prev) => [...prev, { role: 'answer', text: generateLocalAnswer(question), demo: true }])
+      const text = generateLocalAnswer(question)
+      setMessages((prev) => [...prev, { role: 'answer', text, parts: splitParts(text), demo: true }])
     } finally {
       setIsLoading(false)
     }
@@ -174,15 +187,21 @@ function ChatBubble({ message }: { message: ChatMessage }) {
           Voorbeeldantwoord, geen live verbinding
         </span>
       )}
-      <p
-        className={`rounded-2xl rounded-bl-sm px-4 py-3 text-body-lg shadow-xs ring-1 ${
-          message.role === 'error'
-            ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
-            : 'bg-surface text-ink ring-surface-sunken'
-        }`}
-      >
-        {message.text}
-      </p>
+      <div className="flex flex-col gap-1.5">
+        {message.parts.map((part, index) => (
+          <p
+            key={index}
+            style={{ animationDelay: `${index * 250}ms` }}
+            className={`animate-bubble-in rounded-2xl rounded-bl-sm px-4 py-3 text-body-lg shadow-xs ring-1 ${
+              message.role === 'error'
+                ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
+                : 'bg-surface text-ink ring-surface-sunken'
+            }`}
+          >
+            {part}
+          </p>
+        ))}
+      </div>
     </div>
   )
 }
