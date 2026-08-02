@@ -16,6 +16,7 @@ import { Instellingen } from './screens/Instellingen'
 import { OverFatherFlow } from './screens/OverFatherFlow'
 import { Specialisten } from './screens/Specialisten'
 import { AddChild } from './screens/AddChild'
+import { ChildrenQuestion } from './screens/onboarding/ChildrenQuestion'
 import { Les } from './screens/Les'
 import { AdminLayout } from './screens/admin/AdminLayout'
 import { AdminWorlds } from './screens/admin/AdminWorlds'
@@ -36,9 +37,18 @@ function TabLayout() {
   )
 }
 
+function FullScreenSpinner() {
+  return (
+    <div className="flex h-full w-full items-center justify-center bg-page">
+      <div className="size-8 animate-spin rounded-full border-2 border-ink-faint border-t-primary-500" />
+    </div>
+  )
+}
+
 function MainApp() {
-  const { pinVerified, onboardingComplete } = useAppState()
+  const { pinVerified, authLoading, childrenLoaded, session, children } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
+  const [authMode, setAuthMode] = useState<OnboardingMode>('nieuw')
 
   if (showSplash) {
     return <Splash onDone={() => setShowSplash(false)} />
@@ -48,10 +58,26 @@ function MainApp() {
     return <PinScreen onSuccess={() => {}} />
   }
 
-  if (!onboardingComplete) {
+  if (authLoading) {
+    return <FullScreenSpinner />
+  }
+
+  if (!session) {
     return (
       <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
-        <OnboardingFlow />
+        <OnboardingFlow mode={authMode} onSwitchMode={setAuthMode} />
+      </div>
+    )
+  }
+
+  if (!childrenLoaded) {
+    return <FullScreenSpinner />
+  }
+
+  if (children.length === 0) {
+    return (
+      <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+        <ChildrenQuestion onNext={() => {}} />
       </div>
     )
   }

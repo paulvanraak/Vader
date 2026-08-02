@@ -1,15 +1,36 @@
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
 import { Button } from '../../components/Button'
+import { signIn } from '../../lib/account'
 
-export function LoginScreen({ onNext }: { onNext: (name: string) => void }) {
-  const [name, setName] = useState('')
+export function LoginScreen({
+  onNext,
+  onSwitchToSignup,
+}: {
+  onNext: () => void
+  onSwitchToSignup?: () => void
+}) {
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const canSubmit = name.trim().length > 0 && password.length > 0
+  const canSubmit = email.trim().length > 0 && password.length > 0 && !isSubmitting
 
-  function submit() {
-    if (canSubmit) onNext(name.trim())
+  async function submit() {
+    if (!canSubmit) return
+    setError(null)
+    setIsSubmitting(true)
+    try {
+      const { error: signInError } = await signIn(email.trim(), password)
+      if (signInError) {
+        setError(signInError.message)
+        return
+      }
+      onNext()
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -24,11 +45,12 @@ export function LoginScreen({ onNext }: { onNext: (name: string) => void }) {
         </div>
         <div className="flex w-full max-w-xs flex-col gap-3">
           <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Jouw naam"
-            aria-label="Jouw naam"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Jouw e-mailadres"
+            aria-label="E-mailadres"
+            autoCapitalize="none"
             className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
           />
           <input
@@ -36,16 +58,26 @@ export function LoginScreen({ onNext }: { onNext: (name: string) => void }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') submit()
+              if (e.key === 'Enter') void submit()
             }}
             placeholder="Wachtwoord"
             aria-label="Wachtwoord"
             className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
           />
+          {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
+          {onSwitchToSignup && (
+            <button
+              type="button"
+              onClick={onSwitchToSignup}
+              className="mt-1 text-caption font-semibold text-ink-muted underline underline-offset-2"
+            >
+              Nog geen account? Registreer
+            </button>
+          )}
         </div>
       </div>
-      <Button onClick={submit} disabled={!canSubmit}>
-        Inloggen
+      <Button onClick={() => void submit()} disabled={!canSubmit}>
+        {isSubmitting ? 'Bezig...' : 'Inloggen'}
       </Button>
     </div>
   )

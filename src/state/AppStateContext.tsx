@@ -1,7 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import type { Session } from '@supabase/supabase-js'
 import type { Lesson } from '../types/lesson'
 import { lessonPath } from '../lib/worldProgress'
 import { useContent } from './ContentContext'
+import { supabase } from '../lib/supabaseClient'
+import { fetchChildren, insertChild, updateChildProgress, signOutAccount } from '../lib/account'
 
 export type ChildGender = 'zoon' | 'dochter'
 export type AgeGroup = 'jong' | 'oud'
@@ -24,12 +27,10 @@ function emptyProgress(): ChildProgress {
   return { completedLessonIds: [], doneActionIds: [], streakDays: 0 }
 }
 
-function makeChildId(): string {
-  return `child-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-}
-
 interface AppState {
-  onboardingComplete: boolean
+  authLoading: boolean
+  childrenLoaded: boolean
+  session: Session | null
   pinVerified: boolean
   verifyPin: (pin: string) => boolean
   fatherName: string | null
@@ -45,8 +46,7 @@ interface AppState {
   toggleTheme: () => void
   doneActionIds: string[]
   toggleAction: (actionId: string) => void
-  completeOnboarding: (fatherName: string, children: ChildProfile[]) => void
-  addChild: (child: Omit<ChildProfile, 'id'>) => void
+  addChild: (child: Omit<ChildProfile, 'id'>) => Promise<void>
   completeLesson: (lessonId: string) => void
   logout: () => void
 }
@@ -62,17 +62,66 @@ function getInitialTheme(): Theme {
 
 export function AppStateProvider({ children: providerChildren }: { children: ReactNode }) {
   const { lessons } = useContent()
-  const [onboardingComplete, setOnboardingComplete] = useState(false)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [childrenLoaded, setChildrenLoaded] = useState(true)
+  const [session, setSession] = useState<Session | null>(null)
   const [pinVerified, setPinVerified] = useState(false)
-  const [fatherName, setFatherName] = useState<string | null>(null)
   const [childList, setChildList] = useState<ChildProfile[]>([])
   const [activeChildId, setActiveChildId] = useState<string | null>(null)
   const [progressByChild, setProgressByChild] = useState<Record<string, ChildProgress>>({})
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
 
+  const fatherName = (session?.user.user_metadata?.father_name as string | undefined) ?? null
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+
+  // Volgt de Supabase-sessie: bij inloggen, uitloggen of een ververste token
+  // wordt de rest van de state (kinderen, voortgang) hieronder herladen.
+  useEffect(() => {
+    let cancelled = false
+    supabase.auth.getSession().then(({ data }) => {
+      if (!cancelled) {
+        setSession(data.session)
+        setAuthLoading(false)
+      }
+    })
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession)
+    })
+    return () => {
+      cancelled = true
+      subscription.subscription.unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!session) {
+      setChildList([])
+      setProgressByChild({})
+      setActiveChildId(null)
+      setChildrenLoaded(true)
+      return
+    }
+    let cancelled = false
+    setChildrenLoaded(false)
+    fetchChildren()
+      .then(({ profiles, progress }) => {
+        if (cancelled) return
+        setChildList(profiles)
+        setProgressByChild(progress)
+        setActiveChildId((prev) => (prev && profiles.some((p) => p.id === prev) ? prev : (profiles[0]?.id ?? null)))
+        setChildrenLoaded(true)
+      })
+      .catch((err) => {
+        console.error('Kinderen ophalen mislukt:', err)
+        if (!cancelled) setChildrenLoaded(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [session?.user.id])
 
   const activeChild = childList.find((c) => c.id === activeChildId) ?? null
   const progress = (activeChildId && progressByChild[activeChildId]) || emptyProgress()
@@ -88,16 +137,27 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
     return (next ?? path[0]).id
   }, [path, progress.completedLessonIds])
 
+  // Werkt lokale state meteen bij (zodat de UI direct reageert) en synct
+  // daarna op de achtergrond naar Supabase; een mislukte sync wordt gelogd
+  // maar blokkeert de gebruiker niet.
   function updateActiveProgress(updater: (prev: ChildProgress) => ChildProgress) {
     if (!activeChildId) return
-    setProgressByChild((prev) => ({
-      ...prev,
-      [activeChildId]: updater(prev[activeChildId] ?? emptyProgress()),
-    }))
+    const childId = activeChildId
+    setProgressByChild((prev) => {
+      const next = updater(prev[childId] ?? emptyProgress())
+      void updateChildProgress(childId, {
+        completed_lesson_ids: next.completedLessonIds,
+        done_action_ids: next.doneActionIds,
+        streak_days: next.streakDays,
+      }).catch((err) => console.error('Voortgang opslaan mislukt:', err))
+      return { ...prev, [childId]: next }
+    })
   }
 
   const value: AppState = {
-    onboardingComplete,
+    authLoading,
+    childrenLoaded,
+    session,
     pinVerified,
     verifyPin: (pin) => {
       const ok = pin === PIN_CODE
@@ -124,16 +184,8 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
           : [...prev.doneActionIds, actionId],
       }))
     },
-    completeOnboarding: (selectedFatherName, selectedChildren) => {
-      const withIds = selectedChildren.map((c) => ({ ...c, id: c.id || makeChildId() }))
-      setFatherName(selectedFatherName)
-      setChildList(withIds)
-      setActiveChildId(withIds[0]?.id ?? null)
-      setProgressByChild(Object.fromEntries(withIds.map((c) => [c.id, emptyProgress()])))
-      setOnboardingComplete(true)
-    },
-    addChild: (child) => {
-      const newChild: ChildProfile = { ...child, id: makeChildId() }
+    addChild: async (child) => {
+      const newChild = await insertChild(child)
       setChildList((prev) => [...prev, newChild])
       setProgressByChild((prev) => ({ ...prev, [newChild.id]: emptyProgress() }))
       setActiveChildId(newChild.id)
@@ -148,12 +200,8 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
       }))
     },
     logout: () => {
-      setOnboardingComplete(false)
       setPinVerified(false)
-      setFatherName(null)
-      setChildList([])
-      setActiveChildId(null)
-      setProgressByChild({})
+      void signOutAccount()
     },
   }
 

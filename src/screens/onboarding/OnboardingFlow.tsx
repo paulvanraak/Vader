@@ -6,7 +6,6 @@ import { LoginScreen } from './LoginScreen'
 import { IntroStep } from './IntroStep'
 import { ChildrenQuestion } from './ChildrenQuestion'
 import { HowItWorks } from './HowItWorks'
-import { useAppState, type ChildProfile } from '../../state/AppStateContext'
 
 const introParts = [
   {
@@ -28,11 +27,13 @@ const introParts = [
 
 export type OnboardingMode = 'nieuw' | 'inloggen'
 
-export function OnboardingFlow({ mode = 'nieuw' }: { mode?: OnboardingMode }) {
+interface OnboardingFlowProps {
+  mode?: OnboardingMode
+  onSwitchMode?: (mode: OnboardingMode) => void
+}
+
+export function OnboardingFlow({ mode = 'nieuw', onSwitchMode }: OnboardingFlowProps) {
   const [step, setStep] = useState(0)
-  const [fatherName, setFatherName] = useState('')
-  const [children, setChildren] = useState<ChildProfile[]>([])
-  const { completeOnboarding } = useAppState()
   const navigate = useNavigate()
 
   let content: ReactNode
@@ -42,19 +43,15 @@ export function OnboardingFlow({ mode = 'nieuw' }: { mode?: OnboardingMode }) {
     // Een kind toevoegen kan daarna via het menu.
     content = (
       <LoginScreen
-        onNext={(name) => {
-          completeOnboarding(name, [])
-          navigate('/')
-        }}
+        onNext={() => navigate('/')}
+        onSwitchToSignup={onSwitchMode && (() => onSwitchMode('nieuw'))}
       />
     )
   } else if (step === 0) {
     content = (
       <SignupScreen
-        onNext={(name) => {
-          setFatherName(name)
-          setStep(1)
-        }}
+        onNext={() => setStep(1)}
+        onSwitchToLogin={onSwitchMode && (() => onSwitchMode('inloggen'))}
       />
     )
   } else if (step <= 3) {
@@ -70,23 +67,9 @@ export function OnboardingFlow({ mode = 'nieuw' }: { mode?: OnboardingMode }) {
       />
     )
   } else if (step === 4) {
-    content = (
-      <ChildrenQuestion
-        onNext={(selectedChildren) => {
-          setChildren(selectedChildren)
-          setStep(5)
-        }}
-      />
-    )
+    content = <ChildrenQuestion onNext={() => setStep(5)} />
   } else {
-    content = (
-      <HowItWorks
-        onStart={() => {
-          completeOnboarding(fatherName, children)
-          navigate('/')
-        }}
-      />
-    )
+    content = <HowItWorks onStart={() => navigate('/')} />
   }
 
   return (

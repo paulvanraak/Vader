@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { User, Star, Flame, X, Plus, Check } from 'lucide-react'
+import { User, Star, Flame, Check } from 'lucide-react'
 import { Button } from '../../components/Button'
-import type { ChildGender, AgeGroup, ChildProfile } from '../../state/AppStateContext'
+import { useAppState, type ChildGender, type AgeGroup, type ChildProfile } from '../../state/AppStateContext'
 import { childLabel, childSubLabel } from '../../lib/child'
 
 const genderOpties: { value: ChildGender; label: string }[] = [
@@ -14,29 +14,28 @@ const ageOpties: { value: AgeGroup; label: string; range: string; icon: typeof S
   { value: 'oud', label: 'PUBERS', range: '12-16', icon: Flame },
 ]
 
-function makeDraftId(): string {
-  return `draft-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-}
-
-export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]) => void }) {
-  const [added, setAdded] = useState<ChildProfile[]>([])
+export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
+  const { children, addChild } = useAppState()
   const [draftName, setDraftName] = useState('')
   const [draftGender, setDraftGender] = useState<ChildGender | null>(null)
   const [draftAge, setDraftAge] = useState<AgeGroup | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function addChild() {
+  async function handleAddChild() {
     if (!draftName.trim() || !draftGender || !draftAge) return
-    setAdded((prev) => [
-      ...prev,
-      { id: makeDraftId(), name: draftName.trim(), gender: draftGender, ageGroup: draftAge },
-    ])
-    setDraftName('')
-    setDraftGender(null)
-    setDraftAge(null)
-  }
-
-  function removeChild(id: string) {
-    setAdded((prev) => prev.filter((c) => c.id !== id))
+    setIsSaving(true)
+    setError(null)
+    try {
+      await addChild({ name: draftName.trim(), gender: draftGender, ageGroup: draftAge })
+      setDraftName('')
+      setDraftGender(null)
+      setDraftAge(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Kind toevoegen is niet gelukt.')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -48,9 +47,9 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
           <p className="mt-2 text-body text-ink-muted">Voeg één of meerdere kinderen toe.</p>
         </div>
 
-        {added.length > 0 && (
+        {children.length > 0 && (
           <div className="flex flex-col divide-y divide-surface-sunken border-y border-surface-sunken">
-            {added.map((child) => (
+            {children.map((child: ChildProfile) => (
               <div key={child.id} className="flex items-center gap-3 py-3">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
                   <User size={18} strokeWidth={2} />
@@ -59,14 +58,6 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
                   <p className="text-body-lg font-semibold text-ink">{childLabel(child)}</p>
                   <p className="text-caption text-ink-muted">{childSubLabel(child)}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeChild(child.id)}
-                  aria-label={`Verwijder ${childLabel(child)}`}
-                  className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-                >
-                  <X size={16} strokeWidth={2} />
-                </button>
               </div>
             ))}
           </div>
@@ -74,7 +65,7 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
 
         <div className="flex flex-col gap-5">
           <p className="text-label font-semibold text-ink-muted">
-            {added.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
+            {children.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
           </p>
 
           <div>
@@ -152,18 +143,19 @@ export function ChildrenQuestion({ onNext }: { onNext: (children: ChildProfile[]
             </p>
           )}
 
+          {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
+
           <button
             type="button"
-            onClick={addChild}
-            disabled={!draftName.trim() || !draftGender || !draftAge}
+            onClick={() => void handleAddChild()}
+            disabled={isSaving || !draftName.trim() || !draftGender || !draftAge}
             className="flex items-center justify-center gap-2 rounded-md border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
           >
-            <Plus size={18} strokeWidth={2.5} />
-            Bevestigen
+            {isSaving ? 'Bezig...' : 'Bevestigen'}
           </button>
         </div>
       </div>
-      <Button onClick={() => added.length > 0 && onNext(added)} disabled={added.length === 0}>
+      <Button onClick={() => children.length > 0 && onNext()} disabled={children.length === 0}>
         Verder
       </Button>
     </div>

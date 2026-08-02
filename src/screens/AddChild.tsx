@@ -20,13 +20,23 @@ export function AddChild() {
   const [name, setName] = useState('')
   const [gender, setGender] = useState<ChildGender | null>(null)
   const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const canSubmit = name.trim().length > 0 && gender !== null && ageGroup !== null
+  const canSubmit = name.trim().length > 0 && gender !== null && ageGroup !== null && !isSaving
 
-  function submit() {
+  async function submit() {
     if (!canSubmit || !gender || !ageGroup) return
-    addChild({ name: name.trim(), gender, ageGroup })
-    navigate(-1)
+    setIsSaving(true)
+    setError(null)
+    try {
+      await addChild({ name: name.trim(), gender, ageGroup })
+      navigate(-1)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Kind toevoegen is niet gelukt.')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -119,10 +129,12 @@ export function AddChild() {
               Deze demo is nu nog gericht op zonen. Een versie voor dochters komt eraan.
             </p>
           )}
+
+          {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
         </div>
 
-        <Button onClick={submit} disabled={!canSubmit}>
-          Kind toevoegen
+        <Button onClick={() => void submit()} disabled={!canSubmit}>
+          {isSaving ? 'Bezig...' : 'Kind toevoegen'}
         </Button>
       </div>
     </div>
