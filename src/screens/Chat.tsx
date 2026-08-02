@@ -13,11 +13,27 @@ interface ChatMessage {
   text: string
   parts: string[]
   demo?: boolean
+  greeting?: boolean
 }
 
 interface ApiMessage {
   role: 'user' | 'assistant'
   content: string
+}
+
+// Variatie in de opener zodat de chat niet elke keer met dezelfde zin begint.
+const GREETINGS = [
+  'Hallo! Waar loop je tegenaan?',
+  'Hoi, fijn dat je er bent. Wat speelt er?',
+  'Hey! Vertel, wat wil je bespreken?',
+  'Gedag! Waarmee kan ik je helpen?',
+  'Dag! Wat houdt je bezig vandaag?',
+  'Hoi! Wat wil je even doorpraten?',
+]
+
+function randomGreeting(): ChatMessage {
+  const text = GREETINGS[Math.floor(Math.random() * GREETINGS.length)]
+  return { role: 'answer', text, parts: [text], greeting: true }
 }
 
 // Het model splitst een langer antwoord soms op in 2-3 losse berichten,
@@ -32,21 +48,24 @@ function splitParts(text: string): string[] {
 
 function toApiMessages(msgs: ChatMessage[]): ApiMessage[] {
   return msgs
-    .filter((m) => m.role === 'user' || (m.role === 'answer' && !m.demo))
+    .filter((m) => m.role === 'user' || (m.role === 'answer' && !m.demo && !m.greeting))
     .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }))
 }
 
 export function Chat() {
   const { activeChild } = useAppState()
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [randomGreeting()])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const latestRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+  // Blijft staan bij de bovenste bubbel van het nieuwste bericht in plaats
+  // van meteen helemaal naar beneden te springen, zodat je rustig van boven
+  // naar onder kan meelezen terwijl de losse appjes verschijnen.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: 'end' })
-  }, [messages, isLoading])
+    latestRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [messages.length, isLoading])
 
   useEffect(() => {
     const el = textareaRef.current
@@ -92,40 +111,32 @@ export function Chat() {
     }
   }
 
-  const hasChat = messages.length > 0
-
   return (
     <div className="flex h-full flex-col">
-      <div className="shrink-0 px-5 pb-3 pt-6">
-        <p className="text-label text-ink-muted">Chat</p>
-        <h1 className="text-h2 text-ink">Vraag het</h1>
-      </div>
-
       <div className="shrink-0">
         <ChildSwitcher />
       </div>
 
       <div className="flex flex-1 flex-col overflow-y-auto px-5">
-        {hasChat ? (
-          <div className="mt-auto flex flex-col gap-1.5 py-3">
-            {messages.map((message, index) => (
-              <ChatBubble key={index} message={message} />
-            ))}
-            {isLoading && (
-              <div className="flex items-center gap-2 self-start rounded-2xl rounded-bl-sm bg-surface px-4 py-3 text-body text-ink-muted shadow-xs ring-1 ring-surface-sunken">
-                <LoaderCircle size={16} className="animate-spin" strokeWidth={2} />
-                Denkt na
+        <div className="mt-auto flex flex-col gap-1.5 py-3">
+          {messages.map((message, index) => {
+            const isLast = index === messages.length - 1
+            return (
+              <div key={index} ref={isLast && !isLoading ? latestRef : undefined} className="flex flex-col">
+                <ChatBubble message={message} />
               </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-        ) : (
-          <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-            <p className="text-body text-ink-muted">
-              Beschrijf kort wat er speelt en krijg een korte, praktische duiding met een spiegelvraag.
-            </p>
-          </div>
-        )}
+            )
+          })}
+          {isLoading && (
+            <div
+              ref={latestRef}
+              className="flex items-center gap-2 self-start rounded-2xl rounded-bl-sm bg-surface px-4 py-3 text-body text-ink-muted shadow-xs ring-1 ring-surface-sunken"
+            >
+              <LoaderCircle size={16} className="animate-spin" strokeWidth={2} />
+              Denkt na
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="shrink-0 px-5 pb-5 pt-3">
@@ -134,7 +145,7 @@ export function Chat() {
             e.preventDefault()
             void handleSubmit()
           }}
-          className="flex items-end gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken"
+          className="flex items-center gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken"
         >
           <textarea
             ref={textareaRef}
@@ -149,7 +160,7 @@ export function Chat() {
             rows={1}
             placeholder="Vraag iets, bijvoorbeeld: hij sluit zich steeds meer af"
             aria-label="Beschrijf de situatie"
-            className="max-h-32 flex-1 resize-none overflow-y-auto rounded-md bg-surface px-3 py-2.5 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="max-h-32 flex-1 resize-none overflow-y-auto rounded-md bg-surface px-3 py-2.5 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
           />
           <button
             type="submit"
@@ -195,7 +206,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         {message.parts.map((part, index) => (
           <p
             key={index}
-            style={{ animationDelay: `${index * 250}ms` }}
+            style={{ animationDelay: `${index * 650}ms` }}
             className={`animate-bubble-in rounded-2xl rounded-bl-sm px-4 py-3 text-body-lg shadow-xs ring-1 ${
               message.role === 'error'
                 ? 'bg-danger-500/10 text-danger-500 ring-danger-500/20'
