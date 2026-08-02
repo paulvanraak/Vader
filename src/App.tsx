@@ -15,6 +15,7 @@ import { Ik } from './screens/Ik'
 import { Instellingen } from './screens/Instellingen'
 import { OverFatherFlow } from './screens/OverFatherFlow'
 import { Specialisten } from './screens/Specialisten'
+import { AddChild } from './screens/AddChild'
 import { Les } from './screens/Les'
 import { AdminLayout } from './screens/admin/AdminLayout'
 import { AdminWorlds } from './screens/admin/AdminWorlds'
@@ -61,6 +62,7 @@ function MainApp() {
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
+      <Route path="/kind-toevoegen" element={<AddChild />} />
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/kompas" element={<Kompas />} />

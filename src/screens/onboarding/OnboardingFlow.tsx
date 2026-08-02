@@ -38,26 +38,16 @@ export function OnboardingFlow({ mode = 'nieuw' }: { mode?: OnboardingMode }) {
   let content: ReactNode
 
   if (mode === 'inloggen') {
-    // Terugkerende gebruiker: geen uitlegschermen, direct van inloggen naar kinderen.
-    if (step === 0) {
-      content = (
-        <LoginScreen
-          onNext={(name) => {
-            setFatherName(name)
-            setStep(1)
-          }}
-        />
-      )
-    } else {
-      content = (
-        <ChildrenQuestion
-          onNext={(selectedChildren) => {
-            completeOnboarding(fatherName, selectedChildren)
-            navigate('/')
-          }}
-        />
-      )
-    }
+    // Terugkerende gebruiker: geen uitlegschermen en geen kind-stap, direct de app in.
+    // Een kind toevoegen kan daarna via het menu.
+    content = (
+      <LoginScreen
+        onNext={(name) => {
+          completeOnboarding(name, [])
+          navigate('/')
+        }}
+      />
+    )
   } else if (step === 0) {
     content = (
       <SignupScreen

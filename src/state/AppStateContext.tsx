@@ -46,6 +46,7 @@ interface AppState {
   doneActionIds: string[]
   toggleAction: (actionId: string) => void
   completeOnboarding: (fatherName: string, children: ChildProfile[]) => void
+  addChild: (child: Omit<ChildProfile, 'id'>) => void
   completeLesson: (lessonId: string) => void
   logout: () => void
 }
@@ -130,6 +131,12 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
       setActiveChildId(withIds[0]?.id ?? null)
       setProgressByChild(Object.fromEntries(withIds.map((c) => [c.id, emptyProgress()])))
       setOnboardingComplete(true)
+    },
+    addChild: (child) => {
+      const newChild: ChildProfile = { ...child, id: makeChildId() }
+      setChildList((prev) => [...prev, newChild])
+      setProgressByChild((prev) => ({ ...prev, [newChild.id]: emptyProgress() }))
+      setActiveChildId(newChild.id)
     },
     completeLesson: (lessonId) => {
       updateActiveProgress((prev) => ({
