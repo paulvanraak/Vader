@@ -6,7 +6,7 @@ import { AppStateProvider, useAppState } from './state/AppStateContext'
 import { ContentProvider } from './state/ContentContext'
 import { Splash } from './screens/Splash'
 import { PinScreen } from './screens/PinScreen'
-import { OnboardingFlow } from './screens/onboarding/OnboardingFlow'
+import { OnboardingFlow, type OnboardingMode } from './screens/onboarding/OnboardingFlow'
 import { Home } from './screens/Home'
 import { Kompas } from './screens/Kompas'
 import { Chat } from './screens/Chat'
@@ -72,6 +72,14 @@ function MainApp() {
   )
 }
 
+function OnboardingPreview({ mode }: { mode: OnboardingMode }) {
+  return (
+    <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+      <OnboardingFlow mode={mode} />
+    </div>
+  )
+}
+
 function AdminApp() {
   const { pinVerified } = useAppState()
 
@@ -99,6 +107,22 @@ function App() {
         <AppStateProvider>
           <Routes>
             <Route path="/admin/*" element={<AdminApp />} />
+            <Route
+              path="/onboarding/nieuw"
+              element={
+                <AppShell>
+                  <OnboardingPreview mode="nieuw" />
+                </AppShell>
+              }
+            />
+            <Route
+              path="/onboarding/inloggen"
+              element={
+                <AppShell>
+                  <OnboardingPreview mode="inloggen" />
+                </AppShell>
+              }
+            />
             <Route
               path="/*"
               element={

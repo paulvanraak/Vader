@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Users, Radar, Sunrise } from 'lucide-react'
-import { NameQuestion } from './NameQuestion'
+import { SignupScreen } from './SignupScreen'
+import { LoginScreen } from './LoginScreen'
 import { IntroStep } from './IntroStep'
 import { ChildrenQuestion } from './ChildrenQuestion'
 import { HowItWorks } from './HowItWorks'
@@ -25,10 +26,10 @@ const introParts = [
   },
 ]
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5
+export type OnboardingMode = 'nieuw' | 'inloggen'
 
-export function OnboardingFlow() {
-  const [step, setStep] = useState<Step>(0)
+export function OnboardingFlow({ mode = 'nieuw' }: { mode?: OnboardingMode }) {
+  const [step, setStep] = useState(0)
   const [fatherName, setFatherName] = useState('')
   const [children, setChildren] = useState<ChildProfile[]>([])
   const { completeOnboarding } = useAppState()
@@ -36,9 +37,30 @@ export function OnboardingFlow() {
 
   let content: ReactNode
 
-  if (step === 0) {
+  if (mode === 'inloggen') {
+    // Terugkerende gebruiker: geen uitlegschermen, direct van inloggen naar kinderen.
+    if (step === 0) {
+      content = (
+        <LoginScreen
+          onNext={(name) => {
+            setFatherName(name)
+            setStep(1)
+          }}
+        />
+      )
+    } else {
+      content = (
+        <ChildrenQuestion
+          onNext={(selectedChildren) => {
+            completeOnboarding(fatherName, selectedChildren)
+            navigate('/')
+          }}
+        />
+      )
+    }
+  } else if (step === 0) {
     content = (
-      <NameQuestion
+      <SignupScreen
         onNext={(name) => {
           setFatherName(name)
           setStep(1)
@@ -54,7 +76,7 @@ export function OnboardingFlow() {
         total={introParts.length}
         title={part.title}
         body={part.body}
-        onNext={() => setStep((s) => (s + 1) as Step)}
+        onNext={() => setStep((s) => s + 1)}
       />
     )
   } else if (step === 4) {
@@ -78,7 +100,7 @@ export function OnboardingFlow() {
   }
 
   return (
-    <div key={step} className="animate-dissolve h-full">
+    <div key={`${mode}-${step}`} className="animate-dissolve h-full">
       {content}
     </div>
   )
