@@ -4,6 +4,7 @@ import { X } from 'lucide-react'
 import type { Lesson } from '../types/lesson'
 import { useAppState } from '../state/AppStateContext'
 import { getWorldStyle } from '../lib/worldStyles'
+import { personalizeBeat } from '../lib/personalize'
 import { Button } from './Button'
 import { Celebration } from './Celebration'
 import { Haakje } from './beats/Haakje'
@@ -15,12 +16,12 @@ import { Thuismissie } from './beats/Thuismissie'
 
 export function LessonPlayer({ lesson }: { lesson: Lesson }) {
   const navigate = useNavigate()
-  const { completeLesson } = useAppState()
+  const { completeLesson, activeChild } = useAppState()
   const [beatIndex, setBeatIndex] = useState(0)
   const [oefeningAnswer, setOefeningAnswer] = useState<number | null>(null)
   const [isCelebrating, setIsCelebrating] = useState(false)
 
-  const beat = lesson.beats[beatIndex]
+  const beat = personalizeBeat(lesson.beats[beatIndex], activeChild)
   const isLastBeat = beatIndex === lesson.beats.length - 1
   const canAdvance = beat.type !== 'oefening' || oefeningAnswer !== null
   const style = getWorldStyle(lesson.world)

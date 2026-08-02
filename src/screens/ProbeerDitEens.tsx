@@ -7,10 +7,10 @@ import { WhyModal } from '../components/WhyModal'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 
 export function ProbeerDitEens() {
-  const { path, doneActionIds, toggleAction, completedLessonIds } = useAppState()
+  const { path, doneActionIds, toggleAction, completedLessonIds, activeChild } = useAppState()
   const [activeWhyId, setActiveWhyId] = useState<string | null>(null)
 
-  const actions = getAllActions(path, completedLessonIds).filter((item) => item.unlocked)
+  const actions = getAllActions(path, completedLessonIds, activeChild).filter((item) => item.unlocked)
   const activeItem = actions.find((item) => item.id === activeWhyId) ?? null
   const doneCount = actions.filter((item) => doneActionIds.includes(item.id)).length
 
