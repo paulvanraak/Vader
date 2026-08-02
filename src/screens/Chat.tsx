@@ -3,6 +3,8 @@ import { LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
 import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
 import { generateLocalAnswer } from '../lib/localAdvisor'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { useAppState } from '../state/AppStateContext'
+import { calculateAge } from '../lib/age'
 
 type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 
@@ -35,6 +37,7 @@ function toApiMessages(msgs: ChatMessage[]): ApiMessage[] {
 }
 
 export function Chat() {
+  const { activeChild } = useAppState()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -69,10 +72,11 @@ export function Chat() {
 
     setIsLoading(true)
     try {
+      const child = activeChild ? { name: activeChild.name, age: calculateAge(activeChild.birthDate) } : null
       const res = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: toApiMessages(nextMessages) }),
+        body: JSON.stringify({ messages: toApiMessages(nextMessages), child }),
       })
       if (!res.ok) throw new Error('serverroute niet beschikbaar')
       const data = (await res.json()) as { type: 'answer' | 'referral' | 'error'; text: string }

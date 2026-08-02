@@ -1,11 +1,11 @@
 import { supabase } from './supabaseClient'
-import type { ChildGender, AgeGroup, ChildProfile } from '../state/AppStateContext'
+import type { ChildGender, ChildProfile } from '../state/AppStateContext'
 
 interface ChildRow {
   id: string
   name: string
   gender: ChildGender
-  age_group: AgeGroup
+  birth_date: string
   completed_lesson_ids: string[] | null
   done_action_ids: string[] | null
   streak_days: number | null
@@ -18,7 +18,7 @@ export interface ChildProgress {
 }
 
 function rowToChild(row: ChildRow): ChildProfile {
-  return { id: row.id, name: row.name, gender: row.gender, ageGroup: row.age_group }
+  return { id: row.id, name: row.name, gender: row.gender, birthDate: row.birth_date }
 }
 
 function rowToProgress(row: ChildRow): ChildProgress {
@@ -61,14 +61,14 @@ export async function fetchChildren(): Promise<{
 export async function insertChild(child: {
   name: string
   gender: ChildGender
-  ageGroup: AgeGroup
+  birthDate: string
 }): Promise<ChildProfile> {
   const { data: userRes, error: userError } = await supabase.auth.getUser()
   if (userError || !userRes.user) throw new Error('Niet ingelogd.')
 
   const { data, error } = await supabase
     .from('children')
-    .insert({ user_id: userRes.user.id, name: child.name, gender: child.gender, age_group: child.ageGroup })
+    .insert({ user_id: userRes.user.id, name: child.name, gender: child.gender, birth_date: child.birthDate })
     .select()
     .single()
   if (error) throw error

@@ -5,6 +5,7 @@ import { lessonPath } from '../lib/worldProgress'
 import { useContent } from './ContentContext'
 import { supabase } from '../lib/supabaseClient'
 import { fetchChildren, insertChild, updateChildProgress, signOutAccount } from '../lib/account'
+import { deriveAgeGroup } from '../lib/age'
 
 export type ChildGender = 'zoon' | 'dochter'
 export type AgeGroup = 'jong' | 'oud'
@@ -14,7 +15,7 @@ export interface ChildProfile {
   id: string
   name: string
   gender: ChildGender
-  ageGroup: AgeGroup
+  birthDate: string
 }
 
 interface ChildProgress {
@@ -128,7 +129,7 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
 
   const path = useMemo(() => {
     if (!activeChild || activeChild.gender !== 'zoon') return []
-    return lessonPath(lessons, activeChild.ageGroup)
+    return lessonPath(lessons, deriveAgeGroup(activeChild.birthDate))
   }, [activeChild, lessons])
 
   const todayLessonId = useMemo(() => {
