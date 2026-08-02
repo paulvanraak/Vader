@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react'
 import {
   fetchAdminWorlds,
   createWorld,
@@ -46,23 +46,14 @@ export function AdminWorlds() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center gap-3 px-5 pt-5">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          aria-label="Terug"
-          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-        >
-          <ArrowLeft size={18} strokeWidth={2} />
-        </button>
-        <div>
-          <p className="text-label text-ink-muted">CMS</p>
-          <h1 className="text-h3 text-ink">Werelden</h1>
-        </div>
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-label text-ink-muted">CMS</p>
+        <h1 className="text-h2 text-ink">Werelden</h1>
+        <p className="mt-1 text-body text-ink-muted">Voeg werelden toe, sleep de volgorde en beheer de lessen erin.</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-6">
+      <div>
         {error && <p className="mb-4 text-body text-danger-500">{error}</p>}
 
         {!worlds && <p className="text-body text-ink-muted">Laden...</p>}

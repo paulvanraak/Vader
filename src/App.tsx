@@ -16,8 +16,12 @@ import { Instellingen } from './screens/Instellingen'
 import { OverFatherFlow } from './screens/OverFatherFlow'
 import { Specialisten } from './screens/Specialisten'
 import { Les } from './screens/Les'
+import { AdminLayout } from './screens/admin/AdminLayout'
 import { AdminWorlds } from './screens/admin/AdminWorlds'
 import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
+import { AdminLessonEditor } from './screens/admin/AdminLessonEditor'
+import { AdminSpecialists } from './screens/admin/AdminSpecialists'
+import { AdminChatPrompt } from './screens/admin/AdminChatPrompt'
 
 function TabLayout() {
   const location = useLocation()
@@ -31,7 +35,7 @@ function TabLayout() {
   )
 }
 
-function AppRoutes() {
+function MainApp() {
   const { pinVerified, onboardingComplete } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
 
@@ -57,8 +61,6 @@ function AppRoutes() {
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
-      <Route path="/admin" element={<AdminWorlds />} />
-      <Route path="/admin/worlds/:worldId" element={<AdminWorldLessons />} />
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/kompas" element={<Kompas />} />
@@ -70,14 +72,42 @@ function AppRoutes() {
   )
 }
 
+function AdminApp() {
+  const { pinVerified } = useAppState()
+
+  if (!pinVerified) {
+    return <PinScreen onSuccess={() => {}} />
+  }
+
+  return (
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route index element={<AdminWorlds />} />
+        <Route path="worlds/:worldId" element={<AdminWorldLessons />} />
+        <Route path="lessons/:lessonId" element={<AdminLessonEditor />} />
+        <Route path="specialisten" element={<AdminSpecialists />} />
+        <Route path="chat" element={<AdminChatPrompt />} />
+      </Route>
+    </Routes>
+  )
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ContentProvider>
         <AppStateProvider>
-          <AppShell>
-            <AppRoutes />
-          </AppShell>
+          <Routes>
+            <Route path="/admin/*" element={<AdminApp />} />
+            <Route
+              path="/*"
+              element={
+                <AppShell>
+                  <MainApp />
+                </AppShell>
+              }
+            />
+          </Routes>
         </AppStateProvider>
       </ContentProvider>
     </BrowserRouter>

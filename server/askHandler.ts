@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { SYSTEM_PROMPT } from './systemPrompt.ts'
+import { createClient } from '@supabase/supabase-js'
+import { SYSTEM_PROMPT as DEFAULT_SYSTEM_PROMPT } from './systemPrompt.ts'
 import { triggersGuardrail, REFERRAL_TEXT } from '../src/lib/guardrail.ts'
 
 export type AskResult =
@@ -23,6 +24,24 @@ function getClient(): Anthropic {
   return client
 }
 
+// Haalt de systeemprompt op uit de CMS (app_config), zodat een wijziging in
+// het admin-scherm meteen doorwerkt in het volgende Chat-antwoord. Valt terug
+// op de vaste prompt in systemPrompt.ts als Supabase niet bereikbaar is.
+async function getSystemPrompt(): Promise<string> {
+  const url = process.env.VITE_SUPABASE_URL
+  const anonKey = process.env.VITE_SUPABASE_ANON_KEY
+  if (!url || !anonKey) return DEFAULT_SYSTEM_PROMPT
+
+  try {
+    const supabase = createClient(url, anonKey)
+    const { data, error } = await supabase.from('app_config').select('value').eq('key', 'chat_system_prompt').single()
+    if (error || !data?.value) return DEFAULT_SYSTEM_PROMPT
+    return data.value
+  } catch {
+    return DEFAULT_SYSTEM_PROMPT
+  }
+}
+
 export async function handleAsk(question: string): Promise<AskResult> {
   const trimmed = question.trim()
   if (!trimmed) {
@@ -35,10 +54,11 @@ export async function handleAsk(question: string): Promise<AskResult> {
   }
 
   try {
+    const systemPrompt = await getSystemPrompt()
     const response = await getClient().messages.create({
       model: MODEL,
       max_tokens: 500,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: 'user', content: trimmed }],
     })
 

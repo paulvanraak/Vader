@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronUp, ChevronDown, Trash2, Copy, Plus } from 'lucide-react'
+import { ArrowLeft, ChevronUp, ChevronDown, Trash2, Copy, Plus, PenLine } from 'lucide-react'
 import {
   fetchAdminLessons,
   fetchAdminWorlds,
+  fetchCompassEntry,
+  upsertCompassEntry,
   createLesson,
   deleteLesson,
   duplicateLesson,
@@ -25,6 +27,7 @@ export function AdminWorldLessons() {
   const { refetch } = useContent()
   const [world, setWorld] = useState<AdminWorld | null>(null)
   const [lessons, setLessons] = useState<AdminLesson[] | null>(null)
+  const [kompas, setKompas] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [newTitles, setNewTitles] = useState<Record<'jong' | 'oud', string>>({ jong: '', oud: '' })
@@ -32,9 +35,14 @@ export function AdminWorldLessons() {
   async function load() {
     if (!worldId) return
     try {
-      const [worlds, lessonRows] = await Promise.all([fetchAdminWorlds(), fetchAdminLessons(worldId)])
+      const [worlds, lessonRows, background] = await Promise.all([
+        fetchAdminWorlds(),
+        fetchAdminLessons(worldId),
+        fetchCompassEntry(worldId),
+      ])
       setWorld(worlds.find((w) => w.id === worldId) ?? null)
       setLessons(lessonRows)
+      setKompas(background)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Onbekende fout')
     }
@@ -59,120 +67,139 @@ export function AdminWorldLessons() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center gap-3 px-5 pt-5">
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => navigate('/admin')}
-          aria-label="Terug"
-          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+          aria-label="Terug naar werelden"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
         >
           <ArrowLeft size={18} strokeWidth={2} />
         </button>
         <div>
           <p className="text-label text-ink-muted">CMS</p>
-          <h1 className="text-h3 text-ink">{world?.title ?? 'Lessen'}</h1>
+          <h1 className="text-h2 text-ink">{world?.title ?? 'Lessen'}</h1>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-6">
-        {error && <p className="mb-4 text-body text-danger-500">{error}</p>}
-        {!lessons && <p className="text-body text-ink-muted">Laden...</p>}
+      {error && <p className="text-body text-danger-500">{error}</p>}
+      {!lessons && <p className="text-body text-ink-muted">Laden...</p>}
 
-        {lessons &&
-          cohorts.map(({ value: cohort, label }) => {
-            const cohortLessons = lessons.filter((l) => l.cohort === cohort)
-            return (
-              <div key={cohort} className="mb-8 flex flex-col gap-2">
-                <p className="text-label font-semibold text-ink-muted">{label}</p>
+      {world && (
+        <div className="flex flex-col gap-2 rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken">
+          <p className="text-label font-semibold text-ink-muted">Kompas-tekst voor deze wereld</p>
+          <textarea
+            value={kompas}
+            onChange={(e) => setKompas(e.target.value)}
+            onBlur={(e) => withBusy(() => upsertCompassEntry(world.id, e.target.value))}
+            rows={4}
+            className="w-full resize-none rounded-md bg-surface-sunken px-3 py-2.5 text-body text-ink outline-none"
+          />
+        </div>
+      )}
 
-                {cohortLessons.map((lesson, index) => (
-                  <div
-                    key={lesson.id}
-                    className="flex items-center gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken"
-                  >
-                    <div className="flex flex-col">
-                      <button
-                        type="button"
-                        disabled={busy || index === 0}
-                        onClick={() => withBusy(() => swapLessonOrder(lesson, cohortLessons[index - 1]))}
-                        aria-label="Omhoog"
-                        className="text-ink-muted disabled:opacity-30"
-                      >
-                        <ChevronUp size={16} strokeWidth={2} />
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busy || index === cohortLessons.length - 1}
-                        onClick={() => withBusy(() => swapLessonOrder(lesson, cohortLessons[index + 1]))}
-                        aria-label="Omlaag"
-                        className="text-ink-muted disabled:opacity-30"
-                      >
-                        <ChevronDown size={16} strokeWidth={2} />
-                      </button>
-                    </div>
+      {lessons &&
+        cohorts.map(({ value: cohort, label }) => {
+          const cohortLessons = lessons.filter((l) => l.cohort === cohort)
+          return (
+            <div key={cohort} className="flex flex-col gap-2">
+              <p className="text-label font-semibold text-ink-muted">{label}</p>
 
-                    <input
-                      value={lesson.title}
-                      onChange={(e) => {
-                        const title = e.target.value
-                        setLessons((prev) => prev?.map((l) => (l.id === lesson.id ? { ...l, title } : l)) ?? prev)
-                      }}
-                      onBlur={(e) => withBusy(() => updateLessonTitle(lesson.id, e.target.value))}
-                      className="min-w-0 flex-1 truncate bg-transparent text-body-lg text-ink outline-none"
-                    />
-
+              {cohortLessons.map((lesson, index) => (
+                <div
+                  key={lesson.id}
+                  className="flex items-center gap-2 rounded-md bg-surface p-3 shadow-sm ring-1 ring-surface-sunken"
+                >
+                  <div className="flex flex-col">
                     <button
                       type="button"
-                      disabled={busy}
-                      onClick={() => withBusy(() => duplicateLesson(lesson.id))}
-                      aria-label={`Dupliceer ${lesson.title}`}
-                      className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+                      disabled={busy || index === 0}
+                      onClick={() => withBusy(() => swapLessonOrder(lesson, cohortLessons[index - 1]))}
+                      aria-label="Omhoog"
+                      className="text-ink-muted disabled:opacity-30"
                     >
-                      <Copy size={16} strokeWidth={2} />
+                      <ChevronUp size={16} strokeWidth={2} />
                     </button>
                     <button
                       type="button"
-                      disabled={busy}
-                      onClick={() => {
-                        if (confirm(`"${lesson.title}" verwijderen?`)) {
-                          void withBusy(() => deleteLesson(lesson.id))
-                        }
-                      }}
-                      aria-label={`Verwijder ${lesson.title}`}
-                      className="flex size-8 shrink-0 items-center justify-center rounded-full text-danger-500 hover:bg-surface-sunken"
+                      disabled={busy || index === cohortLessons.length - 1}
+                      onClick={() => withBusy(() => swapLessonOrder(lesson, cohortLessons[index + 1]))}
+                      aria-label="Omlaag"
+                      className="text-ink-muted disabled:opacity-30"
                     >
-                      <Trash2 size={16} strokeWidth={2} />
+                      <ChevronDown size={16} strokeWidth={2} />
                     </button>
                   </div>
-                ))}
 
-                <div className="flex items-center gap-2 rounded-md border border-dashed border-surface-sunken p-3">
                   <input
-                    value={newTitles[cohort]}
-                    onChange={(e) => setNewTitles((prev) => ({ ...prev, [cohort]: e.target.value }))}
-                    placeholder="Titel van nieuwe les"
-                    className="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-faint"
+                    value={lesson.title}
+                    onChange={(e) => {
+                      const title = e.target.value
+                      setLessons((prev) => prev?.map((l) => (l.id === lesson.id ? { ...l, title } : l)) ?? prev)
+                    }}
+                    onBlur={(e) => withBusy(() => updateLessonTitle(lesson.id, e.target.value))}
+                    className="min-w-0 flex-1 truncate bg-transparent text-body-lg text-ink outline-none"
                   />
+
                   <button
                     type="button"
-                    disabled={busy || !newTitles[cohort].trim() || !worldId}
-                    onClick={() =>
-                      withBusy(async () => {
-                        await createLesson(worldId as string, cohort, newTitles[cohort].trim())
-                        setNewTitles((prev) => ({ ...prev, [cohort]: '' }))
-                      })
-                    }
-                    className="flex shrink-0 items-center gap-1 rounded-md border border-primary-500 px-3 py-2 text-caption font-bold text-primary-600 disabled:opacity-40"
+                    onClick={() => navigate(`/admin/lessons/${lesson.id}`)}
+                    aria-label={`Bewerk inhoud van ${lesson.title}`}
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-primary-600 hover:bg-surface-sunken"
                   >
-                    <Plus size={14} strokeWidth={2.5} />
-                    Les toevoegen
+                    <PenLine size={16} strokeWidth={2} />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => withBusy(() => duplicateLesson(lesson.id))}
+                    aria-label={`Dupliceer ${lesson.title}`}
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+                  >
+                    <Copy size={16} strokeWidth={2} />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      if (confirm(`"${lesson.title}" verwijderen?`)) {
+                        void withBusy(() => deleteLesson(lesson.id))
+                      }
+                    }}
+                    aria-label={`Verwijder ${lesson.title}`}
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-danger-500 hover:bg-surface-sunken"
+                  >
+                    <Trash2 size={16} strokeWidth={2} />
                   </button>
                 </div>
+              ))}
+
+              <div className="flex items-center gap-2 rounded-md border border-dashed border-surface-sunken p-3">
+                <input
+                  value={newTitles[cohort]}
+                  onChange={(e) => setNewTitles((prev) => ({ ...prev, [cohort]: e.target.value }))}
+                  placeholder="Titel van nieuwe les"
+                  className="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-faint"
+                />
+                <button
+                  type="button"
+                  disabled={busy || !newTitles[cohort].trim() || !worldId}
+                  onClick={() =>
+                    withBusy(async () => {
+                      await createLesson(worldId as string, cohort, newTitles[cohort].trim())
+                      setNewTitles((prev) => ({ ...prev, [cohort]: '' }))
+                    })
+                  }
+                  className="flex shrink-0 items-center gap-1 rounded-md border border-primary-500 px-3 py-2 text-caption font-bold text-primary-600 disabled:opacity-40"
+                >
+                  <Plus size={14} strokeWidth={2.5} />
+                  Les toevoegen
+                </button>
               </div>
-            )
-          })}
-      </div>
+            </div>
+          )
+        })}
     </div>
   )
 }

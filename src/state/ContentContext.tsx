@@ -1,11 +1,23 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { fetchContent, type AppContent } from '../lib/content'
+import { supabase } from '../lib/supabaseClient'
 
 interface ContentState extends AppContent {
   refetch: () => void
 }
 
 const ContentContext = createContext<ContentState | null>(null)
+
+const LIVE_TABLES = [
+  'worlds',
+  'lessons',
+  'beats',
+  'oefening_opties',
+  'thuismissie_acties',
+  'compass_entries',
+  'specialists',
+  'app_config',
+]
 
 export function ContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<AppContent | null>(null)
@@ -26,6 +38,33 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       cancelled = true
     }
   }, [attempt])
+
+  // Live sync: elke wijziging vanuit de CMS (in deze of een andere tab) triggert
+  // een refetch, zodat de app direct de nieuwste inhoud toont zonder handmatige
+  // herlaadactie.
+  useEffect(() => {
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+    function scheduleRefetch() {
+      if (debounceTimer) clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => {
+        fetchContent()
+          .then((data) => setContent(data))
+          .catch(() => {})
+      }, 400)
+    }
+
+    const channel = supabase.channel('content-live-sync')
+    for (const table of LIVE_TABLES) {
+      channel.on('postgres_changes' as never, { event: '*', schema: 'public', table }, scheduleRefetch)
+    }
+    channel.subscribe()
+
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer)
+      void supabase.removeChannel(channel)
+    }
+  }, [])
 
   if (error) {
     return (
