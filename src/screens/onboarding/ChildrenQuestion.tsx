@@ -1,36 +1,36 @@
 import { useState } from 'react'
-import { User, Star, Flame, Check } from 'lucide-react'
+import { User, Check } from 'lucide-react'
 import { Button } from '../../components/Button'
-import { useAppState, type ChildGender, type AgeGroup, type ChildProfile } from '../../state/AppStateContext'
+import { useAppState, type ChildGender, type ChildProfile } from '../../state/AppStateContext'
 import { childLabel, childSubLabel } from '../../lib/child'
+import { birthDateBounds, isValidBirthDate } from '../../lib/age'
 
 const genderOpties: { value: ChildGender; label: string }[] = [
-  { value: 'zoon', label: 'Zoon' },
-  { value: 'dochter', label: 'Dochter' },
+  { value: 'zoon', label: 'Jongen' },
+  { value: 'dochter', label: 'Meisje' },
 ]
 
-const ageOpties: { value: AgeGroup; label: string; range: string; icon: typeof Star }[] = [
-  { value: 'jong', label: "NOVA's", range: '8-11', icon: Star },
-  { value: 'oud', label: 'PUBERS', range: '12-16', icon: Flame },
-]
+const { min: minBirthDate, max: maxBirthDate } = birthDateBounds()
 
 export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
   const { children, addChild } = useAppState()
   const [draftName, setDraftName] = useState('')
+  const [draftBirthDate, setDraftBirthDate] = useState('')
   const [draftGender, setDraftGender] = useState<ChildGender | null>(null)
-  const [draftAge, setDraftAge] = useState<AgeGroup | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const canAdd = draftName.trim().length > 0 && isValidBirthDate(draftBirthDate) && draftGender !== null
+
   async function handleAddChild() {
-    if (!draftName.trim() || !draftGender || !draftAge) return
+    if (!canAdd || !draftGender) return
     setIsSaving(true)
     setError(null)
     try {
-      await addChild({ name: draftName.trim(), gender: draftGender, ageGroup: draftAge })
+      await addChild({ name: draftName.trim(), gender: draftGender, birthDate: draftBirthDate })
       setDraftName('')
+      setDraftBirthDate('')
       setDraftGender(null)
-      setDraftAge(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Kind toevoegen is niet gelukt.')
     } finally {
@@ -68,21 +68,35 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
             {children.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
           </p>
 
-          <div>
-            <p className="mb-2 text-label text-ink-muted">Naam</p>
-            <input
-              type="text"
-              value={draftName}
-              onChange={(e) => setDraftName(e.target.value)}
-              placeholder="Bijvoorbeeld Sam"
-              aria-label="Naam van je kind"
-              className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="mb-2 text-label text-ink-muted">Naam</p>
+              <input
+                type="text"
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                placeholder="Bijvoorbeeld Sam"
+                aria-label="Naam van je kind"
+                className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+              />
+            </div>
+            <div>
+              <p className="mb-2 text-label text-ink-muted">Geboortedatum</p>
+              <input
+                type="date"
+                value={draftBirthDate}
+                onChange={(e) => setDraftBirthDate(e.target.value)}
+                min={minBirthDate}
+                max={maxBirthDate}
+                aria-label="Geboortedatum van je kind"
+                className="w-full rounded-md bg-surface-sunken px-3 py-3 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+              />
+            </div>
           </div>
 
           <div>
-            <p className="mb-2 text-label text-ink-muted">Zoon of dochter?</p>
-            <div className="flex flex-col gap-2" role="radiogroup" aria-label="Zoon of dochter?">
+            <p className="mb-2 text-label text-ink-muted">Jongen of meisje?</p>
+            <div className="flex flex-col gap-2" role="radiogroup" aria-label="Jongen of meisje?">
               {genderOpties.map((optie) => {
                 const isSelected = draftGender === optie.value
                 return (
@@ -106,41 +120,14 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
             </div>
           </div>
 
-          <div>
-            <p className="mb-2 text-label text-ink-muted">Hoe oud?</p>
-            <div className="flex flex-col gap-2" role="radiogroup" aria-label="Hoe oud?">
-              {ageOpties.map((optie) => {
-                const isSelected = draftAge === optie.value
-                const Icon = optie.icon
-                return (
-                  <button
-                    key={optie.value}
-                    type="button"
-                    role="radio"
-                    aria-checked={isSelected}
-                    onClick={() => setDraftAge(optie.value)}
-                    className={`flex items-center gap-3 rounded-md border px-4 py-3 text-left transition ${
-                      isSelected
-                        ? 'border-primary-500 bg-primary-500/10 text-primary-600'
-                        : 'border-surface-sunken bg-surface text-ink hover:border-ink-faint'
-                    }`}
-                  >
-                    <Icon size={18} strokeWidth={2} />
-                    <span className="flex-1">
-                      <span className="block text-body-lg font-semibold">{optie.label}</span>
-                      <span className="block text-caption text-ink-muted">{optie.range} jaar</span>
-                    </span>
-                    {isSelected && <Check size={18} strokeWidth={2.5} />}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
           {draftGender === 'dochter' && (
             <p className="text-caption text-ink-muted">
               Deze demo is nu nog gericht op zonen. Een versie voor dochters komt eraan.
             </p>
+          )}
+
+          {draftBirthDate && !isValidBirthDate(draftBirthDate) && (
+            <p className="text-caption font-semibold text-danger-500">FatherFlow is bedoeld voor kinderen van 6 tot 18 jaar.</p>
           )}
 
           {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
@@ -148,7 +135,7 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
           <button
             type="button"
             onClick={() => void handleAddChild()}
-            disabled={isSaving || !draftName.trim() || !draftGender || !draftAge}
+            disabled={isSaving || !canAdd}
             className="flex items-center justify-center gap-2 rounded-md border border-primary-500 py-3 text-label font-bold text-primary-600 transition disabled:opacity-40"
           >
             {isSaving ? 'Bezig...' : 'Bevestigen'}

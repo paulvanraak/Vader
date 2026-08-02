@@ -1,13 +1,9 @@
 import type { ChildProfile } from '../state/AppStateContext'
+import { calculateAge } from './age'
 
 const genderLabel: Record<ChildProfile['gender'], string> = {
   zoon: 'Zoon',
   dochter: 'Dochter',
-}
-
-const ageRange: Record<ChildProfile['ageGroup'], string> = {
-  jong: '8-11',
-  oud: '12-16',
 }
 
 export function childLabel(child: ChildProfile): string {
@@ -15,7 +11,7 @@ export function childLabel(child: ChildProfile): string {
 }
 
 export function childSubLabel(child: ChildProfile): string {
-  return `${genderLabel[child.gender]} · ${ageRange[child.ageGroup]}`
+  return `${genderLabel[child.gender]} · ${calculateAge(child.birthDate)} jaar`
 }
 
 export function childHasContent(child: ChildProfile): boolean {

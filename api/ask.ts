@@ -71,6 +71,20 @@ interface AskMessage {
   content: string
 }
 
+interface ChildContext {
+  name: string
+  age: number
+}
+
+function sanitizeChild(input: unknown): ChildContext | null {
+  if (typeof input !== 'object' || input === null) return null
+  const name = (input as { name?: unknown }).name
+  const age = (input as { age?: unknown }).age
+  if (typeof name !== 'string' || !name.trim()) return null
+  if (typeof age !== 'number' || !Number.isFinite(age)) return null
+  return { name: name.trim(), age }
+}
+
 type AskResult = { type: 'answer'; text: string } | { type: 'referral'; text: string } | { type: 'error'; text: string }
 
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-5'
@@ -101,22 +115,31 @@ function sanitizeMessages(input: unknown): AskMessage[] {
     .filter((m): m is AskMessage => m !== null)
 }
 
-async function getSystemPrompt(): Promise<string> {
+async function getSystemPrompt(child: ChildContext | null): Promise<string> {
   const url = process.env.VITE_SUPABASE_URL
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY
-  if (!url || !anonKey) return DEFAULT_SYSTEM_PROMPT
 
-  try {
-    const supabase = createClient(url, anonKey)
-    const { data, error } = await supabase.from('app_config').select('value').eq('key', 'chat_system_prompt').single()
-    if (error || !data?.value) return DEFAULT_SYSTEM_PROMPT
-    return data.value
-  } catch {
-    return DEFAULT_SYSTEM_PROMPT
+  let base = DEFAULT_SYSTEM_PROMPT
+  if (url && anonKey) {
+    try {
+      const supabase = createClient(url, anonKey)
+      const { data, error } = await supabase
+        .from('app_config')
+        .select('value')
+        .eq('key', 'chat_system_prompt')
+        .single()
+      if (!error && data?.value) base = data.value
+    } catch {
+      // val terug op DEFAULT_SYSTEM_PROMPT
+    }
   }
+
+  if (!child) return base
+
+  return `${base}\n\nContext: de vader praat over zijn kind, ${child.name}, ${child.age} jaar oud. Gebruik de naam ${child.name} in je antwoorden in plaats van generieke termen als "je zoon", "hij" of "hem", zodat het echt persoonlijk aanvoelt.`
 }
 
-async function handleAsk(messages: AskMessage[]): Promise<AskResult> {
+async function handleAsk(messages: AskMessage[], child: ChildContext | null): Promise<AskResult> {
   const last = messages[messages.length - 1]
   const trimmed = last?.role === 'user' ? last.content.trim() : ''
   if (!trimmed) {
@@ -128,7 +151,7 @@ async function handleAsk(messages: AskMessage[]): Promise<AskResult> {
   }
 
   try {
-    const systemPrompt = await getSystemPrompt()
+    const systemPrompt = await getSystemPrompt(child)
     const response = await getClient().messages.create({
       model: MODEL,
       max_tokens: 700,
@@ -159,7 +182,8 @@ export default async function handler(req: any, res: any) {
       return
     }
     const messages = sanitizeMessages(req.body?.messages)
-    const result = await handleAsk(messages)
+    const child = sanitizeChild(req.body?.child)
+    const result = await handleAsk(messages, child)
     res.status(200).json(result)
   } catch (err) {
     res.status(500).json({
