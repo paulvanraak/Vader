@@ -1,4 +1,4 @@
-import { handleAsk } from '../server/askHandler.ts'
+import { handleAsk, sanitizeMessages } from '../server/askHandler.ts'
 
 /**
  * Serverless-functieversie van dezelfde routelogica, voor een deploy op een
@@ -9,7 +9,7 @@ export default async function handler(req: any, res: any) {
     res.status(405).json({ type: 'error', text: 'Method not allowed' })
     return
   }
-  const question = typeof req.body?.question === 'string' ? req.body.question : ''
-  const result = await handleAsk(question)
+  const messages = sanitizeMessages(req.body?.messages)
+  const result = await handleAsk(messages)
   res.status(200).json(result)
 }

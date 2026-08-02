@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite'
 import dotenv from 'dotenv'
-import { handleAsk } from './askHandler.ts'
+import { handleAsk, sanitizeMessages } from './askHandler.ts'
 
 dotenv.config()
 
@@ -26,9 +26,9 @@ export function askApiPlugin(): Plugin {
           void (async () => {
             res.setHeader('Content-Type', 'application/json')
             try {
-              const parsed = JSON.parse(body || '{}') as { question?: unknown }
-              const question = typeof parsed.question === 'string' ? parsed.question : ''
-              const result = await handleAsk(question)
+              const parsed = JSON.parse(body || '{}') as { messages?: unknown }
+              const messages = sanitizeMessages(parsed.messages)
+              const result = await handleAsk(messages)
               res.end(JSON.stringify(result))
             } catch {
               res.statusCode = 400
