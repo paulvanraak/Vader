@@ -76,6 +76,12 @@ export function AdminLessonEditor() {
         </div>
       </div>
 
+      <p className="rounded-md bg-primary-500/10 px-3 py-2 text-caption text-ink-muted">
+        Tip: gebruik <code className="font-mono">{'{naam}'}</code> en <code className="font-mono">{'{naam_bezit}'}</code>{' '}
+        in de tekst om automatisch de naam (of bezitsvorm, bv. "Sams") van het kind in te vullen. Gebruik dit
+        spaarzaam, gemixt met "hij"/"zijn", vooral niet in het Haakje.
+      </p>
+
       {beats.map((beat) => (
         <div key={beat.id} className="flex flex-col gap-3 rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken">
           <p className="text-label font-bold uppercase tracking-wide text-ink-muted">{beatLabels[beat.type]}</p>

@@ -1,5 +1,7 @@
 import type { Lesson } from '../types/lesson'
+import type { ChildProfile } from '../state/AppStateContext'
 import { isLessonUnlocked } from './worldProgress'
+import { personalizeText } from './personalize'
 
 export interface ActionItem {
   id: string
@@ -11,7 +13,7 @@ export interface ActionItem {
   unlocked: boolean
 }
 
-export function getAllActions(path: Lesson[], completedLessonIds: string[]): ActionItem[] {
+export function getAllActions(path: Lesson[], completedLessonIds: string[], child: ChildProfile | null): ActionItem[] {
   const items: ActionItem[] = []
   path.forEach((lesson, lessonIndex) => {
     const thuismissie = lesson.beats.find((b) => b.type === 'thuismissie')
@@ -20,11 +22,11 @@ export function getAllActions(path: Lesson[], completedLessonIds: string[]): Act
     thuismissie?.acties?.forEach((actie, actieIndex) => {
       items.push({
         id: `${lesson.id}-${actieIndex}`,
-        action: actie,
+        action: personalizeText(actie, child),
         lessonId: lesson.id,
         lessonTitle: lesson.title,
         worldId: lesson.world,
-        why: inzicht?.body ?? '',
+        why: inzicht?.body ? personalizeText(inzicht.body, child) : '',
         unlocked,
       })
     })
