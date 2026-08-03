@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { UserRound } from 'lucide-react'
-import { Button } from '../../components/Button'
+import { OnboardingButton } from './OnboardingButton'
 import { signUp } from '../../lib/account'
+
+const inputClass =
+  'w-full rounded-[8px] border border-[#b1e9ff]/40 bg-transparent px-4 py-3.5 text-body-lg text-white outline-none placeholder:text-[#b1e9ff]/40 focus-visible:border-[#b1e9ff]'
 
 export function SignupScreen({
   onNext,
@@ -44,21 +46,14 @@ export function SignupScreen({
 
   if (needsConfirmation) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4 px-8 text-center">
-        <div className="flex size-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-          <UserRound size={28} strokeWidth={2} />
-        </div>
-        <h1 className="text-h2 font-extrabold text-ink">Check je e-mail</h1>
-        <p className="text-body text-ink-muted">
+      <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#21283e] px-8 text-center">
+        <h1 className="text-[28px] font-semibold text-white">Check je e-mail</h1>
+        <p className="text-[18px] font-light leading-relaxed text-white/80">
           We hebben een bevestigingslink gestuurd naar {email.trim()}. Klik erop om je account te activeren en log
           daarna in.
         </p>
         {onSwitchToLogin && (
-          <button
-            type="button"
-            onClick={onSwitchToLogin}
-            className="text-body-lg font-bold text-primary-600 underline underline-offset-2"
-          >
+          <button type="button" onClick={onSwitchToLogin} className="text-body-lg font-bold text-[#b1e9ff] underline underline-offset-2">
             Naar inloggen
           </button>
         )}
@@ -67,24 +62,20 @@ export function SignupScreen({
   }
 
   return (
-    <div className="flex h-full flex-col justify-between px-6 py-10">
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-        <div className="flex size-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-          <UserRound size={28} strokeWidth={2} />
-        </div>
+    <div className="flex h-full flex-col justify-between bg-[#21283e] px-7 py-10">
+      <div className="flex flex-1 flex-col justify-center gap-6">
         <div>
-          <p className="text-label text-ink-muted">Nieuw account</p>
-          <h1 className="mt-2 text-h1 font-extrabold text-ink">Maak je account aan</h1>
-          <p className="mt-2 text-body text-ink-muted">Zo vind je jouw voortgang de volgende keer terug.</p>
+          <p className="text-[18px] text-[#b1e9ff]">Even voorstellen</p>
+          <h1 className="mt-2 text-[28px] font-semibold text-white">Wat is je naam?</h1>
         </div>
-        <div className="flex w-full max-w-xs flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Jouw naam"
             aria-label="Jouw naam"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className={inputClass}
           />
           <input
             type="email"
@@ -93,7 +84,7 @@ export function SignupScreen({
             placeholder="Jouw e-mailadres"
             aria-label="E-mailadres"
             autoCapitalize="none"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className={inputClass}
           />
           <input
             type="password"
@@ -101,7 +92,7 @@ export function SignupScreen({
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Kies een wachtwoord"
             aria-label="Wachtwoord"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className={inputClass}
           />
           <input
             type="password"
@@ -112,7 +103,7 @@ export function SignupScreen({
             }}
             placeholder="Herhaal wachtwoord"
             aria-label="Herhaal wachtwoord"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className={inputClass}
           />
           {password.length > 0 && !passwordsMatch && (
             <p className="text-caption font-semibold text-danger-500">
@@ -124,16 +115,16 @@ export function SignupScreen({
             <button
               type="button"
               onClick={onSwitchToLogin}
-              className="mt-1 text-caption font-semibold text-ink-muted underline underline-offset-2"
+              className="mt-1 text-caption font-semibold text-[#b1e9ff]/70 underline underline-offset-2"
             >
               Heb je al een account? Log in
             </button>
           )}
         </div>
       </div>
-      <Button onClick={() => void submit()} disabled={!canSubmit}>
+      <OnboardingButton onClick={() => void submit()} disabled={!canSubmit}>
         {isSubmitting ? 'Bezig...' : 'Account aanmaken'}
-      </Button>
+      </OnboardingButton>
     </div>
   )
 }

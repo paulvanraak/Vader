@@ -172,6 +172,15 @@ body,
   height: 100%;
 }
 
+/* Zachte foto-achtige gradient uit Figma, gebruikt op Splash en PIN-scherm. */
+.onboarding-photo-bg {
+  background-color: #bfe4f7;
+  background-image:
+    radial-gradient(120% 70% at 100% -10%, #f2d9b6 0%, rgba(242, 217, 182, 0) 60%),
+    radial-gradient(120% 70% at 105% 105%, #eccca0 0%, rgba(236, 204, 160, 0) 55%),
+    radial-gradient(140% 90% at -10% 40%, #a9d8f0 0%, rgba(169, 216, 240, 0) 60%);
+}
+
 body {
   margin: 0;
   background-color: var(--color-surface-sunken);
