@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import { LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
+import { History, LifeBuoy, LoaderCircle, Send, Sparkles } from 'lucide-react'
 import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
 import { generateLocalAnswer } from '../lib/localAdvisor'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { ChatHistoryPanel } from '../components/ChatHistoryPanel'
 import { useAppState } from '../state/AppStateContext'
 import { calculateAge } from '../lib/age'
+import {
+  fetchThreads,
+  createThread,
+  updateThreadMessages,
+  deleteThread,
+  setThreadPinned,
+  reorderThread,
+  type ChatThread,
+  type StoredMessage,
+} from '../lib/chatThreads'
 
 type MessageRole = 'user' | 'answer' | 'referral' | 'error'
 
@@ -52,6 +63,16 @@ function toApiMessages(msgs: ChatMessage[]): ApiMessage[] {
     .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }))
 }
 
+// Wat écht bewaard wordt: de begroeting en het "voorbeeldantwoord"-label
+// horen niet in de opgeslagen geschiedenis, alleen de echte uitwisseling.
+function toStoredMessages(msgs: ChatMessage[]): StoredMessage[] {
+  return msgs.filter((m) => !m.greeting).map((m) => ({ role: m.role, text: m.text, parts: m.parts }))
+}
+
+function fromStoredMessages(msgs: StoredMessage[]): ChatMessage[] {
+  return msgs.map((m) => ({ role: m.role, text: m.text, parts: m.parts }))
+}
+
 const GREETING_DELAY_MS = 2000
 
 export function Chat() {
@@ -60,6 +81,9 @@ export function Chat() {
   const [isGreetingPending, setIsGreetingPending] = useState(true)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [threads, setThreads] = useState<ChatThread[]>([])
+  const [activeThreadId, setActiveThreadId] = useState<string | null>(null)
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
   const latestRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -67,10 +91,16 @@ export function Chat() {
   // het niet aanvoelt alsof de bot al klaarzat te wachten.
   useEffect(() => {
     const timer = setTimeout(() => {
-      setMessages([randomGreeting()])
+      setMessages((prev) => (prev.length === 0 ? [randomGreeting()] : prev))
       setIsGreetingPending(false)
     }, GREETING_DELAY_MS)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    fetchThreads()
+      .then(setThreads)
+      .catch((err) => console.error('Gesprekken laden mislukt:', err))
   }, [])
 
   // Blijft staan bij de bovenste bubbel van het nieuwste bericht in plaats
@@ -87,18 +117,53 @@ export function Chat() {
     el.style.height = `${el.scrollHeight}px`
   }, [input])
 
+  async function persist(updated: ChatMessage[]) {
+    const stored = toStoredMessages(updated)
+    if (stored.length === 0) return
+    try {
+      if (activeThreadId) {
+        const current = threads.find((t) => t.id === activeThreadId)
+        await updateThreadMessages(activeThreadId, stored, !current?.pinned)
+        setThreads((prev) =>
+          prev
+            .map((t) =>
+              t.id === activeThreadId
+                ? {
+                    ...t,
+                    messages: stored,
+                    updatedAt: new Date().toISOString(),
+                    sortOrder: t.pinned ? t.sortOrder : Date.now(),
+                  }
+                : t,
+            )
+            .sort((a, b) => (a.pinned === b.pinned ? b.sortOrder - a.sortOrder : a.pinned ? -1 : 1)),
+        )
+        return
+      }
+      const firstUser = stored.find((m) => m.role === 'user')
+      if (!firstUser) return
+      const thread = await createThread(firstUser.text, stored)
+      setActiveThreadId(thread.id)
+      setThreads((prev) => [thread, ...prev])
+    } catch (err) {
+      console.error('Gesprek opslaan mislukt:', err)
+    }
+  }
+
   async function handleSubmit() {
     const question = input.trim()
     if (!question || isLoading) return
 
-    const nextMessages: ChatMessage[] = [...messages, { role: 'user', text: question, parts: [question] }]
-    setMessages(nextMessages)
+    const withUser: ChatMessage[] = [...messages, { role: 'user', text: question, parts: [question] }]
+    setMessages(withUser)
     setInput('')
 
     // De vangrail draait client-side, meteen, vóór er ooit een model wordt
     // aangeroepen, zodat dit ook zonder serverroute altijd werkt.
     if (triggersGuardrail(question)) {
-      setMessages((prev) => [...prev, { role: 'referral', text: REFERRAL_TEXT, parts: [REFERRAL_TEXT] }])
+      const final = [...withUser, { role: 'referral' as const, text: REFERRAL_TEXT, parts: [REFERRAL_TEXT] }]
+      setMessages(final)
+      void persist(final)
       return
     }
 
@@ -108,24 +173,101 @@ export function Chat() {
       const res = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: toApiMessages(nextMessages), child }),
+        body: JSON.stringify({ messages: toApiMessages(withUser), child }),
       })
       if (!res.ok) throw new Error('serverroute niet beschikbaar')
       const data = (await res.json()) as { type: 'answer' | 'referral' | 'error'; text: string }
       const parts = data.type === 'answer' ? splitParts(data.text) : [data.text]
-      setMessages((prev) => [...prev, { role: data.type, text: data.text, parts }])
+      const final = [...withUser, { role: data.type, text: data.text, parts }]
+      setMessages(final)
+      void persist(final)
     } catch {
       // Geen serverroute bereikbaar (bijvoorbeeld deze losstaande demo).
       // Geef een eerlijk gelabeld voorbeeldantwoord in plaats van alleen een foutmelding.
       const text = generateLocalAnswer(question)
-      setMessages((prev) => [...prev, { role: 'answer', text, parts: splitParts(text), demo: true }])
+      const final = [...withUser, { role: 'answer' as const, text, parts: splitParts(text), demo: true }]
+      setMessages(final)
+      void persist(final)
     } finally {
       setIsLoading(false)
     }
   }
 
+  function startNewChat() {
+    setMessages([randomGreeting()])
+    setIsGreetingPending(false)
+    setActiveThreadId(null)
+    setIsPanelOpen(false)
+  }
+
+  function openThread(thread: ChatThread) {
+    setMessages(fromStoredMessages(thread.messages))
+    setIsGreetingPending(false)
+    setActiveThreadId(thread.id)
+    setIsPanelOpen(false)
+  }
+
+  async function handleDeleteThread(thread: ChatThread) {
+    if (!confirm(`Gesprek "${thread.title}" verwijderen?`)) return
+    try {
+      await deleteThread(thread.id)
+      setThreads((prev) => prev.filter((t) => t.id !== thread.id))
+      if (activeThreadId === thread.id) {
+        startNewChat()
+      }
+    } catch (err) {
+      console.error('Gesprek verwijderen mislukt:', err)
+    }
+  }
+
+  async function handleTogglePin(thread: ChatThread) {
+    const nextPinned = !thread.pinned
+    setThreads((prev) =>
+      prev
+        .map((t) => (t.id === thread.id ? { ...t, pinned: nextPinned, sortOrder: Date.now() } : t))
+        .sort((a, b) => (a.pinned === b.pinned ? b.sortOrder - a.sortOrder : a.pinned ? -1 : 1)),
+    )
+    try {
+      await setThreadPinned(thread.id, nextPinned)
+    } catch (err) {
+      console.error('Vastzetten mislukt:', err)
+    }
+  }
+
+  function handleMoveThread(thread: ChatThread, direction: 'up' | 'down') {
+    setThreads((prevAll) => {
+      const group = prevAll.filter((t) => t.pinned === thread.pinned).sort((a, b) => b.sortOrder - a.sortOrder)
+      const idx = group.findIndex((t) => t.id === thread.id)
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1
+      if (idx === -1 || targetIdx < 0 || targetIdx >= group.length) return prevAll
+      const target = group[targetIdx]
+      const newSelfOrder = target.sortOrder
+      const newTargetOrder = thread.sortOrder
+      void reorderThread(thread.id, newSelfOrder)
+      void reorderThread(target.id, newTargetOrder)
+      return prevAll
+        .map((t) => {
+          if (t.id === thread.id) return { ...t, sortOrder: newSelfOrder }
+          if (t.id === target.id) return { ...t, sortOrder: newTargetOrder }
+          return t
+        })
+        .sort((a, b) => (a.pinned === b.pinned ? b.sortOrder - a.sortOrder : a.pinned ? -1 : 1))
+    })
+  }
+
   return (
     <div className="flex h-full flex-col">
+      <div className="flex shrink-0 items-center gap-2 px-2 pt-2">
+        <button
+          type="button"
+          onClick={() => setIsPanelOpen(true)}
+          aria-label="Gespreksgeschiedenis"
+          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+        >
+          <History size={20} strokeWidth={2} />
+        </button>
+      </div>
+
       <div className="shrink-0">
         <ChildSwitcher />
       </div>
@@ -190,6 +332,18 @@ export function Chat() {
           </button>
         </form>
       </div>
+
+      <ChatHistoryPanel
+        open={isPanelOpen}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        onClose={() => setIsPanelOpen(false)}
+        onSelect={openThread}
+        onNewChat={startNewChat}
+        onDelete={(thread) => void handleDeleteThread(thread)}
+        onTogglePin={(thread) => void handleTogglePin(thread)}
+        onMove={handleMoveThread}
+      />
     </div>
   )
 }
