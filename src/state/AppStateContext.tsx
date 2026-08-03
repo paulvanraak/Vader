@@ -82,7 +82,16 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
   // wordt de rest van de state (kinderen, voortgang) hieronder herladen.
   useEffect(() => {
     let cancelled = false
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
+      // TIJDELIJK, alleen om te testen: forceer bij elke nieuwe app-load
+      // uitloggen zodat je steeds de volledige onboarding ziet, in plaats van
+      // automatisch door te gaan op een bewaarde sessie. Verwijder dit blok
+      // zodra we overgaan op echte login via e-maillink.
+      if (data.session) {
+        await supabase.auth.signOut()
+        if (!cancelled) setAuthLoading(false)
+        return
+      }
       if (!cancelled) {
         setSession(data.session)
         setAuthLoading(false)
