@@ -48,7 +48,6 @@ function FullScreenSpinner() {
 function MainApp() {
   const { pinVerified, authLoading, childrenLoaded, session, children } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
-  const [authMode, setAuthMode] = useState<OnboardingMode>('nieuw')
 
   if (showSplash) {
     return <Splash onDone={() => setShowSplash(false)} />
@@ -63,9 +62,13 @@ function MainApp() {
   }
 
   if (!session) {
+    // Voor nu bewust alleen de volledige "nieuw"-flow, zonder inlogschakelaar:
+    // één voorspelbaar pad (PIN -> account -> uitleg -> kinderen -> app) in
+    // plaats van dat je per ongeluk via "Log in" op een oud testaccount met
+    // bestaande kinderen belandt en de rest van de onboarding overslaat.
     return (
       <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
-        <OnboardingFlow mode={authMode} onSwitchMode={setAuthMode} />
+        <OnboardingFlow mode="nieuw" />
       </div>
     )
   }
