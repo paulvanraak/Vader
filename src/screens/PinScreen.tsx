@@ -38,18 +38,15 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-12 bg-primary-500 px-6 text-center">
-      <div>
-        <p className="text-h4 font-bold text-neutral-white">Ontgrendel FatherFlow</p>
-        <p className="mt-1 text-caption text-neutral-white/70">Voer je code in</p>
-      </div>
+    <div className="onboarding-photo-bg flex h-full flex-col items-center justify-center gap-14 px-6 text-center text-black">
+      <p className="text-h3 font-medium">Ontgrendel Father Flow</p>
 
       <div className={`flex gap-4 ${shake ? 'animate-[shake_0.4s_ease-in-out]' : ''}`}>
         {Array.from({ length: PIN_LENGTH }).map((_, index) => (
           <span
             key={index}
-            className={`size-3.5 rounded-full border-2 border-neutral-white transition ${
-              index < pin.length ? 'bg-neutral-white' : 'bg-transparent'
+            className={`size-[18px] rounded-full border-2 border-black transition ${
+              index < pin.length ? 'bg-black' : 'bg-transparent'
             }`}
           />
         ))}
@@ -64,7 +61,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
                 type="button"
                 onClick={pressFaceId}
                 aria-label="Ontgrendel met FaceID"
-                className="flex size-16 items-center justify-center rounded-full text-neutral-white"
+                className="flex size-20 items-center justify-center text-black"
               >
                 <ScanFace size={26} strokeWidth={1.75} />
               </button>
@@ -77,7 +74,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
                 type="button"
                 onClick={pressBackspace}
                 aria-label="Verwijder cijfer"
-                className="flex size-16 items-center justify-center rounded-full text-neutral-white"
+                className="flex size-20 items-center justify-center text-black"
               >
                 <Delete size={22} strokeWidth={1.75} />
               </button>
@@ -88,7 +85,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
               key={key}
               type="button"
               onClick={() => pressDigit(key)}
-              className="flex size-16 items-center justify-center rounded-full bg-neutral-white/15 text-h2 font-semibold text-neutral-white transition active:bg-neutral-white/25"
+              className="flex size-20 items-center justify-center rounded-full bg-white text-h2 font-semibold text-black shadow-sm transition active:bg-white/70"
             >
               {key}
             </button>
