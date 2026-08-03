@@ -52,20 +52,33 @@ function toApiMessages(msgs: ChatMessage[]): ApiMessage[] {
     .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }))
 }
 
+const GREETING_DELAY_MS = 2000
+
 export function Chat() {
   const { activeChild } = useAppState()
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [randomGreeting()])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [isGreetingPending, setIsGreetingPending] = useState(true)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const latestRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // De eerste opener komt niet meteen, maar pas na een korte stilte, zodat
+  // het niet aanvoelt alsof de bot al klaarzat te wachten.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessages([randomGreeting()])
+      setIsGreetingPending(false)
+    }, GREETING_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Blijft staan bij de bovenste bubbel van het nieuwste bericht in plaats
   // van meteen helemaal naar beneden te springen, zodat je rustig van boven
   // naar onder kan meelezen terwijl de losse appjes verschijnen.
   useEffect(() => {
     latestRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
-  }, [messages.length, isLoading])
+  }, [messages.length, isLoading, isGreetingPending])
 
   useEffect(() => {
     const el = textareaRef.current
@@ -118,7 +131,7 @@ export function Chat() {
       </div>
 
       <div className="flex flex-1 flex-col overflow-y-auto px-5">
-        <div className="mt-auto flex flex-col gap-1.5 py-3">
+        <div className="mt-auto flex flex-col gap-3 py-3">
           {messages.map((message, index) => {
             const isLast = index === messages.length - 1
             return (
@@ -127,6 +140,11 @@ export function Chat() {
               </div>
             )
           })}
+          {isGreetingPending && messages.length === 0 && (
+            <div ref={latestRef}>
+              <TypingDots />
+            </div>
+          )}
           {isLoading && (
             <div
               ref={latestRef}
@@ -176,6 +194,20 @@ export function Chat() {
   )
 }
 
+function TypingDots() {
+  return (
+    <div className="flex w-fit items-center gap-1.5 self-start rounded-2xl rounded-bl-sm bg-surface px-4 py-3.5 shadow-xs ring-1 ring-surface-sunken">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          style={{ animationDelay: `${i * 150}ms` }}
+          className="size-1.5 animate-bounce rounded-full bg-ink-faint"
+        />
+      ))}
+    </div>
+  )
+}
+
 function ChatBubble({ message }: { message: ChatMessage }) {
   if (message.role === 'user') {
     return (
@@ -202,7 +234,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
           Voorbeeldantwoord, geen live verbinding
         </span>
       )}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2.5">
         {message.parts.map((part, index) => (
           <p
             key={index}
