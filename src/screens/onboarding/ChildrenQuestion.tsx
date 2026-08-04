@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { User, Check } from 'lucide-react'
 import { Button } from '../../components/Button'
+import { WheelDatePicker } from '../../components/WheelDatePicker'
 import { useAppState, type ChildGender, type ChildProfile } from '../../state/AppStateContext'
 import { childLabel, childSubLabel } from '../../lib/child'
-import { birthDateBounds, isValidBirthDate } from '../../lib/age'
+import { birthDateBounds, defaultBirthDate, isValidBirthDate } from '../../lib/age'
 
 const genderOpties: { value: ChildGender; label: string }[] = [
   { value: 'zoon', label: 'Jongen' },
@@ -15,7 +16,7 @@ const { min: minBirthDate, max: maxBirthDate } = birthDateBounds()
 export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
   const { children, addChild } = useAppState()
   const [draftName, setDraftName] = useState('')
-  const [draftBirthDate, setDraftBirthDate] = useState('')
+  const [draftBirthDate, setDraftBirthDate] = useState(defaultBirthDate)
   const [draftGender, setDraftGender] = useState<ChildGender | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +30,7 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
     try {
       await addChild({ name: draftName.trim(), gender: draftGender, birthDate: draftBirthDate })
       setDraftName('')
-      setDraftBirthDate('')
+      setDraftBirthDate(defaultBirthDate())
       setDraftGender(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Kind toevoegen is niet gelukt.')
@@ -68,29 +69,21 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
             {children.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
           </p>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="mb-2 text-label text-ink-muted">Naam</p>
-              <input
-                type="text"
-                value={draftName}
-                onChange={(e) => setDraftName(e.target.value)}
-                placeholder="Bijvoorbeeld Sam"
-                aria-label="Naam van je kind"
-                className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
-              />
-            </div>
-            <div>
-              <p className="mb-2 text-label text-ink-muted">Geboortedatum</p>
-              <input
-                type="date"
-                value={draftBirthDate}
-                onChange={(e) => setDraftBirthDate(e.target.value)}
-                min={minBirthDate}
-                max={maxBirthDate}
-                aria-label="Geboortedatum van je kind"
-                className="w-full rounded-md bg-surface-sunken px-3 py-3 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
-              />
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Naam</p>
+            <input
+              type="text"
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              placeholder="Bijvoorbeeld Sam"
+              aria-label="Naam van je kind"
+              className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Geboortedatum</p>
+            <div className="rounded-md bg-surface-sunken px-2">
+              <WheelDatePicker value={draftBirthDate} onChange={setDraftBirthDate} min={minBirthDate} max={maxBirthDate} />
             </div>
           </div>
 
