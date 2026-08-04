@@ -32,6 +32,14 @@ export function deriveAgeGroup(birthDateIso: string): AgeGroup {
   return calculateAge(birthDateIso) < 12 ? 'jong' : 'oud'
 }
 
+// Startwaarde voor de scroll-wheel datumkiezer: het midden van het
+// toegestane bereik (6-18 jaar), zodat er altijd een geldige datum
+// geselecteerd is in plaats van een lege placeholder.
+export function defaultBirthDate(today: Date = new Date()): string {
+  const midAge = Math.round((MIN_AGE + MAX_AGE) / 2)
+  return toIsoDate(new Date(today.getFullYear() - midAge, today.getMonth(), today.getDate()))
+}
+
 export function isValidBirthDate(birthDateIso: string): boolean {
   if (!birthDateIso) return false
   const age = calculateAge(birthDateIso)

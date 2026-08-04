@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { X, Check } from 'lucide-react'
 import { Button } from '../components/Button'
+import { WheelDatePicker } from '../components/WheelDatePicker'
 import { useAppState, type ChildGender } from '../state/AppStateContext'
-import { birthDateBounds, isValidBirthDate } from '../lib/age'
+import { birthDateBounds, defaultBirthDate, isValidBirthDate } from '../lib/age'
 
 const genderOpties: { value: ChildGender; label: string }[] = [
   { value: 'zoon', label: 'Jongen' },
@@ -16,7 +17,7 @@ export function AddChild() {
   const navigate = useNavigate()
   const { addChild } = useAppState()
   const [name, setName] = useState('')
-  const [birthDate, setBirthDate] = useState('')
+  const [birthDate, setBirthDate] = useState(defaultBirthDate)
   const [gender, setGender] = useState<ChildGender | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -53,29 +54,21 @@ export function AddChild() {
 
       <div className="flex flex-1 flex-col justify-between overflow-y-auto px-5 py-6">
         <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="mb-2 text-label text-ink-muted">Naam</p>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Bijvoorbeeld Sam"
-                aria-label="Naam van je kind"
-                className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
-              />
-            </div>
-            <div>
-              <p className="mb-2 text-label text-ink-muted">Geboortedatum</p>
-              <input
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                min={minBirthDate}
-                max={maxBirthDate}
-                aria-label="Geboortedatum van je kind"
-                className="w-full rounded-md bg-surface-sunken px-3 py-3 text-body text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
-              />
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Naam</p>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Bijvoorbeeld Sam"
+              aria-label="Naam van je kind"
+              className="w-full rounded-md bg-surface-sunken px-4 py-3 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            />
+          </div>
+          <div>
+            <p className="mb-2 text-label text-ink-muted">Geboortedatum</p>
+            <div className="rounded-md bg-surface-sunken px-2">
+              <WheelDatePicker value={birthDate} onChange={setBirthDate} min={minBirthDate} max={maxBirthDate} />
             </div>
           </div>
 
