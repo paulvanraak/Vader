@@ -10,6 +10,7 @@ import { OnboardingFlow, type OnboardingMode } from './screens/onboarding/Onboar
 import { Home } from './screens/Home'
 import { Kompas } from './screens/Kompas'
 import { Chat } from './screens/Chat'
+import { Badges } from './screens/Badges'
 import { ProbeerDitEens } from './screens/ProbeerDitEens'
 import { Ik } from './screens/Ik'
 import { Instellingen } from './screens/Instellingen'
@@ -92,11 +93,12 @@ function MainApp() {
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
       <Route path="/kind-toevoegen" element={<AddChild />} />
+      <Route path="/kompas" element={<Kompas />} />
       <Route element={<TabLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/kompas" element={<Kompas />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/probeer-dit-eens" element={<ProbeerDitEens />} />
+        <Route path="/badges" element={<Badges />} />
         <Route path="/ik" element={<Ik />} />
       </Route>
     </Routes>

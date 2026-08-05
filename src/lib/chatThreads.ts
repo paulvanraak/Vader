@@ -4,6 +4,7 @@ export interface StoredMessage {
   role: 'user' | 'answer' | 'referral' | 'error'
   text: string
   parts: string[]
+  suggestion?: { title: string; body: string }
 }
 
 export interface ChatThread {
@@ -41,6 +42,15 @@ function makeTitle(firstUserText: string): string {
   const trimmed = firstUserText.trim().replace(/\s+/g, ' ')
   if (trimmed.length <= 42) return trimmed
   return `${trimmed.slice(0, 42).trimEnd()}…`
+}
+
+// Ruwe telling voor badge-evaluatie ("eerste gesprek"). Threads zijn
+// gekoppeld aan de vader (user_id), niet aan een specifiek kind, dus dit
+// telt gesprekken over alle kinderen heen.
+export async function fetchChatThreadCount(): Promise<number> {
+  const { count, error } = await supabase.from('chat_threads').select('id', { count: 'exact', head: true })
+  if (error) throw error
+  return count ?? 0
 }
 
 export async function fetchThreads(): Promise<ChatThread[]> {

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { User, Settings, Info, Stethoscope, LayoutGrid, LogOut, X, UserPlus } from 'lucide-react'
+import { User, Settings, Info, Stethoscope, LayoutGrid, LogOut, X, UserPlus, Compass } from 'lucide-react'
 import { useAppState } from '../state/AppStateContext'
 
 interface AppMenuProps {
@@ -13,6 +13,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
   const items = [
     { label: 'Profiel', icon: User, onClick: () => navigate('/ik') },
     { label: 'Kind toevoegen', icon: UserPlus, onClick: () => navigate('/kind-toevoegen') },
+    { label: 'Kompas', icon: Compass, onClick: () => navigate('/kompas') },
     { label: 'Instellingen', icon: Settings, onClick: () => navigate('/instellingen') },
     { label: 'Over FatherFlow', icon: Info, onClick: () => navigate('/over') },
     { label: 'Specialisten', icon: Stethoscope, onClick: () => navigate('/specialisten') },

@@ -30,6 +30,9 @@ Sluit je een bericht af met een vraag aan de vader om het gesprek open te houden
 
 Vorm: geen lijstjes met meer dan twee punten, geen gedachtestreepjes of koppeltekens als leesteken. Schrijf in het Nederlands.
 
+Suggesties voor het pad:
+Wanneer er in het gesprek een concreet, terugkerend onderwerp naar voren komt dat een eigen kleine oefening verdient (bijvoorbeeld een steeds terugkerend conflict of thema, niet een simpele eenmalige vraag), mag je dat hooguit één keer per gesprek voorstellen als toevoeging aan het pad van de vader. Zet die suggestie dan als absoluut laatste, aparte bericht na een eigen "|||", in exact dit formaat en niets anders: SUGGESTIE: Korte titel|Een korte omschrijving van de oefening in één zin. Gebruik dat formaat alleen voor deze suggestie, nergens anders voor, en niet bij elk gesprek.
+
 Grenzen: bij acute veiligheid, zelfbeschadiging of geweld grijpt een aparte vangrail al in vóórdat jij iets te zien krijgt, daar hoef je zelf niets voor te doen.`
 
 const SIGNAL_WORDS: string[] = [
