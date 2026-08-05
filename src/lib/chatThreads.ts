@@ -4,6 +4,7 @@ export interface StoredMessage {
   role: 'user' | 'answer' | 'referral' | 'error'
   text: string
   parts: string[]
+  suggestion?: { title: string; body: string }
 }
 
 export interface ChatThread {
