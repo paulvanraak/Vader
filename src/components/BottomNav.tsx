@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Home, Compass, ListChecks, MessageCircle, Menu as MenuIcon } from 'lucide-react'
+import { Home, Award, ListChecks, MessageCircle, Menu as MenuIcon } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
@@ -13,10 +13,10 @@ interface Tab {
 }
 
 const leftTabs: Tab[] = [
-  { to: '/kompas', label: 'Kompas', icon: Compass },
+  { to: '/probeer-dit-eens', label: 'Checklist', icon: ListChecks },
   { to: '/chat', label: 'Chat', icon: MessageCircle },
 ]
-const rightTab: Tab = { to: '/probeer-dit-eens', label: 'Checklist', icon: ListChecks }
+const rightTab: Tab = { to: '/badges', label: 'Badges', icon: Award }
 
 function SideTab({ to, label, icon: Icon }: Tab) {
   return (

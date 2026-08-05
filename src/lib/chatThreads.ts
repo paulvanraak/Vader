@@ -43,6 +43,15 @@ function makeTitle(firstUserText: string): string {
   return `${trimmed.slice(0, 42).trimEnd()}…`
 }
 
+// Ruwe telling voor badge-evaluatie ("eerste gesprek"). Threads zijn
+// gekoppeld aan de vader (user_id), niet aan een specifiek kind, dus dit
+// telt gesprekken over alle kinderen heen.
+export async function fetchChatThreadCount(): Promise<number> {
+  const { count, error } = await supabase.from('chat_threads').select('id', { count: 'exact', head: true })
+  if (error) throw error
+  return count ?? 0
+}
+
 export async function fetchThreads(): Promise<ChatThread[]> {
   const { data, error } = await supabase
     .from('chat_threads')

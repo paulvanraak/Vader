@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Search, ChevronDown, Lock, CircleCheck } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Search, ChevronDown, Lock, CircleCheck, X } from 'lucide-react'
 import { useAppState } from '../state/AppStateContext'
 import { useContent } from '../state/ContentContext'
 import { lessonsForWorld, isWorldComplete, isLessonUnlocked } from '../lib/worldProgress'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 
 export function Kompas() {
+  const navigate = useNavigate()
   const { path, completedLessonIds } = useAppState()
   const { worlds, compassEntries } = useContent()
   const [query, setQuery] = useState('')
@@ -26,9 +28,19 @@ export function Kompas() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="shrink-0 px-5 pb-3 pt-6">
-        <p className="text-label text-ink-muted">Kompas</p>
-        <h1 className="text-h2 text-ink">Waar je op koerst</h1>
+      <div className="flex shrink-0 items-center justify-between px-5 pb-3 pt-6">
+        <div>
+          <p className="text-label text-ink-muted">Kompas</p>
+          <h1 className="text-h2 text-ink">Waar je op koerst</h1>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          aria-label="Sluiten"
+          className="flex size-9 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+        >
+          <X size={18} strokeWidth={2} />
+        </button>
       </div>
 
       <ChildSwitcher />
