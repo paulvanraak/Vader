@@ -63,11 +63,12 @@ function splitParts(text: string): string[] {
     .filter(Boolean)
 }
 
-const SUGGESTIE_PATTERN = /^SUGGESTIE:\s*(.+?)\s*\|\s*(.+)$/
+const SUGGESTIE_PATTERN = /^\*{0,2}SUGGESTIE:\*{0,2}\s*(.+?)\s*\|\s*(.+?)\*{0,2}$/i
 
-// Het model zet een pad-suggestie (zeldzaam, hooguit één keer per gesprek)
-// als absoluut laatste bericht-deel na een "|||". Die wordt hier losgeknipt
-// van de gewone tekstballonnen, zodat hij apart als kaart getoond kan worden.
+// Het model zet een pad-suggestie als absoluut laatste bericht-deel na een
+// "|||". Die wordt hier losgeknipt van de gewone tekstballonnen, zodat hij
+// apart als kaart getoond kan worden. Tolerant voor hoofdletters en losse
+// markdown-vetdruk, voor het geval het model daarvan afwijkt.
 function extractSuggestion(text: string): { parts: string[]; suggestion: ChatSuggestion | undefined } {
   const parts = splitParts(text)
   const last = parts[parts.length - 1]
