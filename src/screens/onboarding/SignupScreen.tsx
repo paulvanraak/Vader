@@ -5,6 +5,21 @@ import { signUp } from '../../lib/account'
 const inputClass =
   'w-full rounded-[8px] border border-[#b1e9ff]/40 bg-transparent px-4 py-3.5 text-body-lg text-white outline-none placeholder:text-[#b1e9ff]/40 focus-visible:border-[#b1e9ff]'
 
+// TIJDELIJK, alleen om het testen te versnellen: geen handmatig e-mailadres/
+// wachtwoord meer nodig om de app in te komen. We genereren die zelf achter
+// de schermen (e-mailbevestiging staat sowieso al uit in Supabase, dus dit
+// levert meteen een echte sessie op). De echte signUp()-aanroep en de
+// velden hieronder blijven intact voor later, alleen niet meer verplicht
+// zichtbaar. Verwijder deze auto-generatie zodra we weer echte e-mail/
+// wachtwoord-login willen vragen.
+function generateTestCredentials(): { email: string; password: string } {
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  return {
+    email: `vader-${id}@fatherflow-test.local`,
+    password: `${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`,
+  }
+}
+
 export function SignupScreen({
   onNext,
   onSwitchToLogin,
@@ -13,22 +28,20 @@ export function SignupScreen({
   onSwitchToLogin?: () => void
 }) {
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [needsConfirmation, setNeedsConfirmation] = useState(false)
+  const [confirmationEmail, setConfirmationEmail] = useState('')
 
-  const passwordsMatch = password.length >= 6 && password === confirmPassword
-  const canSubmit = name.trim().length > 0 && email.trim().length > 0 && passwordsMatch && !isSubmitting
+  const canSubmit = name.trim().length > 0 && !isSubmitting
 
   async function submit() {
     if (!canSubmit) return
     setError(null)
     setIsSubmitting(true)
     try {
-      const { data, error: signUpError } = await signUp(name.trim(), email.trim(), password)
+      const { email, password } = generateTestCredentials()
+      const { data, error: signUpError } = await signUp(name.trim(), email, password)
       if (signUpError) {
         setError(signUpError.message)
         return
@@ -37,6 +50,7 @@ export function SignupScreen({
         onNext(name.trim())
       } else {
         // Supabase-project vereist e-mailbevestiging: er is nog geen sessie.
+        setConfirmationEmail(email)
         setNeedsConfirmation(true)
       }
     } finally {
@@ -49,8 +63,8 @@ export function SignupScreen({
       <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#21283e] px-8 text-center">
         <h1 className="text-[28px] font-semibold text-white">Check je e-mail</h1>
         <p className="text-[18px] font-light leading-relaxed text-white/80">
-          We hebben een bevestigingslink gestuurd naar {email.trim()}. Klik erop om je account te activeren en log
-          daarna in.
+          We hebben een bevestigingslink gestuurd naar {confirmationEmail}. Klik erop om je account te activeren en
+          log daarna in.
         </p>
         {onSwitchToLogin && (
           <button type="button" onClick={onSwitchToLogin} className="text-body-lg font-bold text-[#b1e9ff] underline underline-offset-2">
@@ -77,49 +91,7 @@ export function SignupScreen({
             aria-label="Jouw naam"
             className={inputClass}
           />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Jouw e-mailadres"
-            aria-label="E-mailadres"
-            autoCapitalize="none"
-            className={inputClass}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Kies een wachtwoord"
-            aria-label="Wachtwoord"
-            className={inputClass}
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') void submit()
-            }}
-            placeholder="Herhaal wachtwoord"
-            aria-label="Herhaal wachtwoord"
-            className={inputClass}
-          />
-          {password.length > 0 && !passwordsMatch && (
-            <p className="text-caption font-semibold text-danger-500">
-              {password.length < 6 ? 'Minimaal 6 tekens.' : 'Wachtwoorden komen niet overeen.'}
-            </p>
-          )}
           {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
-          {onSwitchToLogin && (
-            <button
-              type="button"
-              onClick={onSwitchToLogin}
-              className="mt-1 text-caption font-semibold text-[#b1e9ff]/70 underline underline-offset-2"
-            >
-              Heb je al een account? Log in
-            </button>
-          )}
         </div>
       </div>
       <OnboardingButton onClick={() => void submit()} disabled={!canSubmit}>
