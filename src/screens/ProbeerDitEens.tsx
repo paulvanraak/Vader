@@ -21,7 +21,7 @@ export function ProbeerDitEens() {
       <ChildSwitcher />
       <div className="flex flex-col gap-5 px-5 pb-6 pt-4">
         <div>
-          <h1 className="text-h2 text-ink">Jouw Checklist</h1>
+          <h1 className="font-serif text-h2 font-semibold text-ink">Jouw Checklist</h1>
           <p className="mt-1 text-caption text-ink-muted">
             {doneCount} van {actions.length} geprobeerd
           </p>

@@ -23,7 +23,7 @@ export function AppMenu({ onClose }: AppMenuProps) {
   return (
     <div className="animate-dissolve fixed inset-0 z-50 flex flex-col bg-page">
       <div className="flex shrink-0 items-center justify-between px-5 pt-5">
-        <p className="text-h3 font-bold text-ink">Menu</p>
+        <p className="font-serif text-h3 font-semibold text-ink">Menu</p>
         <button
           type="button"
           onClick={onClose}

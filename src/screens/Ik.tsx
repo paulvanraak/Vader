@@ -15,7 +15,7 @@ export function Ik() {
         </div>
         <div className="min-w-0">
           <p className="text-caption text-ink-muted">Jouw profiel</p>
-          <p className="truncate text-h4 text-ink">{fatherName ?? 'Vader'}</p>
+          <p className="truncate font-serif text-h4 font-semibold text-ink">{fatherName ?? 'Vader'}</p>
         </div>
       </div>
 

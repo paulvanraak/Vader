@@ -21,7 +21,7 @@ export function Celebration({ lessonTitle, onDone }: CelebrationProps) {
   }, [onDone])
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-center gap-3 overflow-hidden px-6 text-center">
+    <div className="relative flex h-full flex-col items-start justify-center gap-3 overflow-hidden px-6 text-left">
       <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
         {confettiDots.map((dot, i) => (
           <span
@@ -35,7 +35,7 @@ export function Celebration({ lessonTitle, onDone }: CelebrationProps) {
       <div className="celebration-badge flex size-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
         <PartyPopper size={32} strokeWidth={2} />
       </div>
-      <h1 className="text-h2 text-ink">Mooi gedaan</h1>
+      <h1 className="font-serif text-h2 font-semibold text-ink">Mooi gedaan</h1>
       <p className="text-body-lg text-ink-muted">{lessonTitle}, klaar voor vandaag.</p>
     </div>
   )

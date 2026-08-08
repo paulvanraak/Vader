@@ -18,7 +18,7 @@ export function Badges() {
       <ChildSwitcher />
       <div className="flex flex-col gap-5 px-5 pb-6 pt-4">
         <div>
-          <h1 className="text-h2 text-ink">Badges</h1>
+          <h1 className="font-serif text-h2 font-semibold text-ink">Badges</h1>
           <p className="mt-1 text-caption text-ink-muted">
             {earnedCount} van {catalog.length} behaald
           </p>
@@ -33,7 +33,7 @@ export function Badges() {
                 key={badge.code}
                 type="button"
                 onClick={() => setActiveBadge(badge)}
-                className="flex flex-col items-center gap-2 rounded-md bg-surface p-3 text-center shadow-sm ring-1 ring-surface-sunken"
+                className="flex flex-col items-start gap-2 rounded-md bg-surface p-3 text-left shadow-sm ring-1 ring-surface-sunken"
               >
                 <span
                   className={`flex size-14 items-center justify-center rounded-full ${
@@ -61,7 +61,7 @@ export function Badges() {
             aria-modal="true"
             aria-label={activeBadge.title}
             onClick={(e) => e.stopPropagation()}
-            className="force-dark animate-dissolve w-full max-w-[420px] rounded-md bg-surface p-6 text-ink shadow-2xl"
+            className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 text-ink shadow-lg"
           >
             <div className="flex items-start justify-between gap-3">
               <span
@@ -89,7 +89,7 @@ export function Badges() {
             <p className="mt-4 text-caption uppercase tracking-wide text-ink-muted">
               {earnedBadgeCodes[activeBadge.code] ? 'Behaald' : 'Nog niet behaald'}
             </p>
-            <p className="mt-1 text-h4 text-ink">{activeBadge.title}</p>
+            <p className="mt-1 font-serif text-h4 font-semibold text-ink">{activeBadge.title}</p>
             <p className="mt-3 text-body-lg leading-relaxed text-ink-muted">{activeBadge.description}</p>
           </div>
         </div>

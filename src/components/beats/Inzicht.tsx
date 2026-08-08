@@ -7,14 +7,14 @@ export function Inzicht({ beat, worldId }: { beat: Beat; worldId: number }) {
   const style = getWorldStyle(worldId)
   return (
     <div>
-      <div className="flex flex-col items-center gap-4 text-center">
+      <div className="flex items-center gap-4">
         <span
-          className="flex size-14 items-center justify-center rounded-full bg-neutral-white/10"
+          className="flex size-14 shrink-0 items-center justify-center rounded-full bg-neutral-white/10"
           style={{ color: style.accentVar }}
         >
           <Lightbulb size={26} strokeWidth={2} />
         </span>
-        <p className="text-h1 font-extrabold uppercase leading-relaxed tracking-wide">Inzicht</p>
+        <p className="font-serif text-h2 font-semibold uppercase tracking-wide">Inzicht</p>
       </div>
       <TypewriterText
         key={beat.body}

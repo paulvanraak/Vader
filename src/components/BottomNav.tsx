@@ -53,7 +53,7 @@ export function BottomNav() {
         <NavLink to="/" end className="flex flex-1 flex-col items-center justify-center px-1 py-1.5 text-center">
           {({ isActive }) => (
             <span
-              className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition ${style.solidBg} ${style.edgeShadow} ${
+              className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition ${style.solidBg} ${
                 isActive ? 'ring-2 ring-surface' : ''
               }`}
             >

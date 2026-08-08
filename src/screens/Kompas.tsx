@@ -31,7 +31,7 @@ export function Kompas() {
       <div className="flex shrink-0 items-center justify-between px-5 pb-3 pt-6">
         <div>
           <p className="text-label text-ink-muted">Kompas</p>
-          <h1 className="text-h2 text-ink">Waar je op koerst</h1>
+          <h1 className="font-serif text-h2 font-semibold text-ink">Waar je op koerst</h1>
         </div>
         <button
           type="button"

@@ -16,7 +16,7 @@ export function Instellingen() {
         >
           <X size={18} strokeWidth={2} />
         </button>
-        <h1 className="text-h3 text-ink">Instellingen</h1>
+        <h1 className="font-serif text-h3 font-semibold text-ink">Instellingen</h1>
       </div>
 
       <div className="flex flex-col gap-6 px-5 py-6">
