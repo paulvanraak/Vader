@@ -44,7 +44,7 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
       <div className="flex flex-1 flex-col gap-8 overflow-y-auto text-left">
         <div>
           <p className="text-label text-ink-muted">Even kennismaken</p>
-          <h1 className="mt-2 text-h1 font-extrabold text-ink">Over wie gaat het?</h1>
+          <h1 className="mt-2 font-serif text-h1 font-semibold text-ink">Over wie gaat het?</h1>
           <p className="mt-2 text-body text-ink-muted">Voeg één of meerdere kinderen toe.</p>
         </div>
 

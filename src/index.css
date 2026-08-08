@@ -1,27 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* Typografie — Manrope, uit Figma */
+  /* Typografie: Manrope voor UI/labels, Fraunces (serieuze, hoog-contrast
+     serif) voor grote koppen en cijfers — editoriaal in plaats van rond. */
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
 
-  --text-display: 2.5rem; /* 40px */
-  --text-display--line-height: 1.15;
-  --text-display--font-weight: 700;
+  --text-display: 3rem; /* 48px */
+  --text-display--line-height: 1.05;
+  --text-display--font-weight: 600;
 
-  --text-h1: 1.875rem; /* 30px */
-  --text-h1--line-height: 1.2;
-  --text-h1--font-weight: 700;
+  --text-h1: 2rem; /* 32px */
+  --text-h1--line-height: 1.1;
+  --text-h1--font-weight: 600;
 
   --text-h2: 1.5rem; /* 24px */
-  --text-h2--line-height: 1.25;
-  --text-h2--font-weight: 700;
+  --text-h2--line-height: 1.15;
+  --text-h2--font-weight: 600;
 
   --text-h3: 1.25rem; /* 20px */
-  --text-h3--line-height: 1.3;
-  --text-h3--font-weight: 700;
+  --text-h3--line-height: 1.2;
+  --text-h3--font-weight: 600;
 
   --text-h4: 1.125rem; /* 18px */
-  --text-h4--line-height: 1.35;
+  --text-h4--line-height: 1.3;
   --text-h4--font-weight: 600;
 
   --text-body-lg: 1rem; /* 16px */
@@ -36,132 +38,122 @@
   --text-body-sm--line-height: 1.5;
   --text-body-sm--font-weight: 400;
 
-  --text-label: 0.875rem; /* 14px */
-  --text-label--line-height: 1.3;
+  --text-label: 0.8125rem; /* 13px */
+  --text-label--line-height: 1.2;
   --text-label--font-weight: 600;
 
-  --text-label-sm: 0.75rem; /* 12px */
-  --text-label-sm--line-height: 1.3;
-  --text-label-sm--font-weight: 600;
+  --text-label-sm: 0.6875rem; /* 11px */
+  --text-label-sm--line-height: 1.2;
+  --text-label-sm--font-weight: 700;
 
   --text-caption: 0.75rem; /* 12px */
   --text-caption--line-height: 1.4;
   --text-caption--font-weight: 500;
 
-  /* Kleuren — uit Figma-variabelen */
-  --color-primary-500: #4c6fff;
-  --color-primary-600: #2541b8;
-  /* Vast (niet thema-afhankelijk): de "dikte"-rand onderin knoppen. */
-  --color-primary-700: #1b3690;
+  /* Kleuren — editoriaal fintech-palet: crème, inkt-zwart, en een set
+     platte, verzadigde accentkleuren (oranje/roze-lila/olijf/blauw/geel). */
+  --color-primary-500: #5a7efb;
+  --color-primary-600: #3d5fe0;
+  --color-primary-700: #1f3a9e;
 
-  /* Vast, verandert niet met het thema: puur wit/donker voor tekst op
-     gekleurde knoppen en de vaste donkere spiegel-kaart. */
   --color-neutral-white: #ffffff;
-  --color-neutral-900: #303030;
+  --color-neutral-900: #15130f;
 
-  /* Thema-afhankelijke tokens. Lichte waarden hier, donkere waarden verderop
-     onder prefers-color-scheme en [data-theme]. */
-  --color-page: #f8fafc;
+  --color-page: #f5f1e7;
   --color-surface: #ffffff;
-  --color-surface-sunken: #f0f0f0;
-  --color-ink: #303030;
-  --color-ink-muted: #8ea3b7;
-  --color-ink-faint: #bdbdbd;
+  --color-surface-sunken: #ece6d8;
+  --color-ink: #15130f;
+  --color-ink-muted: #6e6858;
+  --color-ink-faint: #b9b29e;
 
-  --color-success-500: #8ac53e;
-  --color-warning-500: #ffd143;
-  --color-danger-500: #eb5757;
-  --color-accent-orange: #ff993a;
-  --color-accent-orange-dark: #d9761a;
-  --color-accent-violet: #8b7ff0;
-  --color-accent-violet-dark: #5f52c9;
-  --color-success-700: #5f9c2a;
-  --color-accent-teal: #2fb6a8;
-  --color-accent-teal-dark: #1f8a7f;
-  --color-accent-rose: #f0618b;
-  --color-accent-rose-dark: #c73f68;
-  --color-accent-amber: #e0a02c;
-  --color-accent-amber-dark: #b57a17;
+  --color-success-500: #6fae3c;
+  --color-warning-500: #eeee4a;
+  --color-danger-500: #e04b3c;
 
-  /* Zachte lichtblauw/lavendel gradient-achtergrond, alleen in lichte modus. */
-  --page-bg-image:
-    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
-    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
+  /* Namen bleven behouden uit het vorige palet, de onderliggende tinten zijn
+     vernieuwd naar het editoriale fintech-palet. */
+  --color-accent-orange: #f0511e;
+  --color-accent-orange-dark: #b93a10;
+  --color-accent-violet: #eeee4a;
+  --color-accent-violet-dark: #c9c81e;
+  --color-success-700: #4a7d28;
+  --color-accent-teal: #1d6b4e;
+  --color-accent-teal-dark: #123f2e;
+  --color-accent-rose: #e9b3e3;
+  --color-accent-rose-dark: #c77fc0;
+  --color-accent-amber: #aeb93c;
+  --color-accent-amber-dark: #7d8a1e;
 
-  /* Border radius schaal — uit Figma */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 18px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-3xl: 32px;
-  --radius-4xl: 40px;
-  --radius-5xl: 64px;
-  --radius-6xl: 80px;
+  --page-bg-image: none;
 
-  /* Shadows — uit Figma-effecten */
-  --shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  --shadow-sm:
-    0px 2px 6px 0px rgba(16, 24, 40, 0.08), 0px 1px 3px 0px rgba(16, 24, 40, 0.05);
-  --shadow-md:
-    0px 4px 10px -2px rgba(16, 24, 40, 0.08), 0px 6px 14px -4px rgba(16, 24, 40, 0.1);
-  --shadow-lg:
-    0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
-  --shadow-xl:
-    0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
-  --shadow-2xl: 0px 24px 48px -12px rgba(16, 24, 40, 0.18);
-  --shadow-3xl: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
+  /* Border radius — scherper en platter dan de vorige, ronde app-stijl. */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+  --radius-3xl: 28px;
+  --radius-4xl: 36px;
+  --radius-5xl: 48px;
+  --radius-6xl: 64px;
+
+  /* Shadows — vrijwel plat, geen zware diepte-effecten meer. */
+  --shadow-xs: 0px 1px 2px 0px rgba(21, 19, 15, 0.04);
+  --shadow-sm: 0px 1px 3px 0px rgba(21, 19, 15, 0.06);
+  --shadow-md: 0px 2px 6px 0px rgba(21, 19, 15, 0.06);
+  --shadow-lg: 0px 4px 10px -2px rgba(21, 19, 15, 0.08);
+  --shadow-xl: 0px 8px 16px -4px rgba(21, 19, 15, 0.1);
+  --shadow-2xl: 0px 16px 32px -8px rgba(21, 19, 15, 0.14);
+  --shadow-3xl: 0px 24px 48px -12px rgba(21, 19, 15, 0.16);
 }
 
 /* Volgt de systeemvoorkeur zolang de gebruiker niet zelf heeft gewisseld. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-page: #0f1115;
-    --color-surface: #1b1f24;
-    --color-surface-sunken: #262b31;
-    --color-ink: #f2f3f5;
-    --color-ink-muted: #9aa7b5;
-    --color-ink-faint: #5b6470;
-    --color-primary-600: #93a5ff;
+    --color-page: #131110;
+    --color-surface: #201d18;
+    --color-surface-sunken: #2b2620;
+    --color-ink: #f5f1e7;
+    --color-ink-muted: #b0a991;
+    --color-ink-faint: #6e6858;
+    --color-primary-600: #8da3ff;
     --page-bg-image: none;
   }
 }
 
 /* Handmatige keuze wint altijd, in beide richtingen. */
 :root[data-theme="dark"] {
-  --color-page: #0f1115;
-  --color-surface: #1b1f24;
-  --color-surface-sunken: #262b31;
-  --color-ink: #f2f3f5;
-  --color-ink-muted: #9aa7b5;
-  --color-ink-faint: #5b6470;
-  --color-primary-600: #93a5ff;
+  --color-page: #131110;
+  --color-surface: #201d18;
+  --color-surface-sunken: #2b2620;
+  --color-ink: #f5f1e7;
+  --color-ink-muted: #b0a991;
+  --color-ink-faint: #6e6858;
+  --color-primary-600: #8da3ff;
   --page-bg-image: none;
 }
 
 :root[data-theme="light"] {
-  --color-page: #f8fafc;
+  --color-page: #f5f1e7;
   --color-surface: #ffffff;
-  --color-surface-sunken: #f0f0f0;
-  --color-ink: #303030;
-  --color-ink-muted: #8ea3b7;
-  --color-ink-faint: #bdbdbd;
-  --color-primary-600: #2541b8;
-  --page-bg-image:
-    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
-    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
+  --color-surface-sunken: #ece6d8;
+  --color-ink: #15130f;
+  --color-ink-muted: #6e6858;
+  --color-ink-faint: #b9b29e;
+  --color-primary-600: #3d5fe0;
+  --page-bg-image: none;
 }
 
 /* Scoped dark: de onboarding is altijd donker, ongeacht de app-instelling. */
 .force-dark {
-  --color-page: #0f1115;
-  --color-surface: #1b1f24;
-  --color-surface-sunken: #262b31;
-  --color-ink: #f2f3f5;
-  --color-ink-muted: #9aa7b5;
-  --color-ink-faint: #5b6470;
-  --color-primary-600: #93a5ff;
+  --color-page: #131110;
+  --color-surface: #201d18;
+  --color-surface-sunken: #2b2620;
+  --color-ink: #f5f1e7;
+  --color-ink-muted: #b0a991;
+  --color-ink-faint: #6e6858;
+  --color-primary-600: #8da3ff;
   --page-bg-image: none;
   color-scheme: dark;
 }
@@ -172,23 +164,9 @@ body,
   height: 100%;
 }
 
-/* Zachte foto-achtige gradient uit Figma, gebruikt op Splash en PIN-scherm. */
-.onboarding-photo-bg {
-  background-color: #bfe4f7;
-  background-image:
-    radial-gradient(120% 70% at 100% -10%, #f2d9b6 0%, rgba(242, 217, 182, 0) 60%),
-    radial-gradient(120% 70% at 105% 105%, #eccca0 0%, rgba(236, 204, 160, 0) 55%),
-    radial-gradient(140% 90% at -10% 40%, #a9d8f0 0%, rgba(169, 216, 240, 0) 60%);
-}
-
 body {
   margin: 0;
-  background-color: var(--color-surface-sunken);
-  background-image: var(--page-bg-image);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-color: var(--color-page);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   color-scheme: light dark;

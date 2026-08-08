@@ -38,15 +38,15 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <div className="onboarding-photo-bg flex h-full flex-col items-center justify-center gap-14 px-6 text-center text-black">
-      <p className="text-h3 font-medium">Ontgrendel Father Flow</p>
+    <div className="flex h-full flex-col justify-center gap-10 bg-page px-7">
+      <p className="font-serif text-h1 text-ink">Ontgrendel Father Flow</p>
 
       <div className={`flex gap-4 ${shake ? 'animate-[shake_0.4s_ease-in-out]' : ''}`}>
         {Array.from({ length: PIN_LENGTH }).map((_, index) => (
           <span
             key={index}
-            className={`size-[18px] rounded-full border-2 border-black transition ${
-              index < pin.length ? 'bg-black' : 'bg-transparent'
+            className={`size-[18px] rounded-full border-2 border-ink transition ${
+              index < pin.length ? 'bg-ink' : 'bg-transparent'
             }`}
           />
         ))}
@@ -61,7 +61,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
                 type="button"
                 onClick={pressFaceId}
                 aria-label="Ontgrendel met FaceID"
-                className="flex size-20 items-center justify-center text-black"
+                className="flex size-20 items-center justify-center text-ink"
               >
                 <ScanFace size={26} strokeWidth={1.75} />
               </button>
@@ -74,7 +74,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
                 type="button"
                 onClick={pressBackspace}
                 aria-label="Verwijder cijfer"
-                className="flex size-20 items-center justify-center text-black"
+                className="flex size-20 items-center justify-center text-ink"
               >
                 <Delete size={22} strokeWidth={1.75} />
               </button>
@@ -85,7 +85,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
               key={key}
               type="button"
               onClick={() => pressDigit(key)}
-              className="flex size-20 items-center justify-center rounded-full bg-white text-h2 font-semibold text-black shadow-sm transition active:bg-white/70"
+              className="flex size-20 items-center justify-center rounded-full bg-surface-sunken font-serif text-h2 text-ink transition active:bg-ink/10"
             >
               {key}
             </button>

@@ -25,7 +25,7 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
       <div className="flex flex-1 flex-col gap-6">
         <div>
           <p className="text-label text-ink-muted">Zo werkt het</p>
-          <h1 className="mt-2 text-h1 font-extrabold text-ink">FatherFlow</h1>
+          <h1 className="mt-2 font-serif text-h1 font-semibold text-ink">FatherFlow</h1>
         </div>
         <div className="flex flex-col gap-4">
           {stappen.map(({ icon: Icon, title, body }) => (
