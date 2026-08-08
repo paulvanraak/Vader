@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Lock } from 'lucide-react'
 import { Button } from '../../components/Button'
 import { signIn } from '../../lib/account'
 
@@ -34,16 +33,13 @@ export function LoginScreen({
   }
 
   return (
-    <div className="flex h-full flex-col justify-between px-6 py-10">
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-        <div className="flex size-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-          <Lock size={28} strokeWidth={2} />
-        </div>
+    <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
+      <div className="flex flex-1 flex-col justify-center gap-6">
         <div>
           <p className="text-label text-ink-muted">Welkom terug</p>
-          <h1 className="mt-2 text-h1 font-extrabold text-ink">Log in bij FatherFlow</h1>
+          <h1 className="mt-2 font-serif text-h1 font-semibold text-ink">Log in bij FatherFlow</h1>
         </div>
-        <div className="flex w-full max-w-xs flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
           <input
             type="email"
             value={email}
@@ -51,7 +47,7 @@ export function LoginScreen({
             placeholder="Jouw e-mailadres"
             aria-label="E-mailadres"
             autoCapitalize="none"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="w-full rounded-md border border-ink-faint bg-transparent px-4 py-3.5 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:border-ink"
           />
           <input
             type="password"
@@ -62,7 +58,7 @@ export function LoginScreen({
             }}
             placeholder="Wachtwoord"
             aria-label="Wachtwoord"
-            className="w-full rounded-md bg-surface-sunken px-4 py-3 text-center text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:ring-2 focus-visible:ring-primary-500"
+            className="w-full rounded-md border border-ink-faint bg-transparent px-4 py-3.5 text-body-lg text-ink outline-none placeholder:text-ink-faint focus-visible:border-ink"
           />
           {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
           {onSwitchToSignup && (

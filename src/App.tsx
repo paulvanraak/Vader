@@ -68,7 +68,7 @@ function MainApp() {
     // plaats van dat je per ongeluk via "Log in" op een oud testaccount met
     // bestaande kinderen belandt en de rest van de onboarding overslaat.
     return (
-      <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+      <div className="flex h-full flex-col overflow-hidden bg-page">
         <OnboardingFlow mode="nieuw" />
       </div>
     )
@@ -80,7 +80,7 @@ function MainApp() {
 
   if (children.length === 0) {
     return (
-      <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+      <div className="flex h-full flex-col overflow-hidden bg-page">
         <ChildrenQuestion onNext={() => {}} />
       </div>
     )
@@ -107,7 +107,7 @@ function MainApp() {
 
 function OnboardingPreview({ mode }: { mode: OnboardingMode }) {
   return (
-    <div className="force-dark flex h-full flex-col overflow-hidden bg-page">
+    <div className="flex h-full flex-col overflow-hidden bg-page">
       <OnboardingFlow mode={mode} />
     </div>
   )

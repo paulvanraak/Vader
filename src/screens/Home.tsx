@@ -89,7 +89,7 @@ function ReflectieSheet({ item, onClose }: { item: PathItem; onClose: () => void
         aria-modal="true"
         aria-label={item.title}
         onClick={(e) => e.stopPropagation()}
-        className="animate-dissolve w-full max-w-[420px] rounded-md bg-surface p-6 shadow-2xl"
+        className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 shadow-lg"
       >
         <div className="flex items-start justify-between gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
@@ -105,7 +105,7 @@ function ReflectieSheet({ item, onClose }: { item: PathItem; onClose: () => void
           </button>
         </div>
         <p className="mt-4 text-caption uppercase tracking-wide text-ink-muted">Even terugblikken</p>
-        <p className="mt-1 text-h4 text-ink">{item.body}</p>
+        <p className="mt-1 font-serif text-h4 font-semibold text-ink">{item.body}</p>
         <div className="mt-5 flex flex-col gap-2">
           {REFLECTIE_OPTIES.map((optie) => (
             <button
@@ -147,7 +147,7 @@ function VoorJouSheet({ item, onClose }: { item: PathItem; onClose: () => void }
         aria-modal="true"
         aria-label={item.title}
         onClick={(e) => e.stopPropagation()}
-        className="animate-dissolve w-full max-w-[420px] rounded-md bg-surface p-6 shadow-2xl"
+        className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 shadow-lg"
       >
         <div className="flex items-start justify-between gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
@@ -163,7 +163,7 @@ function VoorJouSheet({ item, onClose }: { item: PathItem; onClose: () => void }
           </button>
         </div>
         <p className="mt-4 text-caption uppercase tracking-wide text-primary-600">Voor jou, uit je gesprek</p>
-        <p className="mt-1 text-h4 text-ink">{item.title}</p>
+        <p className="mt-1 font-serif text-h4 font-semibold text-ink">{item.title}</p>
         <p className="mt-3 text-body-lg leading-relaxed text-ink-muted">{item.body}</p>
         {!isDone && (
           <button
@@ -228,17 +228,12 @@ export function Home() {
           return (
             <div key={lesson.id} className="flex w-full flex-col">
               {showBanner && world && (
-                <div
-                  className="z-10 my-6 flex w-full items-center justify-between rounded-md border-l-4 bg-surface py-2 pl-7 pr-4 shadow-sm"
-                  style={{ borderLeftColor: style.accentVar }}
-                >
+                <div className={`z-10 my-6 flex w-full items-center justify-between rounded-lg py-4 pl-6 pr-5 ${style.softBg}`}>
                   <div className="text-left">
-                    <p className="text-h3 font-bold text-ink">{world.title}</p>
+                    <p className="font-serif text-h2 font-semibold text-ink">{world.title}</p>
                     <p className="text-body text-ink-muted">{world.subtitle}</p>
                   </div>
-                  <p className="text-h1 font-extrabold" style={{ color: style.accentVar }}>
-                    {world.id}
-                  </p>
+                  <p className={`font-serif text-display font-semibold ${style.text}`}>{world.id}</p>
                 </div>
               )}
 
@@ -252,14 +247,14 @@ export function Home() {
                     disabled={!unlocked}
                     onClick={() => unlocked && navigate(`/les/${lesson.id}`)}
                     aria-label={`Les ${index + 1}: ${lesson.title}`}
-                    className={`flex items-center justify-center rounded-full border-4 border-transparent transition ${
+                    className={`flex items-center justify-center rounded-full transition ${
                       isDone
-                        ? `size-14 bg-success-500 text-neutral-white shadow-[0_5px_0_0_var(--color-success-700)] active:translate-y-[4px] active:shadow-[0_1px_0_0_var(--color-success-700)]`
+                        ? 'size-14 bg-success-500 text-neutral-white'
                         : isCurrent
-                          ? `size-14 ${style.solidBg} text-neutral-white ${style.edgeShadow} active:translate-y-[4px] active:${style.edgeShadowActive}`
+                          ? `size-14 ${style.solidBg} text-neutral-white`
                           : unlocked
-                            ? `size-14 ${style.softBg} ${style.text} shadow-md ring-1 ring-surface-sunken hover:ring-2 active:translate-y-[4px]`
-                            : 'size-11 cursor-not-allowed bg-surface-sunken text-ink-muted'
+                            ? `size-14 ${style.softBg} ${style.text}`
+                            : 'size-11 cursor-not-allowed bg-surface-sunken text-ink-faint'
                     }`}
                   >
                     {isDone ? (

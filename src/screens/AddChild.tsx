@@ -49,7 +49,7 @@ export function AddChild() {
         >
           <X size={18} strokeWidth={2} />
         </button>
-        <h1 className="text-h3 text-ink">Kind toevoegen</h1>
+        <h1 className="font-serif text-h3 font-semibold text-ink">Kind toevoegen</h1>
       </div>
 
       <div className="flex flex-1 flex-col justify-between overflow-y-auto px-5 py-6">
