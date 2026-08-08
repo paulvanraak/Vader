@@ -64,14 +64,14 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
           className={`h-2 flex-1 overflow-hidden rounded-full ${isDarkBeat ? 'bg-neutral-white/15' : 'bg-surface-sunken'}`}
         >
           <div
-            className="h-full rounded-full bg-gradient-to-r from-primary-500 to-accent-orange transition-all duration-500"
+            className="h-full rounded-full bg-ink transition-all duration-500"
             style={{ width: `${((beatIndex + 1) / lesson.beats.length) * 100}%` }}
           />
         </div>
       </div>
 
       <p
-        className="shrink-0 px-8 pt-3 text-center text-body font-bold leading-snug"
+        className="shrink-0 px-5 pt-3 text-left text-body font-bold leading-snug"
         style={{ color: style.accentVar }}
       >
         {lesson.title}

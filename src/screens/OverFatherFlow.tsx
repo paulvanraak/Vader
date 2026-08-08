@@ -15,7 +15,7 @@ export function OverFatherFlow() {
         >
           <X size={18} strokeWidth={2} />
         </button>
-        <h1 className="text-h3 text-ink">Over FatherFlow</h1>
+        <h1 className="font-serif text-h3 font-semibold text-ink">Over FatherFlow</h1>
       </div>
 
       <div className="flex flex-col gap-5 px-5 py-6">

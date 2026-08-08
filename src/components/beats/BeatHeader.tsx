@@ -10,11 +10,11 @@ interface BeatHeaderProps {
 export function BeatHeader({ icon: Icon, title, worldId }: BeatHeaderProps) {
   const style = getWorldStyle(worldId)
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <span className={`flex size-12 items-center justify-center rounded-full ${style.softBg} ${style.text}`}>
-        <Icon size={24} strokeWidth={2} />
+    <div className="flex items-center gap-3">
+      <span className={`flex size-11 shrink-0 items-center justify-center rounded-full ${style.softBg} ${style.text}`}>
+        <Icon size={22} strokeWidth={2} />
       </span>
-      <p className="text-h4 font-extrabold uppercase tracking-wide text-ink">{title}</p>
+      <p className="font-serif text-h4 font-semibold text-ink">{title}</p>
     </div>
   )
 }
