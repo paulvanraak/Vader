@@ -1,0 +1,336 @@
+@import "tailwindcss";
+
+@theme {
+  /* Typografie — Manrope, uit Figma */
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: 2.5rem; /* 40px */
+  --text-display--line-height: 1.15;
+  --text-display--font-weight: 700;
+
+  --text-h1: 1.875rem; /* 30px */
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 1.5rem; /* 24px */
+  --text-h2--line-height: 1.25;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 1.25rem; /* 20px */
+  --text-h3--line-height: 1.3;
+  --text-h3--font-weight: 700;
+
+  --text-h4: 1.125rem; /* 18px */
+  --text-h4--line-height: 1.35;
+  --text-h4--font-weight: 600;
+
+  --text-body-lg: 1rem; /* 16px */
+  --text-body-lg--line-height: 1.5;
+  --text-body-lg--font-weight: 500;
+
+  --text-body: 0.875rem; /* 14px */
+  --text-body--line-height: 1.5;
+  --text-body--font-weight: 500;
+
+  --text-body-sm: 0.75rem; /* 12px */
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--font-weight: 400;
+
+  --text-label: 0.875rem; /* 14px */
+  --text-label--line-height: 1.3;
+  --text-label--font-weight: 600;
+
+  --text-label-sm: 0.75rem; /* 12px */
+  --text-label-sm--line-height: 1.3;
+  --text-label-sm--font-weight: 600;
+
+  --text-caption: 0.75rem; /* 12px */
+  --text-caption--line-height: 1.4;
+  --text-caption--font-weight: 500;
+
+  /* Kleuren — uit Figma-variabelen */
+  --color-primary-500: #4c6fff;
+  --color-primary-600: #2541b8;
+  /* Vast (niet thema-afhankelijk): de "dikte"-rand onderin knoppen. */
+  --color-primary-700: #1b3690;
+
+  /* Vast, verandert niet met het thema: puur wit/donker voor tekst op
+     gekleurde knoppen en de vaste donkere spiegel-kaart. */
+  --color-neutral-white: #ffffff;
+  --color-neutral-900: #303030;
+
+  /* Thema-afhankelijke tokens. Lichte waarden hier, donkere waarden verderop
+     onder prefers-color-scheme en [data-theme]. */
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+  --color-ink: #303030;
+  --color-ink-muted: #8ea3b7;
+  --color-ink-faint: #bdbdbd;
+
+  --color-success-500: #8ac53e;
+  --color-warning-500: #ffd143;
+  --color-danger-500: #eb5757;
+  --color-accent-orange: #ff993a;
+  --color-accent-orange-dark: #d9761a;
+  --color-accent-violet: #8b7ff0;
+  --color-accent-violet-dark: #5f52c9;
+  --color-success-700: #5f9c2a;
+  --color-accent-teal: #2fb6a8;
+  --color-accent-teal-dark: #1f8a7f;
+  --color-accent-rose: #f0618b;
+  --color-accent-rose-dark: #c73f68;
+  --color-accent-amber: #e0a02c;
+  --color-accent-amber-dark: #b57a17;
+
+  /* Zachte lichtblauw/lavendel gradient-achtergrond, alleen in lichte modus. */
+  --page-bg-image:
+    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
+    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
+
+  /* Border radius schaal — uit Figma */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 18px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-4xl: 40px;
+  --radius-5xl: 64px;
+  --radius-6xl: 80px;
+
+  /* Shadows — uit Figma-effecten */
+  --shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  --shadow-sm:
+    0px 2px 6px 0px rgba(16, 24, 40, 0.08), 0px 1px 3px 0px rgba(16, 24, 40, 0.05);
+  --shadow-md:
+    0px 4px 10px -2px rgba(16, 24, 40, 0.08), 0px 6px 14px -4px rgba(16, 24, 40, 0.1);
+  --shadow-lg:
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+  --shadow-xl:
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+  --shadow-2xl: 0px 24px 48px -12px rgba(16, 24, 40, 0.18);
+  --shadow-3xl: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
+}
+
+/* Volgt de systeemvoorkeur zolang de gebruiker niet zelf heeft gewisseld. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #0f1115;
+    --color-surface: #1b1f24;
+    --color-surface-sunken: #262b31;
+    --color-ink: #f2f3f5;
+    --color-ink-muted: #9aa7b5;
+    --color-ink-faint: #5b6470;
+    --color-primary-600: #93a5ff;
+    --page-bg-image: none;
+  }
+}
+
+/* Handmatige keuze wint altijd, in beide richtingen. */
+:root[data-theme="dark"] {
+  --color-page: #0f1115;
+  --color-surface: #1b1f24;
+  --color-surface-sunken: #262b31;
+  --color-ink: #f2f3f5;
+  --color-ink-muted: #9aa7b5;
+  --color-ink-faint: #5b6470;
+  --color-primary-600: #93a5ff;
+  --page-bg-image: none;
+}
+
+:root[data-theme="light"] {
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+  --color-ink: #303030;
+  --color-ink-muted: #8ea3b7;
+  --color-ink-faint: #bdbdbd;
+  --color-primary-600: #2541b8;
+  --page-bg-image:
+    radial-gradient(1100px 850px at 88% 4%, rgba(186, 224, 255, 0.65), rgba(186, 224, 255, 0) 60%),
+    radial-gradient(1000px 950px at 2% 108%, rgba(210, 200, 240, 0.55), rgba(210, 200, 240, 0) 60%);
+}
+
+/* Scoped dark: de onboarding is altijd donker, ongeacht de app-instelling. */
+.force-dark {
+  --color-page: #0f1115;
+  --color-surface: #1b1f24;
+  --color-surface-sunken: #262b31;
+  --color-ink: #f2f3f5;
+  --color-ink-muted: #9aa7b5;
+  --color-ink-faint: #5b6470;
+  --color-primary-600: #93a5ff;
+  --page-bg-image: none;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Zachte foto-achtige gradient uit Figma, gebruikt op Splash en PIN-scherm. */
+.onboarding-photo-bg {
+  background-color: #bfe4f7;
+  background-image:
+    radial-gradient(120% 70% at 100% -10%, #f2d9b6 0%, rgba(242, 217, 182, 0) 60%),
+    radial-gradient(120% 70% at 105% 105%, #eccca0 0%, rgba(236, 204, 160, 0) 55%),
+    radial-gradient(140% 90% at -10% 40%, #a9d8f0 0%, rgba(169, 216, 240, 0) 60%);
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface-sunken);
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light dark;
+}
+
+@keyframes celebration-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes celebration-confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(160px) rotate(200deg);
+    opacity: 0;
+  }
+}
+
+.celebration-badge {
+  animation: celebration-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.celebration-confetti {
+  animation: celebration-confetti 1.2s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration-badge,
+  .celebration-confetti {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes dissolve-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+.animate-dissolve {
+  animation: dissolve-in 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-dissolve {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-bubble-in {
+  animation: bubble-in 0.5s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bubble-in {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+@keyframes type-word-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.type-word-in {
+  display: inline-block;
+  animation: type-word-in 0.6s cubic-bezier(0.16, 0.7, 0.24, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .type-word-in {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+.typewriter-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.9s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
