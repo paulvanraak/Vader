@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { PartyPopper } from 'lucide-react'
+import { PartyPopper, Trophy } from 'lucide-react'
+import { Button } from './Button'
 
 const confettiDots = [
   { color: 'bg-primary-500', left: '20%', delay: '0s' },
@@ -11,14 +12,16 @@ const confettiDots = [
 
 interface CelebrationProps {
   lessonTitle: string
+  isJourneyComplete?: boolean
   onDone: () => void
 }
 
-export function Celebration({ lessonTitle, onDone }: CelebrationProps) {
+export function Celebration({ lessonTitle, isJourneyComplete, onDone }: CelebrationProps) {
   useEffect(() => {
+    if (isJourneyComplete) return
     const timer = setTimeout(onDone, 1800)
     return () => clearTimeout(timer)
-  }, [onDone])
+  }, [isJourneyComplete, onDone])
 
   return (
     <div className="relative flex h-full flex-col items-start justify-center gap-3 overflow-hidden px-6 text-left">
@@ -33,10 +36,24 @@ export function Celebration({ lessonTitle, onDone }: CelebrationProps) {
       </div>
 
       <div className="celebration-badge flex size-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-        <PartyPopper size={32} strokeWidth={2} />
+        {isJourneyComplete ? <Trophy size={32} strokeWidth={2} /> : <PartyPopper size={32} strokeWidth={2} />}
       </div>
-      <h1 className="font-serif text-h2 font-semibold text-ink">Mooi gedaan</h1>
-      <p className="text-body-lg text-ink-muted">{lessonTitle}, klaar voor vandaag.</p>
+      {isJourneyComplete ? (
+        <>
+          <h1 className="font-serif text-h2 font-semibold text-ink">Alle 6 thema's behaald</h1>
+          <p className="text-body-lg text-ink-muted">
+            Je hebt alle 6 thema's afgerond. Binnenkort ontgrendel je een nieuwe serie thema's.
+          </p>
+          <Button onClick={onDone} className="mt-2">
+            Verder
+          </Button>
+        </>
+      ) : (
+        <>
+          <h1 className="font-serif text-h2 font-semibold text-ink">Mooi gedaan</h1>
+          <p className="text-body-lg text-ink-muted">{lessonTitle}, klaar voor vandaag.</p>
+        </>
+      )}
     </div>
   )
 }
