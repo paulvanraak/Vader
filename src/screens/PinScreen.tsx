@@ -41,7 +41,7 @@ export function PinScreen({ onSuccess }: { onSuccess: () => void }) {
     <div className="flex h-full flex-col justify-center gap-10 bg-page px-7">
       <p className="font-serif text-h1 text-ink">Ontgrendel Father Flow</p>
 
-      <div className={`flex gap-4 ${shake ? 'animate-[shake_0.4s_ease-in-out]' : ''}`}>
+      <div className={`flex justify-center gap-4 ${shake ? 'animate-[shake_0.4s_ease-in-out]' : ''}`}>
         {Array.from({ length: PIN_LENGTH }).map((_, index) => (
           <span
             key={index}
