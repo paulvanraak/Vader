@@ -16,10 +16,15 @@ import { Thuismissie } from './beats/Thuismissie'
 
 export function LessonPlayer({ lesson }: { lesson: Lesson }) {
   const navigate = useNavigate()
-  const { completeLesson, activeChild } = useAppState()
+  const { completeLesson, activeChild, path, completedLessonIds } = useAppState()
   const [beatIndex, setBeatIndex] = useState(0)
   const [oefeningAnswer, setOefeningAnswer] = useState<number | null>(null)
   const [isCelebrating, setIsCelebrating] = useState(false)
+
+  const isJourneyComplete =
+    path.length > 0 &&
+    path[path.length - 1].id === lesson.id &&
+    path.every((l) => l.id === lesson.id || completedLessonIds.includes(l.id))
 
   const beat = personalizeBeat(lesson.beats[beatIndex], activeChild)
   const isLastBeat = beatIndex === lesson.beats.length - 1
@@ -41,7 +46,9 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
   }
 
   if (isCelebrating) {
-    return <Celebration lessonTitle={lesson.title} onDone={() => navigate('/')} />
+    return (
+      <Celebration lessonTitle={lesson.title} isJourneyComplete={isJourneyComplete} onDone={() => navigate('/')} />
+    )
   }
 
   return (

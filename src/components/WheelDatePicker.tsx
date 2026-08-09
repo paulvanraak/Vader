@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 
 const ITEM_HEIGHT = 40
-const VISIBLE_HEIGHT = ITEM_HEIGHT * 5
+const VISIBLE_HEIGHT = ITEM_HEIGHT * 3
 const PAD = (VISIBLE_HEIGHT - ITEM_HEIGHT) / 2
 
 const MONTHS = [
