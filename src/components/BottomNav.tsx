@@ -23,7 +23,7 @@ function SideTab({ to, label, icon: Icon }: Tab) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex min-w-0 flex-1 flex-col items-center gap-1 rounded-md px-1 py-1.5 text-center transition ${
+        `flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-md px-1 py-1.5 text-center transition ${
           isActive ? 'text-primary-600' : 'text-ink-faint'
         }`
       }
@@ -44,7 +44,7 @@ export function BottomNav() {
     <>
       <nav
         aria-label="Hoofdnavigatie"
-        className="relative z-30 flex shrink-0 items-end justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2"
+        className="relative z-30 flex shrink-0 items-end justify-between border-t border-surface-sunken bg-surface px-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3"
       >
         {leftTabs.map((tab) => (
           <SideTab key={tab.to} {...tab} />
@@ -68,7 +68,7 @@ export function BottomNav() {
           type="button"
           onClick={() => setMenuOpen(true)}
           aria-label="Menu"
-          className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-md px-1 py-1.5 text-center text-ink-faint transition"
+          className="flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-md px-1 py-1.5 text-center text-ink-faint transition"
         >
           <MenuIcon size={22} strokeWidth={2} />
           <span className="truncate text-caption">Menu</span>

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* Typografie: Manrope voor UI/labels, Fraunces (serieuze, hoog-contrast
-     serif) voor grote koppen en cijfers — editoriaal in plaats van rond. */
+  /* Typografie: Manrope voor UI/labels, Inter (strakke grotesk, zoals de
+     fintech-referentie) voor grote koppen en cijfers. */
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --text-display: 3rem; /* 48px */
   --text-display--line-height: 1.05;
