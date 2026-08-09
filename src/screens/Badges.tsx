@@ -24,7 +24,7 @@ export function Badges() {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {catalog.map((badge) => {
             const earned = Boolean(earnedBadgeCodes[badge.code])
             const Icon = badge.icon
@@ -33,7 +33,7 @@ export function Badges() {
                 key={badge.code}
                 type="button"
                 onClick={() => setActiveBadge(badge)}
-                className="flex flex-col items-start gap-2 rounded-md bg-surface p-3 text-left shadow-sm ring-1 ring-surface-sunken"
+                className="flex flex-col items-center gap-2 rounded-md bg-surface p-3 text-center shadow-sm ring-1 ring-surface-sunken"
               >
                 <span
                   className={`flex size-14 items-center justify-center rounded-full ${

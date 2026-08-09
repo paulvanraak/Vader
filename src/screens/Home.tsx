@@ -262,7 +262,7 @@ export function Home() {
                     ) : isCurrent ? (
                       <Play size={20} strokeWidth={2} fill="currentColor" />
                     ) : unlocked ? (
-                      <span className="text-body-lg">{index + 1}</span>
+                      <span className="text-body-lg text-ink">{index + 1}</span>
                     ) : (
                       <Lock size={16} strokeWidth={2.5} />
                     )}

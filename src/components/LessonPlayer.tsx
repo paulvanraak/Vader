@@ -64,18 +64,22 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
           className={`h-2 flex-1 overflow-hidden rounded-full ${isDarkBeat ? 'bg-neutral-white/15' : 'bg-surface-sunken'}`}
         >
           <div
-            className="h-full rounded-full bg-ink transition-all duration-500"
-            style={{ width: `${((beatIndex + 1) / lesson.beats.length) * 100}%` }}
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${((beatIndex + 1) / lesson.beats.length) * 100}%`, backgroundColor: style.accentVar }}
           />
         </div>
       </div>
 
-      <p
-        className="shrink-0 px-5 pt-3 text-left text-body font-bold leading-snug"
-        style={{ color: style.accentVar }}
-      >
-        {lesson.title}
-      </p>
+      <div className="shrink-0 px-5 pt-3">
+        <span
+          className={`inline-block rounded-md px-3 py-2 font-serif text-h3 font-semibold leading-snug ${
+            isDarkBeat ? 'bg-neutral-white/10' : style.softBg
+          }`}
+          style={{ color: style.accentVar }}
+        >
+          {lesson.title}
+        </span>
+      </div>
 
       <div key={beatIndex} className="animate-dissolve flex-1 overflow-y-auto px-5 py-6">
         {beat.type === 'haakje' && <Haakje beat={beat} worldId={lesson.world} />}
