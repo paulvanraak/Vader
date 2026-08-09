@@ -78,11 +78,11 @@ export function SignupScreen({
   return (
     <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
       <div className="flex flex-1 flex-col justify-center gap-6">
-        <div>
+        <div className="stack-in">
           <p className="text-[18px] text-ink-muted">Even voorstellen</p>
           <h1 className="mt-2 font-serif text-[32px] font-semibold text-ink">Wat is je naam?</h1>
         </div>
-        <div className="flex w-full flex-col gap-3">
+        <div className="stack-in stack-delay-1 flex w-full flex-col gap-3">
           <input
             type="text"
             value={name}
@@ -94,9 +94,11 @@ export function SignupScreen({
           {error && <p className="text-caption font-semibold text-danger-500">{error}</p>}
         </div>
       </div>
-      <Button onClick={() => void submit()} disabled={!canSubmit}>
-        {isSubmitting ? 'Bezig...' : 'Account aanmaken'}
-      </Button>
+      <div className="stack-in stack-delay-2">
+        <Button onClick={() => void submit()} disabled={!canSubmit}>
+          {isSubmitting ? 'Bezig...' : 'Account aanmaken'}
+        </Button>
+      </div>
     </div>
   )
 }

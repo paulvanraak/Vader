@@ -1,4 +1,5 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, MouseEvent, ReactNode } from 'react'
+import { hapticTap } from '../lib/haptics'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary'
@@ -13,9 +14,14 @@ const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
   secondary: 'border-2 border-ink bg-transparent text-ink hover:bg-ink/5',
 }
 
-export function Button({ variant = 'primary', className = '', children, ...props }: ButtonProps) {
+export function Button({ variant = 'primary', className = '', children, onClick, ...props }: ButtonProps) {
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
+    hapticTap()
+    onClick?.(e)
+  }
+
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} {...props}>
+    <button className={`${base} ${variants[variant]} ${className}`} onClick={handleClick} {...props}>
       {children}
     </button>
   )

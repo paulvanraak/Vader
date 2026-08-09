@@ -23,13 +23,13 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
   return (
     <div className="flex h-full flex-col justify-between px-6 py-10">
       <div className="flex flex-1 flex-col gap-6">
-        <div>
+        <div className="stack-in">
           <p className="text-label text-ink-muted">Zo werkt het</p>
           <h1 className="mt-2 font-serif text-h1 font-semibold text-ink">FatherFlow</h1>
         </div>
         <div className="flex flex-col gap-4">
-          {stappen.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="flex items-start gap-3">
+          {stappen.map(({ icon: Icon, title, body }, index) => (
+            <div key={title} className={`stack-in stack-delay-${index + 1} flex items-start gap-3`}>
               <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-500/10 text-primary-600">
                 <Icon size={20} strokeWidth={2} />
               </div>
@@ -41,7 +41,9 @@ export function HowItWorks({ onStart }: { onStart: () => void }) {
           ))}
         </div>
       </div>
-      <Button onClick={onStart}>Laten we beginnen</Button>
+      <div className="stack-in stack-delay-4">
+        <Button onClick={onStart}>Laten we beginnen</Button>
+      </div>
     </div>
   )
 }

@@ -296,6 +296,45 @@ body {
   }
 }
 
+@keyframes stack-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Onboarding: elementen komen na elkaar binnen ("stacking"), niet allemaal
+   tegelijk — gebruik samen met .stack-delay-* op opeenvolgende elementen. */
+.stack-in {
+  animation: stack-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stack-delay-1 {
+  animation-delay: 0.08s;
+}
+.stack-delay-2 {
+  animation-delay: 0.16s;
+}
+.stack-delay-3 {
+  animation-delay: 0.24s;
+}
+.stack-delay-4 {
+  animation-delay: 0.32s;
+}
+.stack-delay-5 {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-in {
+    animation-duration: 0.01ms !important;
+  }
+}
+
 .typewriter-cursor::after {
   content: "";
   display: inline-block;

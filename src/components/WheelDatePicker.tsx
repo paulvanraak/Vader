@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
+import { hapticTick } from '../lib/haptics'
 
-const ITEM_HEIGHT = 40
+const ITEM_HEIGHT = 32
 const VISIBLE_HEIGHT = ITEM_HEIGHT * 3
 const PAD = (VISIBLE_HEIGHT - ITEM_HEIGHT) / 2
 
@@ -114,7 +115,10 @@ function WheelColumn({ items, value, onChange, format, grow }: WheelColumnProps)
       if (!el) return
       const index = Math.min(items.length - 1, Math.max(0, Math.round(el.scrollTop / ITEM_HEIGHT)))
       const next = items[index]
-      if (next !== undefined && next !== value) onChange(next)
+      if (next !== undefined && next !== value) {
+        hapticTick()
+        onChange(next)
+      }
       const targetTop = index * ITEM_HEIGHT
       if (Math.abs(el.scrollTop - targetTop) > 1) {
         el.scrollTo({ top: targetTop, behavior: 'smooth' })
