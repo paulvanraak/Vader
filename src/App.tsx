@@ -6,6 +6,7 @@ import { AppStateProvider, useAppState } from './state/AppStateContext'
 import { ContentProvider } from './state/ContentContext'
 import { Splash } from './screens/Splash'
 import { PinScreen } from './screens/PinScreen'
+import { IntroCarousel } from './screens/onboarding/IntroCarousel'
 import { OnboardingFlow, type OnboardingMode } from './screens/onboarding/OnboardingFlow'
 import { Home } from './screens/Home'
 import { Kompas } from './screens/Kompas'
@@ -49,9 +50,14 @@ function FullScreenSpinner() {
 function MainApp() {
   const { pinVerified, authLoading, childrenLoaded, session, children } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
+  const [showIntro, setShowIntro] = useState(true)
 
   if (showSplash) {
     return <Splash onDone={() => setShowSplash(false)} />
+  }
+
+  if (showIntro) {
+    return <IntroCarousel onDone={() => setShowIntro(false)} />
   }
 
   if (!pinVerified) {
@@ -64,7 +70,7 @@ function MainApp() {
 
   if (!session) {
     // Voor nu bewust alleen de volledige "nieuw"-flow, zonder inlogschakelaar:
-    // één voorspelbaar pad (PIN -> account -> uitleg -> kinderen -> app) in
+    // één voorspelbaar pad (uitleg -> PIN -> account -> kinderen -> app) in
     // plaats van dat je per ongeluk via "Log in" op een oud testaccount met
     // bestaande kinderen belandt en de rest van de onboarding overslaat.
     return (
