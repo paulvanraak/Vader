@@ -4,6 +4,7 @@ import { Home, Award, ListChecks, MessageCircle, Menu as MenuIcon } from 'lucide
 import type { ComponentType } from 'react'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
+import { hapticTap } from '../lib/haptics'
 import { AppMenu } from './AppMenu'
 
 interface Tab {
@@ -22,6 +23,7 @@ function SideTab({ to, label, icon: Icon }: Tab) {
   return (
     <NavLink
       to={to}
+      onClick={hapticTap}
       className={({ isActive }) =>
         `flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-md px-1 py-1.5 text-center transition ${
           isActive ? 'text-primary-600' : 'text-ink-faint'
@@ -50,7 +52,12 @@ export function BottomNav() {
           <SideTab key={tab.to} {...tab} />
         ))}
 
-        <NavLink to="/" end className="flex flex-1 flex-col items-center justify-center px-1 py-1.5 text-center">
+        <NavLink
+          to="/"
+          end
+          onClick={hapticTap}
+          className="flex flex-1 flex-col items-center justify-center px-1 py-1.5 text-center"
+        >
           {({ isActive }) => (
             <span
               className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition ${style.solidBg} ${
@@ -66,7 +73,10 @@ export function BottomNav() {
 
         <button
           type="button"
-          onClick={() => setMenuOpen(true)}
+          onClick={() => {
+            hapticTap()
+            setMenuOpen(true)
+          }}
           aria-label="Menu"
           className="flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-md px-1 py-1.5 text-center text-ink-faint transition"
         >

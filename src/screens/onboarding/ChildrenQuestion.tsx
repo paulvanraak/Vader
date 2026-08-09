@@ -42,14 +42,14 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex h-full flex-col justify-between px-6 py-10">
       <div className="flex flex-1 flex-col gap-8 overflow-y-auto text-left">
-        <div>
+        <div className="stack-in">
           <p className="text-label text-ink-muted">Even kennismaken</p>
           <h1 className="mt-2 font-serif text-h1 font-semibold text-ink">Over wie gaat het?</h1>
           <p className="mt-2 text-body text-ink-muted">Voeg één of meerdere kinderen toe.</p>
         </div>
 
         {children.length > 0 && (
-          <div className="flex flex-col divide-y divide-surface-sunken border-y border-surface-sunken">
+          <div className="stack-in stack-delay-1 flex flex-col divide-y divide-surface-sunken border-y border-surface-sunken">
             {children.map((child: ChildProfile) => (
               <div key={child.id} className="flex items-center gap-3 py-3">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
@@ -64,7 +64,7 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
           </div>
         )}
 
-        <div className="flex flex-col gap-5">
+        <div className={`stack-in ${children.length > 0 ? 'stack-delay-2' : 'stack-delay-1'} flex flex-col gap-5`}>
           <p className="text-label font-semibold text-ink-muted">
             {children.length > 0 ? 'Nog een kind toevoegen' : 'Kind toevoegen'}
           </p>
@@ -135,9 +135,11 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
           </button>
         </div>
       </div>
-      <Button onClick={() => children.length > 0 && onNext()} disabled={children.length === 0}>
-        Verder
-      </Button>
+      <div className="stack-in stack-delay-3">
+        <Button onClick={() => children.length > 0 && onNext()} disabled={children.length === 0}>
+          Verder
+        </Button>
+      </div>
     </div>
   )
 }
