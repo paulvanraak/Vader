@@ -5,6 +5,7 @@ import { useAppState } from '../state/AppStateContext'
 import { useContent } from '../state/ContentContext'
 import { lessonsForWorld, isWorldComplete, isLessonUnlocked } from '../lib/worldProgress'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { FeatureExplainer } from '../components/FeatureExplainer'
 
 export function Kompas() {
   const navigate = useNavigate()
@@ -130,6 +131,7 @@ export function Kompas() {
           </div>
         </div>
       </div>
+      <FeatureExplainer id="kompas" />
     </div>
   )
 }
