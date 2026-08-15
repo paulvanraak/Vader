@@ -1,53 +1,70 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
-import { Button } from './Button'
 import { featureExplainers, type FeatureExplainerId } from '../lib/featureExplainers'
 import { hasSeenExplainer, markExplainerSeen } from '../lib/seenExplainers'
+import { hapticTap } from '../lib/haptics'
 
 export function FeatureExplainer({ id }: { id: FeatureExplainerId }) {
   const [open, setOpen] = useState(() => !hasSeenExplainer(id))
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  function dismiss() {
+    hapticTap()
+    markExplainerSeen(id)
+    setOpen(false)
+  }
+
+  // Wegtikken buiten het kaartje sluit het — geen scherm-dekkend overlay
+  // nodig, de rest van het scherm blijft zichtbaar én aantikbaar.
+  useEffect(() => {
+    if (!open) return
+    function handlePointerDown(e: PointerEvent) {
+      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
+        dismiss()
+      }
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   if (!open) return null
 
   const content = featureExplainers[id]
   const Icon = content.icon
 
-  function dismiss() {
-    markExplainerSeen(id)
-    setOpen(false)
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center" onClick={dismiss}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={content.title}
-        onClick={(e) => e.stopPropagation()}
-        className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 shadow-lg"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-            <Icon size={22} strokeWidth={2} />
-          </span>
-          <button
-            type="button"
-            onClick={dismiss}
-            aria-label="Sluiten"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-          >
-            <X size={18} strokeWidth={2} />
-          </button>
+    <div
+      ref={cardRef}
+      role="dialog"
+      aria-modal="false"
+      aria-label={content.title}
+      className="animate-tooltip-in fixed inset-x-4 bottom-24 z-50 mx-auto max-w-[340px] rounded-2xl border border-white/25 bg-surface/75 p-3.5 shadow-xl backdrop-blur-xl"
+    >
+      <div className="flex items-start gap-2.5">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-primary-600">
+          <Icon size={16} strokeWidth={2} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-serif text-body-lg font-semibold text-ink">{content.title}</p>
+          <p className="mt-0.5 text-caption leading-snug text-ink-muted">{content.body}</p>
         </div>
-        <p className="mt-4 font-serif text-h4 font-semibold text-ink">{content.title}</p>
-        <div className="mt-3 flex flex-col gap-3 text-body-lg leading-relaxed text-ink-muted">
-          {content.body.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
-        <Button onClick={dismiss} className="mt-5">
-          Ik begrijp het
-        </Button>
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Sluiten"
+          className="flex size-6 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
+        >
+          <X size={14} strokeWidth={2} />
+        </button>
       </div>
+      <button
+        type="button"
+        onClick={dismiss}
+        className="mt-2.5 w-full rounded-full bg-ink px-4 py-2 text-caption font-bold text-page transition active:scale-[0.98]"
+      >
+        Ik begrijp het
+      </button>
     </div>
   )
 }
