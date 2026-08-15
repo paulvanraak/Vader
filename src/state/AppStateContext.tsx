@@ -192,7 +192,7 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
 
   const path = useMemo(() => {
     if (!activeChild || activeChild.gender !== 'zoon') return []
-    return lessonPath(lessons, deriveAgeGroup(activeChild.birthDate))
+    return lessonPath(lessons, deriveAgeGroup(activeChild.birthDate, activeChild.gender))
   }, [activeChild, lessons])
 
   const todayLessonId = useMemo(() => {

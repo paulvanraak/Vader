@@ -40,6 +40,39 @@ import type { ChildGender } from '../state/AppStateContext'
 export const MIN_PROFILE_AGE = 8
 export const MAX_PROFILE_AGE = 16
 
+/**
+ * Ontwikkelingsfase voor het richten van content. Bewust vier fases in plaats
+ * van negen losse leeftijden: de literatuur werkt in fases, en het verschil
+ * tussen 11 en 12 is kleiner dan de spreiding bínnen één leeftijd.
+ *
+ * De grenzen liggen per geslacht anders, omdat meisjes de puberteit gemiddeld
+ * ongeveer twee jaar eerder ingaan dan jongens. Een meisje van 11 en een jongen
+ * van 13 zitten ontwikkelingspsychologisch vaak in dezelfde fase — dáárom is
+ * één leeftijdsgrens voor beide geslachten altijd voor de één te vroeg en voor
+ * de ander te laat.
+ */
+export type DevelopmentBand = 'kind' | 'vroeg' | 'midden' | 'laat'
+
+const bandUpperBounds: Record<ChildGender, { kind: number; vroeg: number; midden: number }> = {
+  dochter: { kind: 9, vroeg: 12, midden: 14 },
+  zoon: { kind: 10, vroeg: 13, midden: 15 },
+}
+
+export function getDevelopmentBand(age: number, gender: ChildGender): DevelopmentBand {
+  const b = bandUpperBounds[gender]
+  if (age <= b.kind) return 'kind'
+  if (age <= b.vroeg) return 'vroeg'
+  if (age <= b.midden) return 'midden'
+  return 'laat'
+}
+
+export const bandLabels: Record<DevelopmentBand, string> = {
+  kind: 'Middenkindertijd',
+  vroeg: 'Vroege puberteit',
+  midden: 'Midden-puberteit',
+  laat: 'Late adolescentie',
+}
+
 interface SharedStage {
   phase: string
   brain: string

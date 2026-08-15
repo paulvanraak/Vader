@@ -14,12 +14,28 @@ function possessive(name: string): string {
 // CMS-content op plekken waar de naam van het kind natuurlijk past. Zonder
 // actief kind (zou in de praktijk niet voorkomen tijdens een les) valt dit
 // terug op de generieke voornaamwoorden die er origineel stonden.
+// Naast {naam} en {naam_bezit} kan lescontent geslachtsneutraal geschreven
+// worden met voornaamwoord-tokens, zodat één tekst klopt voor een zoon én
+// voor een dochter. Zonder deze tokens staat er letterlijk "hij"/"hem" in de
+// content en leest een dochter dus mannelijke tekst.
+const PRONOUNS = {
+  zoon: { hij: 'hij', hem: 'hem', zijn: 'zijn', kind: 'zoon' },
+  dochter: { hij: 'zij', hem: 'haar', zijn: 'haar', kind: 'dochter' },
+} as const
+
+const TOKEN_PATTERN = /\{(naam|naam_bezit|hij|hem|zijn|kind)\}/
+
 export function personalizeText(text: string, child: ChildProfile | null): string {
-  if (!text.includes('{naam}') && !text.includes('{naam_bezit}')) return text
+  if (!TOKEN_PATTERN.test(text)) return text
   const name = child?.name?.trim()
+  const p = PRONOUNS[child?.gender === 'dochter' ? 'dochter' : 'zoon']
   return text
-    .replaceAll('{naam_bezit}', name ? possessive(name) : 'zijn')
-    .replaceAll('{naam}', name || 'hem')
+    .replaceAll('{naam_bezit}', name ? possessive(name) : p.zijn)
+    .replaceAll('{naam}', name || p.hem)
+    .replaceAll('{hij}', p.hij)
+    .replaceAll('{hem}', p.hem)
+    .replaceAll('{zijn}', p.zijn)
+    .replaceAll('{kind}', p.kind)
 }
 
 export function personalizeBeat(beat: Beat, child: ChildProfile | null): Beat {
