@@ -7,6 +7,7 @@ import { ChatHistoryPanel } from '../components/ChatHistoryPanel'
 import { FeatureExplainer } from '../components/FeatureExplainer'
 import { useAppState } from '../state/AppStateContext'
 import { calculateAge } from '../lib/age'
+import { buildDevelopmentBrief } from '../lib/development'
 import {
   fetchThreads,
   createThread,
@@ -202,7 +203,20 @@ export function Chat() {
 
     setIsLoading(true)
     try {
-      const child = activeChild ? { name: activeChild.name, age: calculateAge(activeChild.birthDate) } : null
+      // Naast naam en leeftijd gaat er een leeftijds- en geslachtsspecifieke
+      // ontwikkelingsbriefing mee, zodat het advies klopt voor een kind van
+      // precies deze leeftijd in plaats van voor "een puber" in het algemeen.
+      const child = activeChild
+        ? (() => {
+            const age = calculateAge(activeChild.birthDate)
+            return {
+              name: activeChild.name,
+              age,
+              gender: activeChild.gender,
+              brief: buildDevelopmentBrief(activeChild.name, age, activeChild.gender),
+            }
+          })()
+        : null
       const res = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

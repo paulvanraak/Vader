@@ -78,15 +78,28 @@ interface AskMessage {
 interface ChildContext {
   name: string
   age: number
+  gender: 'zoon' | 'dochter' | null
+  brief: string | null
 }
+
+// De ontwikkelingsbriefing wordt client-side opgebouwd (src/lib/development.ts)
+// en hier begrensd meegenomen, zodat deze serverroute self-contained blijft.
+const MAX_BRIEF_LENGTH = 2000
 
 function sanitizeChild(input: unknown): ChildContext | null {
   if (typeof input !== 'object' || input === null) return null
   const name = (input as { name?: unknown }).name
   const age = (input as { age?: unknown }).age
+  const gender = (input as { gender?: unknown }).gender
+  const brief = (input as { brief?: unknown }).brief
   if (typeof name !== 'string' || !name.trim()) return null
   if (typeof age !== 'number' || !Number.isFinite(age)) return null
-  return { name: name.trim(), age }
+  return {
+    name: name.trim(),
+    age,
+    gender: gender === 'zoon' || gender === 'dochter' ? gender : null,
+    brief: typeof brief === 'string' && brief.trim() ? brief.trim().slice(0, MAX_BRIEF_LENGTH) : null,
+  }
 }
 
 type AskResult = { type: 'answer'; text: string } | { type: 'referral'; text: string } | { type: 'error'; text: string }
@@ -140,7 +153,16 @@ async function getSystemPrompt(child: ChildContext | null): Promise<string> {
 
   if (!child) return base
 
-  return `${base}\n\nContext: de vader praat over zijn kind, ${child.name}, ${child.age} jaar oud. Gebruik de naam ${child.name} in je antwoorden in plaats van generieke termen als "je zoon", "hij" of "hem", zodat het echt persoonlijk aanvoelt.`
+  const relatie = child.gender === 'dochter' ? 'dochter' : child.gender === 'zoon' ? 'zoon' : 'kind'
+  const voornaamwoord = child.gender === 'dochter' ? '"je dochter" of "haar"' : '"je zoon", "hij" of "hem"'
+
+  let context = `\n\nContext: de vader praat over zijn ${relatie}, ${child.name}, ${child.age} jaar oud. Gebruik de naam ${child.name} in je antwoorden in plaats van generieke termen als ${voornaamwoord}, zodat het echt persoonlijk aanvoelt.`
+
+  if (child.brief) {
+    context += `\n\n${child.brief}\n\nGebruik dit ontwikkelingsprofiel actief. Stem je advies af op wat er bij ${child.name} op precies deze leeftijd speelt, in plaats van op algemeen puberadvies: verwijs waar het past naar wat er lichamelijk, in het brein en sociaal aan de hand is, en houd rekening met wat een ${relatie} van ${child.age} van zijn of haar vader nodig heeft. Presenteer het als jouw begrip van ${child.name}, niet als een opsomming uit een handboek, en noem geen leeftijdsgemiddelden of onderzoekstermen tenzij de vader er zelf naar vraagt. Gemiddelden zijn bovendien geen norm: als de vader beschrijft dat ${child.name} eerder of later is dan gemiddeld, volg dan zijn beschrijving.`
+  }
+
+  return `${base}${context}`
 }
 
 async function handleAsk(messages: AskMessage[], child: ChildContext | null): Promise<AskResult> {
