@@ -1,4 +1,4 @@
-import type { AgeGroup } from '../state/AppStateContext'
+import type { AgeGroup, ChildGender } from '../state/AppStateContext'
 
 const MIN_AGE = 6
 const MAX_AGE = 18
@@ -26,10 +26,18 @@ export function calculateAge(birthDateIso: string, today: Date = new Date()): nu
 }
 
 // De contentbibliotheek is nog opgebouwd rond twee cohorten (NOVA's / PUBERS).
-// Leeftijden onder de 12 krijgen de jongere cohort, 12 en ouder de oudere,
-// zodat het hele bereik van 6 tot 18 jaar toch passende content krijgt.
-export function deriveAgeGroup(birthDateIso: string): AgeGroup {
-  return calculateAge(birthDateIso) < 12 ? 'jong' : 'oud'
+// Tot die per ontwikkelingsfase is herschreven, vormt dit de brug: in plaats
+// van één neutrale grens op 12 jaar ligt de grens per geslacht anders, omdat
+// meisjes de puberteit gemiddeld zo'n twee jaar eerder ingaan. Een meisje van
+// 11 krijgt dus puber-content, een jongen van 12 nog niet — met één gedeelde
+// grens was die altijd voor de één te vroeg en voor de ander te laat.
+const COHORT_BOUNDARY: Record<ChildGender, number> = {
+  dochter: 11,
+  zoon: 13,
+}
+
+export function deriveAgeGroup(birthDateIso: string, gender: ChildGender = 'zoon'): AgeGroup {
+  return calculateAge(birthDateIso) < COHORT_BOUNDARY[gender] ? 'jong' : 'oud'
 }
 
 // Startwaarde voor de scroll-wheel datumkiezer: het midden van het
