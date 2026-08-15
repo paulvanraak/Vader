@@ -23,19 +23,29 @@ const PRONOUNS = {
   dochter: { hij: 'zij', hem: 'haar', zijn: 'haar', kind: 'dochter' },
 } as const
 
-const TOKEN_PATTERN = /\{(naam|naam_bezit|hij|hem|zijn|kind)\}/
+// Tokens mogen ook met hoofdletter geschreven worden ({Hij} aan het begin van
+// een zin), dan komt het vervangende woord ook met hoofdletter terug.
+const TOKEN_PATTERN = /\{(naam|naam_bezit|[Hh]ij|[Hh]em|[Zz]ijn|[Kk]ind)\}/g
+
+function capitalize(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1)
+}
 
 export function personalizeText(text: string, child: ChildProfile | null): string {
+  TOKEN_PATTERN.lastIndex = 0
   if (!TOKEN_PATTERN.test(text)) return text
   const name = child?.name?.trim()
   const p = PRONOUNS[child?.gender === 'dochter' ? 'dochter' : 'zoon']
+
   return text
     .replaceAll('{naam_bezit}', name ? possessive(name) : p.zijn)
     .replaceAll('{naam}', name || p.hem)
-    .replaceAll('{hij}', p.hij)
-    .replaceAll('{hem}', p.hem)
-    .replaceAll('{zijn}', p.zijn)
-    .replaceAll('{kind}', p.kind)
+    .replace(TOKEN_PATTERN, (match, token: string) => {
+      const lower = token.toLowerCase() as keyof typeof p
+      const value = p[lower]
+      if (value === undefined) return match
+      return token[0] === token[0].toUpperCase() ? capitalize(value) : value
+    })
 }
 
 export function personalizeBeat(beat: Beat, child: ChildProfile | null): Beat {
