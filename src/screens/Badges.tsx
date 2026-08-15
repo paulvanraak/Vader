@@ -4,6 +4,7 @@ import { useAppState } from '../state/AppStateContext'
 import { useContent } from '../state/ContentContext'
 import { badgeCatalog, type BadgeDef } from '../lib/badges'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { FeatureExplainer } from '../components/FeatureExplainer'
 
 export function Badges() {
   const { earnedBadgeCodes } = useAppState()
@@ -94,6 +95,7 @@ export function Badges() {
           </div>
         </div>
       )}
+      <FeatureExplainer id="badges" />
     </div>
   )
 }

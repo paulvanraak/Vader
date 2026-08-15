@@ -5,6 +5,7 @@ import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
 import { WhyModal } from '../components/WhyModal'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { FeatureExplainer } from '../components/FeatureExplainer'
 
 export function ProbeerDitEens() {
   const { path, doneActionIds, toggleAction, completedLessonIds, activeChild } = useAppState()
@@ -77,6 +78,7 @@ export function ProbeerDitEens() {
           <WhyModal title={activeItem.lessonTitle} body={activeItem.why} onClose={() => setActiveWhyId(null)} />
         )}
       </div>
+      <FeatureExplainer id="checklist" />
     </div>
   )
 }

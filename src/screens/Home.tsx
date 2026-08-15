@@ -6,6 +6,7 @@ import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
 import { useContent } from '../state/ContentContext'
 import { ChildSwitcher } from '../components/ChildSwitcher'
+import { FeatureExplainer } from '../components/FeatureExplainer'
 import type { PathItem, ReflectieResponse } from '../lib/pathItems'
 
 const REFLECTIE_OPTIES: { value: ReflectieResponse; label: string }[] = [
@@ -294,6 +295,7 @@ export function Home() {
 
       {activeReflectie && <ReflectieSheet item={activeReflectie} onClose={() => setActiveReflectie(null)} />}
       {activeVoorJou && <VoorJouSheet item={activeVoorJou} onClose={() => setActiveVoorJou(null)} />}
+      <FeatureExplainer id="pad" />
     </div>
   )
 }

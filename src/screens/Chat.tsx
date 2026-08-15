@@ -4,6 +4,7 @@ import { triggersGuardrail, REFERRAL_TEXT } from '../lib/guardrail'
 import { generateLocalAnswer } from '../lib/localAdvisor'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 import { ChatHistoryPanel } from '../components/ChatHistoryPanel'
+import { FeatureExplainer } from '../components/FeatureExplainer'
 import { useAppState } from '../state/AppStateContext'
 import { calculateAge } from '../lib/age'
 import {
@@ -385,6 +386,7 @@ export function Chat() {
         onTogglePin={(thread) => void handleTogglePin(thread)}
         onMove={handleMoveThread}
       />
+      <FeatureExplainer id="chat" />
     </div>
   )
 }
