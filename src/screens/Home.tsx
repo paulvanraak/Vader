@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Check, Lock, Play, Clock, MessageCircle, HelpCircle, X } from 'lucide-react'
+import { Check, Lock, Play, MessageCircle, HelpCircle, X } from 'lucide-react'
 import { isLessonUnlocked } from '../lib/worldProgress'
 import { getWorldStyle } from '../lib/worldStyles'
 import { useAppState } from '../state/AppStateContext'
@@ -183,27 +183,10 @@ function VoorJouSheet({ item, onClose }: { item: PathItem; onClose: () => void }
 
 export function Home() {
   const navigate = useNavigate()
-  const { activeChild, path, todayLessonId, completedLessonIds, pathItems } = useAppState()
+  const { path, todayLessonId, completedLessonIds, pathItems } = useAppState()
   const { worlds } = useContent()
   const [activeReflectie, setActiveReflectie] = useState<PathItem | null>(null)
   const [activeVoorJou, setActiveVoorJou] = useState<PathItem | null>(null)
-
-  if (activeChild && activeChild.gender === 'dochter') {
-    return (
-      <div className="flex flex-col">
-        <ChildSwitcher />
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center">
-          <span className="flex size-14 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-            <Clock size={26} strokeWidth={2} />
-          </span>
-          <p className="text-h4 font-extrabold text-ink">Bijna zover</p>
-          <p className="text-body text-ink-muted">
-            Deze demo is nu nog gericht op zonen. Een versie voor dochters komt eraan.
-          </p>
-        </div>
-      </div>
-    )
-  }
 
   let lastWorldId: number | null = null
   const lastLessonId = path.length > 0 ? path[path.length - 1].id : null
