@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
@@ -51,6 +51,17 @@ function MainApp() {
   const { pinVerified, authLoading, childrenLoaded, session, children } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
   const [showIntro, setShowIntro] = useState(true)
+  // Eén keer vastgelegd zodra de kinderen geladen zijn: moet deze gebruiker
+  // nog door de kind-stap heen? Bewust niet live op children.length kijken,
+  // anders klapt het scherm weg zodra je het eerste kind bevestigt en kun je
+  // er nooit een tweede toevoegen.
+  const [needsChildSetup, setNeedsChildSetup] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    if (childrenLoaded && needsChildSetup === null) {
+      setNeedsChildSetup(children.length === 0)
+    }
+  }, [childrenLoaded, children.length, needsChildSetup])
 
   if (showSplash) {
     return <Splash onDone={() => setShowSplash(false)} />
@@ -84,10 +95,14 @@ function MainApp() {
     return <FullScreenSpinner />
   }
 
-  if (children.length === 0) {
+  if (needsChildSetup === null) {
+    return <FullScreenSpinner />
+  }
+
+  if (needsChildSetup) {
     return (
       <div className="flex h-full flex-col overflow-hidden bg-page">
-        <ChildrenQuestion onNext={() => {}} />
+        <ChildrenQuestion onNext={() => setNeedsChildSetup(false)} />
       </div>
     )
   }
