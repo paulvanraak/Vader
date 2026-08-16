@@ -4,7 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "generate": "node scripts/generate-api.mjs",
+    "verify:sources": "node scripts/generate-api.mjs --check",
+    "test:guardrail": "tsx src/lib/__tests__/guardrail.test.ts",
+    "predev": "node scripts/generate-api.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-api.mjs --check && npm run test:guardrail",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
@@ -29,5 +34,8 @@
     "tsx": "^4.23.1",
     "typescript": "~6.0.2",
     "vite": "^8.1.1"
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }

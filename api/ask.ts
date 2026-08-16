@@ -10,6 +10,7 @@ import { createClient } from '@supabase/supabase-js'
 // van gedeeld met server/askHandler.ts (gebruikt door de lokale dev-route
 // in server/vitePlugin.ts, die dit probleem niet heeft).
 
+// <<<GENERATED:SYSTEM_PROMPT>>>
 const DEFAULT_SYSTEM_PROMPT = `Je bent de vaste chatexpert in FatherFlow, een app die vaders helpt hun zoon (8 tot 16 jaar) beter te begrijpen en dichter bij hem te blijven, juist nu de manosfeer en online extremen op hem afkomen.
 
 Wie je bent:
@@ -34,41 +35,105 @@ Suggesties voor het pad:
 Wanneer de vader een concreet, herkenbaar onderwerp beschrijft dat zich leent voor een kleine oefening om samen mee te proberen (een gedragspatroon, een spanning, iets waar hij mee worstelt), stel dat dan voor als toevoeging aan zijn pad. Doe dit al bij je allereerste antwoord in het gesprek als het onderwerp concreet genoeg is, wacht niet tot het onderwerp vaker terugkomt. Sla dit alleen over bij hele algemene of vage vragen zonder duidelijk onderwerp. Zet die suggestie als absoluut laatste, aparte bericht na een eigen "|||", in exact dit formaat en niets anders: SUGGESTIE: Korte titel|Een korte omschrijving van de oefening in één zin. Gebruik dat formaat alleen voor deze suggestie, nergens anders voor, en maximaal één keer per gesprek.
 
 Grenzen: bij acute veiligheid, zelfbeschadiging of geweld grijpt een aparte vangrail al in vóórdat jij iets te zien krijgt, daar hoef je zelf niets voor te doen.`
+// <<<END:SYSTEM_PROMPT>>>
 
-const SIGNAL_WORDS: string[] = [
-  // Zelfbeschadiging / zelfdoding
-  'zelfmoord',
-  'zelfdoding',
-  'zelfbeschadiging',
-  'suicide',
-  'ik wil dood',
-  'ik ga dood',
-  'niet meer wil leven',
-  'geen zin meer om te leven',
-  'mezelf iets aandoen',
-  'snijden in mezelf',
-  // Geweld / dreiging
-  'geweld',
-  'mishandeling',
-  'mishandelen',
-  'in elkaar slaan',
-  'vermoorden',
-  'ombrengen',
-  'dood maken',
-  'wapen',
-  'mes erbij',
-  'pistool',
-  'bedreigd met',
-  'concrete dreiging',
+// <<<GENERATED:GUARDRAIL>>>
+const GUARDRAIL_PATTERNS: { id: string; regex: string }[] = [
+  {
+    "id": "zelfmoord",
+    "regex": "\\bzelfmoord\\w*"
+  },
+  {
+    "id": "zelfdoding",
+    "regex": "\\bzelfdoding\\w*"
+  },
+  {
+    "id": "suicide",
+    "regex": "\\bsuicid\\w*"
+  },
+  {
+    "id": "zelfbeschadiging",
+    "regex": "\\bzelfbeschadig\\w*"
+  },
+  {
+    "id": "automutilatie",
+    "regex": "\\bautomutilat\\w*"
+  },
+  {
+    "id": "dood-willen",
+    "regex": "\\bik wil (niet meer leven|dood)\\b"
+  },
+  {
+    "id": "niet-meer-leven",
+    "regex": "\\b(niet meer wil(len)? leven|geen zin meer om te leven|er niet meer wil(len)? zijn)\\b"
+  },
+  {
+    "id": "eind-maken",
+    "regex": "\\ber een eind aan maken\\b"
+  },
+  {
+    "id": "zichzelf-iets-aandoen",
+    "regex": "\\b(mezelf|zichzelf|zich) iets aan(doen|gedaan)\\b"
+  },
+  {
+    "id": "snijden",
+    "regex": "\\bsnijd\\w* in (mezelf|zichzelf|zijn arm|haar arm|zijn armen|haar armen)\\b"
+  },
+  {
+    "id": "geweld",
+    "regex": "\\bgeweld(?!ig)\\w*"
+  },
+  {
+    "id": "mishandeling",
+    "regex": "\\bmishandel\\w*"
+  },
+  {
+    "id": "misbruik",
+    "regex": "\\b(seksueel misbruik|misbruikt door)\\b"
+  },
+  {
+    "id": "in-elkaar-slaan",
+    "regex": "\\bin elkaar (slaan|geslagen|geschopt)\\b"
+  },
+  {
+    "id": "vermoorden",
+    "regex": "\\bvermoord\\w*"
+  },
+  {
+    "id": "ombrengen",
+    "regex": "\\bombrengen\\b"
+  },
+  {
+    "id": "dood-maken",
+    "regex": "\\b(dood ?maken|van kant maken)\\b"
+  },
+  {
+    "id": "wapen",
+    "regex": "\\b(wapen|wapens|pistool|vuurwapen)\\b"
+  },
+  {
+    "id": "mes-dreiging",
+    "regex": "\\b(mes erbij|met een mes bedreig\\w*|trok een mes)\\b"
+  },
+  {
+    "id": "bedreigd",
+    "regex": "\\b(bedreigd met|concrete dreiging|doodsbedreiging\\w*)\\b"
+  }
 ]
+
+const REFERRAL_TEXT = "Dit klinkt zwaarder dan waar deze app voor bedoeld is, en je hoeft dit niet alleen op te lossen. Neem contact op met Veilig Thuis via 0800 2000, of met je huisarts. Bij direct gevaar bel 112."
 
 function triggersGuardrail(input: string): boolean {
   const normalized = input.toLowerCase()
-  return SIGNAL_WORDS.some((word) => normalized.includes(word))
+  return GUARDRAIL_PATTERNS.some(({ regex }) => new RegExp(regex, "i").test(normalized))
 }
 
-const REFERRAL_TEXT =
-  'Dit klinkt zwaarder dan waar deze app voor bedoeld is, en je hoeft dit niet alleen op te lossen. Neem contact op met Veilig Thuis via 0800 2000, of met je huisarts. Bij direct gevaar bel 112.'
+function matchedGuardrailPattern(input: string): string | null {
+  const normalized = input.toLowerCase()
+  const hit = GUARDRAIL_PATTERNS.find(({ regex }) => new RegExp(regex, "i").test(normalized))
+  return hit ? hit.id : null
+}
+// <<<END:GUARDRAIL>>>
 
 interface AskMessage {
   role: 'user' | 'assistant'
@@ -102,7 +167,10 @@ function sanitizeChild(input: unknown): ChildContext | null {
   }
 }
 
-type AskResult = { type: 'answer'; text: string } | { type: 'referral'; text: string } | { type: 'error'; text: string }
+type AskResult =
+  | { type: 'answer'; text: string }
+  | { type: 'referral'; text: string; guarded: true }
+  | { type: 'error'; text: string }
 
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-5'
 
@@ -172,8 +240,19 @@ async function handleAsk(messages: AskMessage[], child: ChildContext | null): Pr
     return { type: 'error', text: 'Stel een vraag om verder te gaan.' }
   }
 
-  if (triggersGuardrail(trimmed)) {
-    return { type: 'referral', text: REFERRAL_TEXT }
+  // De vangrail draait ook hier, en niet alleen client-side, zodat hij niet te
+  // omzeilen is door de route rechtstreeks aan te roepen. Alle berichten van de
+  // vader worden gecontroleerd, niet alleen het laatste: anders volstaat het om
+  // het signaal een beurt eerder te zetten.
+  for (const message of messages) {
+    if (message.role !== 'user') continue
+    const pattern = matchedGuardrailPattern(message.content)
+    if (pattern) {
+      // Bewust alleen welk patroon afging en wanneer. De tekst van de vader
+      // gaat nooit de logs in.
+      console.warn(`[guardrail] ${new Date().toISOString()} patroon=${pattern}`)
+      return { type: 'referral', text: REFERRAL_TEXT, guarded: true }
+    }
   }
 
   try {

@@ -29,16 +29,43 @@ function rowToProgress(row: ChildRow): ChildProgress {
   }
 }
 
-export async function signUp(fatherName: string, email: string, password: string) {
-  return supabase.auth.signUp({
+/**
+ * Laag 1 en 2 van het inlogmodel: identiteit via e-mail, terugkeer op een nieuw
+ * toestel via een zescijferige code uit de mail. Er bestaat bewust geen
+ * wachtwoord — dat scheelt de vader een geheim en ons een lek.
+ *
+ * Laag 3 (Face ID of pincode) is géén serverauthenticatie maar een slot op de
+ * sessie die al op het toestel staat; die leeft in src/lib/appLock.ts.
+ */
+export async function sendLoginCode(email: string, fatherName?: string) {
+  return supabase.auth.signInWithOtp({
     email,
-    password,
-    options: { data: { father_name: fatherName } },
+    options: {
+      shouldCreateUser: true,
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      ...(fatherName ? { data: { father_name: fatherName } } : {}),
+    },
   })
 }
 
-export async function signIn(email: string, password: string) {
-  return supabase.auth.signInWithPassword({ email, password })
+export async function verifyLoginCode(email: string, token: string) {
+  return supabase.auth.verifyOtp({ email, token, type: 'email' })
+}
+
+/**
+ * Supabase geeft technische, Engelstalige foutteksten terug. Een vader die
+ * afhaakt op "otp_expired" is een verloren testvader, dus vertalen we naar wat
+ * er feitelijk aan de hand is en wat hij kan doen.
+ */
+export function describeAuthError(message: string): string {
+  const m = message.toLowerCase()
+  if (m.includes('expired')) return 'Deze code is verlopen. Vraag een nieuwe aan.'
+  if (m.includes('invalid') || m.includes('incorrect')) return 'Deze code klopt niet. Controleer de cijfers uit de mail.'
+  if (m.includes('rate limit') || m.includes('too many') || m.includes('security purposes')) {
+    return 'Je hebt het te vaak geprobeerd. Wacht een minuut en probeer opnieuw.'
+  }
+  if (m.includes('email') && m.includes('valid')) return 'Dit lijkt geen geldig e-mailadres.'
+  return 'Versturen is niet gelukt. Controleer je verbinding en probeer opnieuw.'
 }
 
 export async function signOutAccount() {

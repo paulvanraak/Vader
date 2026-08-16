@@ -20,6 +20,7 @@ import { fetchActionCompletions, logActionCompletion, type ActionCompletion } fr
 import { computeConnectionStreakWeeks } from '../lib/streak'
 import { evaluateBadges, fetchEarnedBadges, awardBadges } from '../lib/badges'
 import { fetchChatThreadCount } from '../lib/chatThreads'
+import { resetProgressForChild } from '../lib/resetProgress'
 
 export type ChildGender = 'zoon' | 'dochter'
 export type AgeGroup = 'jong' | 'oud'
@@ -46,8 +47,6 @@ interface AppState {
   authLoading: boolean
   childrenLoaded: boolean
   session: Session | null
-  pinVerified: boolean
-  verifyPin: (pin: string) => boolean
   fatherName: string | null
   children: ChildProfile[]
   activeChildId: string | null
@@ -70,11 +69,10 @@ interface AppState {
   resolveReflectie: (itemId: string, response: ReflectieResponse) => Promise<void>
   resolveVoorJou: (itemId: string) => Promise<void>
   addVoorJouItem: (item: { title: string; body: string }) => Promise<void>
+  resetProgress: (childId: string) => Promise<void>
 }
 
 const AppStateContext = createContext<AppState | null>(null)
-
-const PIN_CODE = '12345'
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined' || !window.matchMedia) return 'light'
@@ -86,7 +84,6 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
   const [authLoading, setAuthLoading] = useState(true)
   const [childrenLoaded, setChildrenLoaded] = useState(true)
   const [session, setSession] = useState<Session | null>(null)
-  const [pinVerified, setPinVerified] = useState(false)
   const [childList, setChildList] = useState<ChildProfile[]>([])
   const [activeChildId, setActiveChildId] = useState<string | null>(null)
   const [progressByChild, setProgressByChild] = useState<Record<string, ChildProgress>>({})
@@ -106,16 +103,7 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
   // wordt de rest van de state (kinderen, voortgang) hieronder herladen.
   useEffect(() => {
     let cancelled = false
-    supabase.auth.getSession().then(async ({ data }) => {
-      // TIJDELIJK, alleen om te testen: forceer bij elke nieuwe app-load
-      // uitloggen zodat je steeds de volledige onboarding ziet, in plaats van
-      // automatisch door te gaan op een bewaarde sessie. Verwijder dit blok
-      // zodra we overgaan op echte login via e-maillink.
-      if (data.session) {
-        await supabase.auth.signOut()
-        if (!cancelled) setAuthLoading(false)
-        return
-      }
+    supabase.auth.getSession().then(({ data }) => {
       if (!cancelled) {
         setSession(data.session)
         setAuthLoading(false)
@@ -257,12 +245,6 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
     authLoading,
     childrenLoaded,
     session,
-    pinVerified,
-    verifyPin: (pin) => {
-      const ok = pin === PIN_CODE
-      if (ok) setPinVerified(true)
-      return ok
-    },
     fatherName,
     children: childList,
     activeChildId,
@@ -356,7 +338,6 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
       void evaluateAndAwardBadges({ completedLessonIds: nextCompleted })
     },
     logout: () => {
-      setPinVerified(false)
       void signOutAccount()
     },
     pathItems,
@@ -399,6 +380,13 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
         insertAfterLessonId: todayLessonId,
       })
       setPathItemsByChild((prev) => ({ ...prev, [childId]: [...(prev[childId] ?? []), item] }))
+    },
+    resetProgress: async (childId) => {
+      await resetProgressForChild(childId)
+      setProgressByChild((prev) => ({ ...prev, [childId]: emptyProgress() }))
+      setPathItemsByChild((prev) => ({ ...prev, [childId]: [] }))
+      setActionCompletionsByChild((prev) => ({ ...prev, [childId]: [] }))
+      setEarnedBadgesByChild((prev) => ({ ...prev, [childId]: {} }))
     },
   }
 
