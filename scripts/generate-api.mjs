@@ -148,8 +148,18 @@ for (const { file, blocks, whole } of targets) {
 }
 
 // Bouwslot voor taak 6: het dev-paneel mag nooit in een productiebuild zitten.
-if (process.env.VITE_DEV_TOOLS === 'true' && process.env.NODE_ENV === 'production') {
-  console.error('✗ VITE_DEV_TOOLS staat aan terwijl dit een productiebuild is. Zet de vlag uit.')
+// Dit is de enige garantie die niet van iemands geheugen afhangt. VERCEL_ENV
+// staat op 'production' of 'preview' en is het signaal dat er werkelijk toe
+// doet; NODE_ENV vangt het geval dat er buiten Vercel om gebouwd wordt.
+const isProductionBuild =
+  process.env.VERCEL_ENV === 'production' ||
+  (process.env.VERCEL_ENV === undefined && process.env.NODE_ENV === 'production')
+
+if (process.env.VITE_DEV_TOOLS === 'true' && isProductionBuild) {
+  console.error(
+    '✗ VITE_DEV_TOOLS staat aan terwijl dit een productiebuild is. Zet de vlag uit;\n' +
+      '  het dev-paneel hoort alleen in de preview-omgeving thuis.',
+  )
   failed = true
 }
 

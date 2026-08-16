@@ -30,6 +30,7 @@ import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
 import { AdminLessonEditor } from './screens/admin/AdminLessonEditor'
 import { AdminSpecialists } from './screens/admin/AdminSpecialists'
 import { AdminChatPrompt } from './screens/admin/AdminChatPrompt'
+import { DevPanel } from './components/DevPanel'
 
 function TabLayout() {
   const location = useLocation()
@@ -204,6 +205,7 @@ function App() {
               }
             />
           </Routes>
+          {__DEV_TOOLS__ && <DevPanel />}
         </AppStateProvider>
       </ContentProvider>
     </BrowserRouter>
