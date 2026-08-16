@@ -5,9 +5,13 @@ import { BottomNav } from './components/BottomNav'
 import { AppStateProvider, useAppState } from './state/AppStateContext'
 import { ContentProvider } from './state/ContentContext'
 import { Splash } from './screens/Splash'
-import { PinScreen } from './screens/PinScreen'
 import { IntroCarousel } from './screens/onboarding/IntroCarousel'
-import { OnboardingFlow, type OnboardingMode } from './screens/onboarding/OnboardingFlow'
+import { EmailAuthScreen } from './screens/onboarding/EmailAuthScreen'
+import { AppLockScreen } from './screens/AppLockScreen'
+import { LockSetupScreen } from './screens/LockSetupScreen'
+import { AuthCallback } from './screens/AuthCallback'
+import { isLockEnabled, hasBeenAsked } from './lib/appLock'
+import { signOutAccount } from './lib/account'
 import { Home } from './screens/Home'
 import { Kompas } from './screens/Kompas'
 import { Chat } from './screens/Chat'
@@ -48,9 +52,13 @@ function FullScreenSpinner() {
 }
 
 function MainApp() {
-  const { pinVerified, authLoading, childrenLoaded, session, children } = useAppState()
+  const { authLoading, childrenLoaded, session, children } = useAppState()
   const [showSplash, setShowSplash] = useState(true)
   const [showIntro, setShowIntro] = useState(true)
+  // Laag 3: het slot op dit toestel. Staat het niet aan, dan is er niets te
+  // ontgrendelen en gaan we er meteen doorheen.
+  const [unlocked, setUnlocked] = useState(() => !isLockEnabled())
+  const [lockAsked, setLockAsked] = useState(() => hasBeenAsked())
   // Eén keer vastgelegd zodra de kinderen geladen zijn: moet deze gebruiker
   // nog door de kind-stap heen? Bewust niet live op children.length kijken,
   // anders klapt het scherm weg zodra je het eerste kind bevestigt en kun je
@@ -71,23 +79,40 @@ function MainApp() {
     return <IntroCarousel onDone={() => setShowIntro(false)} />
   }
 
-  if (!pinVerified) {
-    return <PinScreen onSuccess={() => {}} />
-  }
-
   if (authLoading) {
     return <FullScreenSpinner />
   }
 
+  // Laag 1 en 2: identiteit via mail, terugkeer via een code uit de mail.
   if (!session) {
-    // Voor nu bewust alleen de volledige "nieuw"-flow, zonder inlogschakelaar:
-    // één voorspelbaar pad (uitleg -> PIN -> account -> kinderen -> app) in
-    // plaats van dat je per ongeluk via "Log in" op een oud testaccount met
-    // bestaande kinderen belandt en de rest van de onboarding overslaat.
     return (
-      <div className="flex h-full flex-col overflow-hidden bg-page">
-        <OnboardingFlow mode="nieuw" />
+      <div className="animate-dissolve flex h-full flex-col overflow-hidden bg-page">
+        <EmailAuthScreen onNext={() => {}} />
       </div>
+    )
+  }
+
+  // Laag 3: sessie staat er, maar het toestel is vergrendeld.
+  if (!unlocked) {
+    return (
+      <AppLockScreen
+        onUnlocked={() => setUnlocked(true)}
+        onFallback={() => {
+          setUnlocked(true)
+          void signOutAccount()
+        }}
+      />
+    )
+  }
+
+  // Eén keer aanbieden om het slot aan te zetten, daarna nooit meer.
+  if (!lockAsked) {
+    return (
+      <LockSetupScreen
+        userId={session.user.id}
+        label={session.user.email ?? 'FatherFlow'}
+        onDone={() => setLockAsked(true)}
+      />
     )
   }
 
@@ -126,19 +151,20 @@ function MainApp() {
   )
 }
 
-function OnboardingPreview({ mode }: { mode: OnboardingMode }) {
-  return (
-    <div className="flex h-full flex-col overflow-hidden bg-page">
-      <OnboardingFlow mode={mode} />
-    </div>
-  )
-}
-
 function AdminApp() {
-  const { pinVerified } = useAppState()
+  const { authLoading, session } = useAppState()
 
-  if (!pinVerified) {
-    return <PinScreen onSuccess={() => {}} />
+  if (authLoading) return <FullScreenSpinner />
+
+  // Het CMS zat achter een vaste democode. Nu er echte accounts zijn, is
+  // ingelogd zijn de voorwaarde; dat is een echte drempel in plaats van een
+  // getal dat in de bundel staat.
+  if (!session) {
+    return (
+      <div className="flex h-full flex-col overflow-hidden bg-page">
+        <EmailAuthScreen onNext={() => {}} />
+      </div>
+    )
   }
 
   return (
@@ -162,18 +188,10 @@ function App() {
           <Routes>
             <Route path="/admin/*" element={<AdminApp />} />
             <Route
-              path="/onboarding/nieuw"
+              path="/auth/callback"
               element={
                 <AppShell>
-                  <OnboardingPreview mode="nieuw" />
-                </AppShell>
-              }
-            />
-            <Route
-              path="/onboarding/inloggen"
-              element={
-                <AppShell>
-                  <OnboardingPreview mode="inloggen" />
+                  <AuthCallback />
                 </AppShell>
               }
             />
