@@ -1,11 +1,11 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { SYSTEM_PROMPT as DEFAULT_SYSTEM_PROMPT } from './systemPrompt.ts'
-import { triggersGuardrail, REFERRAL_TEXT } from '../src/lib/guardrail.ts'
+import { matchedGuardrailPattern, REFERRAL_TEXT } from '../src/lib/guardrail.ts'
 
 export type AskResult =
   | { type: 'answer'; text: string }
-  | { type: 'referral'; text: string }
+  | { type: 'referral'; text: string; guarded: true }
   | { type: 'error'; text: string }
 
 export interface AskMessage {
@@ -96,10 +96,19 @@ export async function handleAsk(messages: AskMessage[], child: ChildContext | nu
     return { type: 'error', text: 'Stel een vraag om verder te gaan.' }
   }
 
-  // De vangrail draait altijd vóór het model wordt aangeroepen, en kijkt
-  // alleen naar het nieuwste bericht van de vader.
-  if (triggersGuardrail(trimmed)) {
-    return { type: 'referral', text: REFERRAL_TEXT }
+  // De vangrail draait altijd vóór het model wordt aangeroepen. Alle berichten
+  // van de vader worden gecontroleerd, niet alleen het laatste: anders volstaat
+  // het om het signaal een beurt eerder te zetten. Dit moet één op één gelijk
+  // blijven aan api/ask.ts, want dit is de lokale spiegel van diezelfde route.
+  for (const message of messages) {
+    if (message.role !== 'user') continue
+    const pattern = matchedGuardrailPattern(message.content)
+    if (pattern) {
+      // Bewust alleen welk patroon afging en wanneer. De tekst van de vader
+      // gaat nooit de logs in.
+      console.warn(`[guardrail] ${new Date().toISOString()} patroon=${pattern}`)
+      return { type: 'referral', text: REFERRAL_TEXT, guarded: true }
+    }
   }
 
   try {

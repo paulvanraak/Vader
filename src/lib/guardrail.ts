@@ -1,40 +1,24 @@
-/**
- * Signaalwoordenlijst voor de vangrail. Losstaand en makkelijk uitbreidbaar,
- * per de instructie in CLAUDE.md deel 7. Gedeeld tussen client en server zodat
- * de controle altijd draait vóór het model wordt aangeroepen, ook wanneer er
- * geen serverroute beschikbaar is (bijvoorbeeld in een losstaande demo).
- */
-export const SIGNAL_WORDS: string[] = [
-  // Zelfbeschadiging / zelfdoding
-  'zelfmoord',
-  'zelfdoding',
-  'zelfbeschadiging',
-  'suicide',
-  'ik wil dood',
-  'ik ga dood',
-  'niet meer wil leven',
-  'geen zin meer om te leven',
-  'mezelf iets aandoen',
-  'snijden in mezelf',
-  // Geweld / dreiging
-  'geweld',
-  'mishandeling',
-  'mishandelen',
-  'in elkaar slaan',
-  'vermoorden',
-  'ombrengen',
-  'dood maken',
-  'wapen',
-  'mes erbij',
-  'pistool',
-  'bedreigd met',
-  'concrete dreiging',
-]
+import { GUARDRAIL_PATTERNS, REFERRAL_TEXT } from './generated/guardrailPatterns.ts'
 
-export function triggersGuardrail(input: string): boolean {
+/**
+ * De vangrail draait in twee lagen. Deze client-side laag is snel en werkt ook
+ * zonder netwerk; api/ask.ts draait dezelfde controle server-side zodat hij niet
+ * te omzeilen is door de route rechtstreeks aan te roepen.
+ *
+ * Beide lezen uit content/guardrail-patterns.json — hier via het gegenereerde
+ * generated/guardrailPatterns.ts, daar via injectie in de route zelf, omdat die
+ * self-contained moet blijven. "npm run verify:sources" laat de build falen
+ * zodra een van die kopieën afwijkt van de bron.
+ */
+export { GUARDRAIL_PATTERNS, REFERRAL_TEXT }
+
+/** Welk patroon afging, of null. Gebruikt voor logging zonder gebruikerstekst. */
+export function matchedGuardrailPattern(input: string): string | null {
   const normalized = input.toLowerCase()
-  return SIGNAL_WORDS.some((word) => normalized.includes(word))
+  const hit = GUARDRAIL_PATTERNS.find(({ regex }) => new RegExp(regex, 'i').test(normalized))
+  return hit ? hit.id : null
 }
 
-export const REFERRAL_TEXT =
-  'Dit klinkt zwaarder dan waar deze app voor bedoeld is, en je hoeft dit niet alleen op te lossen. Neem contact op met Veilig Thuis via 0800 2000, of met je huisarts. Bij direct gevaar bel 112.'
+export function triggersGuardrail(input: string): boolean {
+  return matchedGuardrailPattern(input) !== null
+}
