@@ -13,39 +13,13 @@
  *    blijft. Een omweg die de databeveiliging passeert test iets anders dan wat
  *    de vaders straks doen, en dan test je precies het pad niet dat kan breken.
  */
-import { supabase } from './supabaseClient'
 import type { ChildGender } from '../state/AppStateContext'
 import { getDevelopmentBand, bandLabels, type DevelopmentBand } from './development'
 import { calculateAge } from './age'
 
 export const DEV_TOOLS_ENABLED = __DEV_TOOLS__
 
-/**
- * De inloggegevens van de testgebruiker staan in de omgeving, nooit in de repo.
- * Zet ze op Vercel alleen in de preview-omgeving.
- */
-const TEST_EMAIL = import.meta.env.VITE_DEV_TEST_EMAIL as string | undefined
-const TEST_PASSWORD = import.meta.env.VITE_DEV_TEST_PASSWORD as string | undefined
-
-export function hasTestUserCredentials(): boolean {
-  return Boolean(TEST_EMAIL && TEST_PASSWORD)
-}
-
-export async function signInAsTestUser(): Promise<{ ok: boolean; error?: string }> {
-  if (!TEST_EMAIL || !TEST_PASSWORD) {
-    return {
-      ok: false,
-      error:
-        'Zet VITE_DEV_TEST_EMAIL en VITE_DEV_TEST_PASSWORD in je omgeving. ' +
-        'De snelle route logt in als een echte gebruiker, dus die moet bestaan.',
-    }
-  }
-  const { error } = await supabase.auth.signInWithPassword({
-    email: TEST_EMAIL,
-    password: TEST_PASSWORD,
-  })
-  return error ? { ok: false, error: error.message } : { ok: true }
-}
+export { skipLogin, hasTestUserCredentials } from './skipLogin'
 
 /**
  * De acht combinaties, elk met een leeftijd die comfortabel midden in de band

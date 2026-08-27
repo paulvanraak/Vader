@@ -155,6 +155,15 @@ const isProductionBuild =
   process.env.VERCEL_ENV === 'production' ||
   (process.env.VERCEL_ENV === undefined && process.env.NODE_ENV === 'production')
 
+// De overslaan-knop mag bewust wél op productie, maar hij hoort er niet te
+// blijven staan. Een waarschuwing, geen fout: jij hebt hem expres aangezet.
+if (process.env.VITE_ALLOW_SKIP_LOGIN === 'true' && isProductionBuild) {
+  console.warn(
+    '! VITE_ALLOW_SKIP_LOGIN staat aan op productie. De knop "Sla login over"\n' +
+      '  is dan voor iedere bezoeker zichtbaar. Zet hem uit voor de vaderstest.',
+  )
+}
+
 if (process.env.VITE_DEV_TOOLS === 'true' && isProductionBuild) {
   console.error(
     '✗ VITE_DEV_TOOLS staat aan terwijl dit een productiebuild is. Zet de vlag uit;\n' +

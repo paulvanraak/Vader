@@ -5,7 +5,7 @@ import {
   devProfilePresets,
   birthDateForAge,
   describeBandStatus,
-  signInAsTestUser,
+  skipLogin,
   hasTestUserCredentials,
   type DevProfilePreset,
 } from '../lib/devTools'
@@ -151,7 +151,7 @@ export function DevPanel() {
             disabled={busy}
             onClick={() =>
               void run('Ingelogd als testgebruiker.', async () => {
-                const res = await signInAsTestUser()
+                const res = await skipLogin()
                 if (!res.ok) throw new Error(res.error)
               })
             }
@@ -242,3 +242,5 @@ export function DevPanel() {
     </div>
   )
 }
+
+export default DevPanel
