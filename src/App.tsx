@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { BottomNav } from './components/BottomNav'
@@ -30,7 +30,12 @@ import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
 import { AdminLessonEditor } from './screens/admin/AdminLessonEditor'
 import { AdminSpecialists } from './screens/admin/AdminSpecialists'
 import { AdminChatPrompt } from './screens/admin/AdminChatPrompt'
-import { DevPanel } from './components/DevPanel'
+
+// Een lazy import in plaats van een statische: staat __DEV_TOOLS__ op false,
+// dan is deze tak dood, heeft de module geen enkele importeur meer en gooit de
+// bundelaar hem eruit. Bij een statische import bleef devTools.ts achter in de
+// productiebundel, ook al werd het paneel zelf al weggehaald.
+const DevPanel = __DEV_TOOLS__ ? lazy(() => import('./components/DevPanel')) : null
 
 function TabLayout() {
   const location = useLocation()
@@ -205,7 +210,11 @@ function App() {
               }
             />
           </Routes>
-          {__DEV_TOOLS__ && <DevPanel />}
+          {DevPanel && (
+            <Suspense fallback={null}>
+              <DevPanel />
+            </Suspense>
+          )}
         </AppStateProvider>
       </ContentProvider>
     </BrowserRouter>

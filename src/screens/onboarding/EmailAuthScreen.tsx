@@ -1,6 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Button } from '../../components/Button'
 import { sendLoginCode, verifyLoginCode, describeAuthError } from '../../lib/account'
+
+// Lazy achter de vlag, zodat de knop en alles wat eraan hangt in een
+// productiebuild geen importeur meer heeft en uit de bundel valt.
+const DevSkipLogin = __DEV_TOOLS__
+  ? lazy(() => import('../../components/DevSkipLogin'))
+  : null
 
 const CODE_LENGTH = 6
 const RESEND_COOLDOWN_SECONDS = 60
@@ -82,7 +88,12 @@ export function EmailAuthScreen({ onNext }: { onNext: () => void }) {
 
   if (step === 'code') {
     return (
-      <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
+      <div className="relative flex h-full flex-col justify-between bg-page px-7 py-10">
+      {DevSkipLogin && (
+        <Suspense fallback={null}>
+          <DevSkipLogin onDone={onNext} />
+        </Suspense>
+      )}
         <div className="flex flex-1 flex-col justify-center gap-6">
           <div className="stack-in">
             <p className="text-[18px] text-ink-muted">Check je mail</p>
@@ -140,7 +151,12 @@ export function EmailAuthScreen({ onNext }: { onNext: () => void }) {
   }
 
   return (
-    <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
+    <div className="relative flex h-full flex-col justify-between bg-page px-7 py-10">
+      {DevSkipLogin && (
+        <Suspense fallback={null}>
+          <DevSkipLogin onDone={onNext} />
+        </Suspense>
+      )}
       <div className="flex flex-1 flex-col justify-center gap-6">
         <div className="stack-in">
           <p className="text-[18px] text-ink-muted">Welkom bij FatherFlow</p>
