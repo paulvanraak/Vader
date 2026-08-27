@@ -23,5 +23,17 @@ export default defineConfig(({ mode }) => ({
         process.env.VERCEL_ENV === 'preview' ||
         process.env.VITE_DEV_TOOLS === 'true',
     ),
+    // Aparte vlag voor alleen de overslaan-knop op het inlogscherm.
+    //
+    // Bewust niet dezelfde vlag als hierboven. Het dev-paneel kan voortgang
+    // wissen en tussen profielen springen; dat hoort nooit op productie en het
+    // bouwslot bewaakt dat. De overslaan-knop levert alleen een gewone sessie
+    // op onder RLS, dus die mag daar wel staan als je hem bewust aanzet.
+    __ALLOW_SKIP_LOGIN__: JSON.stringify(
+      mode !== 'production' ||
+        process.env.VERCEL_ENV === 'preview' ||
+        process.env.VITE_DEV_TOOLS === 'true' ||
+        process.env.VITE_ALLOW_SKIP_LOGIN === 'true',
+    ),
   },
 }))

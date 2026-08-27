@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { skipLogin, hasTestUserCredentials } from '../lib/devTools'
+import { skipLogin, hasTestUserCredentials } from '../lib/skipLogin'
 
 /**
  * Knop rechtsboven op het inlogscherm om het inloggen over te slaan.

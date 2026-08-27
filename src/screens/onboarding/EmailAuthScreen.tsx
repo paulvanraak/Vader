@@ -2,9 +2,9 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Button } from '../../components/Button'
 import { sendLoginCode, verifyLoginCode, describeAuthError } from '../../lib/account'
 
-// Lazy achter de vlag, zodat de knop en alles wat eraan hangt in een
-// productiebuild geen importeur meer heeft en uit de bundel valt.
-const DevSkipLogin = __DEV_TOOLS__
+// Lazy achter de vlag, zodat de knop en alles wat eraan hangt geen importeur
+// meer heeft en uit de bundel valt zodra de vlag uitstaat.
+const DevSkipLogin = __ALLOW_SKIP_LOGIN__
   ? lazy(() => import('../../components/DevSkipLogin'))
   : null
 
