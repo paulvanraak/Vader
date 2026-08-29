@@ -11,3 +11,9 @@ declare const __DEV_TOOLS__: boolean
  * op productie mag staan en het dev-paneel niet.
  */
 declare const __ALLOW_SKIP_LOGIN__: boolean
+
+/**
+ * Automatisch inloggen als de testgebruiker, zodat het inlogscherm helemaal
+ * wordt overgeslagen. Tijdelijk, voor het bouwen; uit voor de vaderstest.
+ */
+declare const __AUTO_LOGIN__: boolean
