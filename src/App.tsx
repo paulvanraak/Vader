@@ -57,8 +57,35 @@ function FullScreenSpinner() {
   )
 }
 
+/**
+ * Automatisch inloggen zolang __AUTO_LOGIN__ aanstaat: je komt de app binnen
+ * zonder inlogscherm, maar wél met een echte sessie. Dat laatste is het punt —
+ * de voortgang wordt gewoon in de database bewaard en RLS blijft gelden, dus
+ * wat je nu opbouwt staat er straks nog steeds. Vlag uit en opnieuw deployen
+ * zet het gewone inloggen terug zonder dat er iets aan de data verandert.
+ */
+function useAutoLogin(session: unknown, authLoading: boolean) {
+  const [failure, setFailure] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    if (!__AUTO_LOGIN__ || authLoading || session || busy || failure) return
+    setBusy(true)
+    void import('./lib/skipLogin')
+      .then(({ skipLogin }) => skipLogin())
+      .then((res) => {
+        if (!res.ok) setFailure(res.error ?? 'Automatisch inloggen lukte niet.')
+      })
+      .catch((err) => setFailure(err instanceof Error ? err.message : 'Automatisch inloggen lukte niet.'))
+      .finally(() => setBusy(false))
+  }, [session, authLoading, busy, failure])
+
+  return { autoFailure: failure }
+}
+
 function MainApp() {
   const { authLoading, childrenLoaded, session, children } = useAppState()
+  const { autoFailure } = useAutoLogin(session, authLoading)
   const [showSplash, setShowSplash] = useState(true)
   const [showIntro, setShowIntro] = useState(true)
   // Laag 3: het slot op dit toestel. Staat het niet aan, dan is er niets te
@@ -89,14 +116,28 @@ function MainApp() {
     return <FullScreenSpinner />
   }
 
+  // Automatisch inloggen is bezig: even wachten in plaats van het inlogscherm
+  // laten opflitsen.
+  if (!session && __AUTO_LOGIN__ && !autoFailure) {
+    return <FullScreenSpinner />
+  }
+
   // Laag 1 en 2: identiteit via mail, terugkeer via een code uit de mail.
+  // Ook het vangnet als automatisch inloggen niet lukt: dan hoor je waaróm, in
+  // plaats van tegen een leeg scherm aan te kijken.
   if (!session) {
     return (
       <div className="animate-dissolve flex h-full flex-col overflow-hidden bg-page">
+        {autoFailure && (
+          <p className="bg-danger-500/10 px-7 pt-6 text-caption font-semibold text-danger-500">
+            Automatisch inloggen lukte niet: {autoFailure}
+          </p>
+        )}
         <EmailAuthScreen onNext={() => {}} />
       </div>
     )
   }
+
 
   // Laag 3: sessie staat er, maar het toestel is vergrendeld.
   if (!unlocked) {
