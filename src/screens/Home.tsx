@@ -197,6 +197,28 @@ export function Home() {
   return (
     <div className="flex flex-col">
       <ChildSwitcher />
+
+      {/*
+        Ingang naar thema 1 in de nieuwe opzet. Staat bovenaan zodat het te
+        vinden is zonder de URL te kennen. Het oude pad blijft eronder staan,
+        zodat je beide naast elkaar kunt bekijken.
+      */}
+      <button
+        type="button"
+        onClick={() => navigate('/thema1')}
+        className="mx-5 mt-4 rounded-md border-2 border-ink bg-surface p-4 text-left shadow-sm transition active:scale-[0.99]"
+      >
+        <span className="text-caption font-bold uppercase tracking-wide text-ink-muted">
+          Nieuwe opzet · 8 weken
+        </span>
+        <span className="mt-1 block font-serif text-h4 font-semibold text-ink">
+          Thema 1 — Contact maken
+        </span>
+        <span className="mt-1 block text-body text-ink-muted">
+          Vier lessen, acht oefeningen in zeven vormen, een checkpoint en twee stille weken.
+        </span>
+      </button>
+
       <div className="flex flex-col py-5 pl-5 pr-3">
         {path.map((lesson, index) => {
           const world = worlds.find((w) => w.id === lesson.world)
