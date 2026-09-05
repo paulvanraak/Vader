@@ -26,24 +26,30 @@ export function hasTestUserCredentials(): boolean {
  * testen dat in productie niet bestaat.
  */
 export async function skipLogin(): Promise<{ ok: boolean; error?: string }> {
+  // Anoniem eerst. Dit is wat "geen account, geen login, geen mail" in de
+  // praktijk betekent: Supabase maakt stilletjes een gebruiker aan, de vader
+  // ziet er niets van, en omdat het een echte sessie is blijft RLS gelden en
+  // wordt de voortgang gewoon opgeslagen. Bij de volgende keer openen keert
+  // dezelfde sessie terug uit de browseropslag.
+  const anon = await supabase.auth.signInAnonymously()
+  if (!anon.error) return { ok: true }
+
+  // Staat anoniem inloggen uit, dan vallen we terug op het vaste testaccount
+  // als dat is ingesteld. Ook dat is een echte gebruiker.
   if (TEST_EMAIL && TEST_PASSWORD) {
     const { error } = await supabase.auth.signInWithPassword({
       email: TEST_EMAIL,
       password: TEST_PASSWORD,
     })
     if (!error) return { ok: true }
-    console.warn('[dev] testgebruiker inloggen mislukt, ik probeer anoniem:', error.message)
+    return { ok: false, error: `Anoniem inloggen staat uit en het testaccount werkte niet: ${error.message}` }
   }
-
-  const { error } = await supabase.auth.signInAnonymously()
-  if (!error) return { ok: true }
 
   return {
     ok: false,
-    error: TEST_EMAIL
-      ? `Inloggen als testgebruiker mislukte en anoniem inloggen staat uit. (${error.message})`
-      : 'Geen testaccount ingesteld en anoniem inloggen staat uit. Zet ' +
-        'VITE_DEV_TEST_EMAIL en VITE_DEV_TEST_PASSWORD, of zet anonieme ' +
-        'aanmeldingen aan in Supabase Auth.',
+    error:
+      'Anoniem inloggen staat uit in Supabase. Zet het aan bij Authentication > ' +
+      'Providers > Anonymous sign-ins. Dan is er geen account, geen login en ' +
+      `geen mail nodig. (${anon.error.message})`,
   }
 }

@@ -24,6 +24,7 @@ import { Specialisten } from './screens/Specialisten'
 import { AddChild } from './screens/AddChild'
 import { ChildrenQuestion } from './screens/onboarding/ChildrenQuestion'
 import { Les } from './screens/Les'
+import { Thema1 } from './screens/Thema1'
 import { AdminLayout } from './screens/admin/AdminLayout'
 import { AdminWorlds } from './screens/admin/AdminWorlds'
 import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
@@ -90,8 +91,10 @@ function MainApp() {
   const [showIntro, setShowIntro] = useState(true)
   // Laag 3: het slot op dit toestel. Staat het niet aan, dan is er niets te
   // ontgrendelen en gaan we er meteen doorheen.
-  const [unlocked, setUnlocked] = useState(() => !isLockEnabled())
-  const [lockAsked, setLockAsked] = useState(() => hasBeenAsked())
+  // Met __AUTO_LOGIN__ aan hoort er geen enkele drempel te zijn: geen
+  // inlogscherm en dus ook geen app-slot. Zet de vlag uit en beide keren terug.
+  const [unlocked, setUnlocked] = useState(() => __AUTO_LOGIN__ || !isLockEnabled())
+  const [lockAsked, setLockAsked] = useState(() => __AUTO_LOGIN__ || hasBeenAsked())
   // Eén keer vastgelegd zodra de kinderen geladen zijn: moet deze gebruiker
   // nog door de kind-stap heen? Bewust niet live op children.length kijken,
   // anders klapt het scherm weg zodra je het eerste kind bevestigt en kun je
@@ -182,6 +185,7 @@ function MainApp() {
   return (
     <Routes>
       <Route path="/les/:id" element={<Les />} />
+      <Route path="/thema1" element={<Thema1 />} />
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
