@@ -29,17 +29,17 @@ export default defineConfig(({ mode }) => ({
     // wissen en tussen profielen springen; dat hoort nooit op productie en het
     // bouwslot bewaakt dat. De overslaan-knop levert alleen een gewone sessie
     // op onder RLS, dus die mag daar wel staan als je hem bewust aanzet.
-    // Automatisch inloggen: het inlogscherm wordt helemaal overgeslagen.
-    // Bedoeld om ongestoord aan de app te kunnen werken. Zet de vlag uit en
-    // deploy opnieuw, en het gewone inloggen is terug — er verandert niets
-    // aan de accounts of aan de opgeslagen voortgang.
-    __AUTO_LOGIN__: JSON.stringify(process.env.VITE_AUTO_LOGIN === 'true'),
+    // Geen inlogscherm: je valt de app meteen binnen. Staat nu standaard AAN,
+    // omdat er nog gebouwd wordt. Zet VITE_AUTO_LOGIN=false en deploy opnieuw
+    // en het gewone inloggen is terug; aan de opgeslagen voortgang verandert
+    // er dan niets.
+    __AUTO_LOGIN__: JSON.stringify(process.env.VITE_AUTO_LOGIN !== 'false'),
     __ALLOW_SKIP_LOGIN__: JSON.stringify(
       mode !== 'production' ||
         process.env.VERCEL_ENV === 'preview' ||
         process.env.VITE_DEV_TOOLS === 'true' ||
         process.env.VITE_ALLOW_SKIP_LOGIN === 'true' ||
-        process.env.VITE_AUTO_LOGIN === 'true',
+        process.env.VITE_AUTO_LOGIN !== 'false',
     ),
   },
 }))

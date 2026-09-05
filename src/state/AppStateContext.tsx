@@ -393,6 +393,15 @@ export function AppStateProvider({ children: providerChildren }: { children: Rea
   return <AppStateContext.Provider value={value}>{providerChildren}</AppStateContext.Provider>
 }
 
+/**
+ * Zelfde context, maar null in plaats van een fout als er geen provider is.
+ * Voor schermen die ook los te renderen moeten zijn — de personalisatie valt
+ * dan gewoon terug op de neutrale tekst.
+ */
+export function useOptionalAppState(): AppState | null {
+  return useContext(AppStateContext)
+}
+
 export function useAppState(): AppState {
   const ctx = useContext(AppStateContext)
   if (!ctx) {
