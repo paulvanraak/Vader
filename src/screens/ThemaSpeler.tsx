@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronUp, Flame } from 'lucide-react'
 import { Button } from '../components/Button'
 import { useOptionalAppState } from '../state/AppStateContext'
@@ -7,12 +7,14 @@ import { personalizeText } from '../lib/personalize'
 import { hapticTap, hapticSuccess } from '../lib/haptics'
 import {
   laadRitme, bewaarRitme, registreerSessie, noteerOefening, noteerMissie,
-  trekOefeningen, teVeelOpEenDag, voltooiDeel, type RitmeState,
+  trekOefeningen, voltooiDeel, type RitmeState,
 } from '../lib/ritme'
-import { THEMA1_LESSEN, THEMA1_OEFENINGEN, type Oefening, type Les } from '../content/thema1'
+import { vindThema, type Oefening, type Les, type Thema } from '../content/themas'
 
 /**
- * De speler van thema 1.
+ * De speler van een thema. Welk thema er speelt staat in de route, niet in de
+ * code: /thema/:themaId/:deel. Zo hoeft er voor een nieuw thema alleen een
+ * bestand bij in src/content.
  *
  * Twee bewegingen, zoals afgesproken. Een les stapelt: blokken schuiven één
  * voor één van onder in en blijven staan, zodat je het inzicht nog ziet als de
@@ -50,11 +52,19 @@ function useSwipeOmhoog(onVolgende: () => void) {
  * gaan tussen werk en overzicht, en kun je tussendoor bij je checklist,
  * je badges en de chat.
  */
-export function Thema1() {
+export function ThemaSpeler() {
+  const { themaId } = useParams()
+  const thema = vindThema(themaId)
+  if (!thema) return <Navigate to="/" replace />
+  return <Speler thema={thema} />
+}
+
+function Speler({ thema }: { thema: Thema }) {
   const navigate = useNavigate()
   const { deel } = useParams()
-  const index = Math.max(0, Math.min(Number(deel ?? 0), THEMA1_LESSEN.length - 1))
-  const les = THEMA1_LESSEN[index]
+  const lessen = thema.lessen
+  const index = Math.max(0, Math.min(Number(deel ?? 0), lessen.length - 1))
+  const les = lessen[index]
 
   const activeChild = useOptionalAppState()?.activeChild ?? null
   const p = (t: string) => personalizeText(t, activeChild)
@@ -78,7 +88,7 @@ export function Thema1() {
         streak={ritme.streak}
         fase={les.fase}
         deel={index + 1}
-        totaal={THEMA1_LESSEN.length}
+        totaal={lessen.length}
         onTerug={() => navigate('/')}
       />
 
@@ -88,6 +98,7 @@ export function Thema1() {
 
       {fase.soort === 'sessie' && (
         <Sessie
+          thema={thema}
           les={les}
           p={p}
           ritme={ritme}
@@ -100,7 +111,6 @@ export function Thema1() {
         <Missie
           les={les}
           p={p}
-          teVeel={teVeelOpEenDag(ritme)}
           onVerder={() => {
             let volgende = noteerMissie(ritme, les.id, 'in_checklist')
             volgende = voltooiDeel(volgende, les.id)
@@ -237,11 +247,14 @@ function Kaart({ kop, children }: { kop: string; children: React.ReactNode }) {
   )
 }
 
-function Sessie({ les, p, ritme, onOefening, onKlaar }: {
-  les: Les; p: (t: string) => string; ritme: RitmeState
+function Sessie({ thema, les, p, ritme, onOefening, onKlaar }: {
+  thema: Thema; les: Les; p: (t: string) => string; ritme: RitmeState
   onOefening: (id: string, fout: boolean) => void; onKlaar: () => void
 }) {
-  const pool = useMemo(() => THEMA1_OEFENINGEN.filter((o) => o.lesId === les.id), [les.id])
+  const pool = useMemo(
+    () => thema.oefeningen.filter((o) => o.lesId === les.id),
+    [thema, les.id],
+  )
   const set = useMemo(() => trekOefeningen(pool, ritme, Math.min(3, pool.length)), [pool])
   const [i, setI] = useState(0)
   const [beantwoord, setBeantwoord] = useState(false)
@@ -487,8 +500,8 @@ function Feedback({ kop, tekst }: { kop: string; tekst: string }) {
   )
 }
 
-function Missie({ les, p, teVeel, onVerder }: {
-  les: Les; p: (t: string) => string; teVeel: boolean; onVerder: () => void
+function Missie({ les, p, onVerder }: {
+  les: Les; p: (t: string) => string; onVerder: () => void
 }) {
   return (
     <>
@@ -502,11 +515,6 @@ function Missie({ les, p, teVeel, onVerder }: {
           <p className="text-caption text-ink-muted">
             Staat vanaf nu in je checklist. Daar vertel je hoe het ging.
           </p>
-          {teVeel && (
-            <p className="text-caption text-ink-muted">
-              Je hebt vandaag al flink wat gedaan. Het mag, maar verdeeld over meer dagen werkt beter.
-            </p>
-          )}
         </div>
       </Midden>
       <div className="pb-6"><Button onClick={onVerder}>Verder</Button></div>

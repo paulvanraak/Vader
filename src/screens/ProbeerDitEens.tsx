@@ -2,7 +2,7 @@ import { ChildSwitcher } from '../components/ChildSwitcher'
 import { FeatureExplainer } from '../components/FeatureExplainer'
 import { ThemaMissies } from '../components/ThemaMissies'
 import { laadRitme } from '../lib/ritme'
-import { THEMA1_LESSEN } from '../content/thema1'
+import { THEMAS } from '../content/themas'
 
 /**
  * De checklist. Hier staan de opdrachten die je uit de thema's meekrijgt, en
@@ -13,7 +13,7 @@ import { THEMA1_LESSEN } from '../content/thema1'
  */
 export function ProbeerDitEens() {
   const ritme = laadRitme()
-  const aantal = THEMA1_LESSEN.filter((l) => ritme.missies[l.id]).length
+  const aantal = THEMAS.flatMap((t) => t.lessen).filter((l) => ritme.missies[l.id]).length
 
   return (
     <div className="flex flex-col">
