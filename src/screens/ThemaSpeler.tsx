@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChevronUp, Flame } from 'lucide-react'
+import { ArrowLeft, Flame } from 'lucide-react'
 import { Button } from '../components/Button'
+import { BlokkenStapel, SwipeHint, useSwipeOmhoog } from '../components/BlokkenStapel'
 import { useOptionalAppState } from '../state/AppStateContext'
 import { personalizeText } from '../lib/personalize'
 import { hapticTap, hapticSuccess } from '../lib/haptics'
@@ -31,20 +32,6 @@ type Fase =
   | { soort: 'les' }
   | { soort: 'sessie' }
   | { soort: 'missie' }
-
-/** Swipe omhoog of een tik: allebei betekenen "volgende". */
-function useSwipeOmhoog(onVolgende: () => void) {
-  const start = useRef<number | null>(null)
-  return {
-    onTouchStart: (e: React.TouchEvent) => { start.current = e.touches[0].clientY },
-    onTouchEnd: (e: React.TouchEvent) => {
-      if (start.current === null) return
-      const delta = start.current - e.changedTouches[0].clientY
-      start.current = null
-      if (delta > 45) onVolgende()
-    },
-  }
-}
 
 /**
  * Speelt één deel van een thema: de les, drie oefeningen, en de opdracht.
@@ -84,6 +71,8 @@ function Speler({ thema }: { thema: Thema }) {
 
   return (
     <div className="flex h-full flex-col bg-page">
+      {/* De balk hoort niet mee te bewegen met de wissel. Hij staat daarom
+          buiten het vlak dat animeert, en niet erin. */}
       <Kop
         streak={ritme.streak}
         fase={les.fase}
@@ -92,33 +81,78 @@ function Speler({ thema }: { thema: Thema }) {
         onTerug={() => navigate('/')}
       />
 
-      {fase.soort === 'les' && (
-        <LesBlokken les={les} p={p} onKlaar={() => setFase({ soort: 'sessie' })} />
-      )}
+      <Hoofdstukwissel sleutel={fase.soort}>
+        {(soort) => (
+          <>
+            {soort === 'les' && (
+              <LesBlokken les={les} p={p} onKlaar={() => setFase({ soort: 'sessie' })} />
+            )}
 
-      {fase.soort === 'sessie' && (
-        <Sessie
-          thema={thema}
-          les={les}
-          p={p}
-          ritme={ritme}
-          onOefening={(id, fout) => bewaar(noteerOefening(ritme, id, fout))}
-          onKlaar={() => { bewaar(registreerSessie(ritme)); setFase({ soort: 'missie' }) }}
-        />
-      )}
+            {soort === 'sessie' && (
+              <Sessie
+                thema={thema}
+                les={les}
+                p={p}
+                ritme={ritme}
+                onOefening={(id, fout) => bewaar(noteerOefening(ritme, id, fout))}
+                onKlaar={() => { bewaar(registreerSessie(ritme)); setFase({ soort: 'missie' }) }}
+              />
+            )}
 
-      {fase.soort === 'missie' && (
-        <Missie
-          les={les}
-          p={p}
-          onVerder={() => {
-            let volgende = noteerMissie(ritme, les.id, 'in_checklist')
-            volgende = voltooiDeel(volgende, les.id)
-            bewaar(volgende)
-            navigate('/', { state: { gevierd: les.id } })
-          }}
-        />
-      )}
+            {soort === 'missie' && (
+              <Missie
+                les={les}
+                p={p}
+                onVerder={() => {
+                  let volgende = noteerMissie(ritme, les.id, 'in_checklist')
+                  volgende = voltooiDeel(volgende, les.id)
+                  bewaar(volgende)
+                  navigate('/', { state: { gevierd: les.id } })
+                }}
+              />
+            )}
+          </>
+        )}
+      </Hoofdstukwissel>
+    </div>
+  )
+}
+
+const UIT_MS = 340
+
+/**
+ * De wissel tussen twee hoofdstukken binnen één deel: van de les naar de
+ * oefeningen, en van de oefeningen naar de opdracht.
+ *
+ * Wat er staat gaat omhoog het beeld uit; wat komt, komt van onder het scherm
+ * op. Het oude hoofdstuk blijft dus nog even hangen nadat de fase al gewisseld
+ * is — vandaar dat dit een eigen kopie van de sleutel bijhoudt en niet gewoon
+ * de nieuwe waarde doorgeeft. Zonder die kopie zou het nieuwe hoofdstuk naar
+ * boven wegvallen in plaats van het oude.
+ */
+function Hoofdstukwissel({ sleutel, children }: {
+  sleutel: string
+  children: (sleutel: string) => React.ReactNode
+}) {
+  const [getoond, setGetoond] = useState(sleutel)
+  const [gaatUit, setGaatUit] = useState(false)
+
+  useEffect(() => {
+    if (sleutel === getoond) return
+    setGaatUit(true)
+    const t = window.setTimeout(() => { setGetoond(sleutel); setGaatUit(false) }, UIT_MS)
+    return () => window.clearTimeout(t)
+  }, [sleutel, getoond])
+
+  // De sleutel is bewust alleen `getoond`. Zou hij ook op het weggaan reageren,
+  // dan bouwt het oude hoofdstuk zich opnieuw op terwijl het wegschuift, en zie
+  // je de les terugspringen naar het eerste blok op weg naar buiten.
+  return (
+    <div
+      key={getoond}
+      className={`flex flex-1 flex-col overflow-hidden ${gaatUit ? 'hoofdstuk-uit' : 'hoofdstuk-in'}`}
+    >
+      {children(getoond)}
     </div>
   )
 }
@@ -165,22 +199,6 @@ function Overgang({ label }: { label: string }) {
   )
 }
 
-/** Het lichte pijltje op de plek van de knop. Ook aan te tikken. */
-function SwipeHint({ onClick }: { onClick: () => void }) {
-  return (
-    <div className="flex justify-center pb-8 pt-2">
-      <button
-        type="button"
-        onClick={onClick}
-        aria-label="Volgende"
-        className="pijl-adem flex size-11 items-center justify-center rounded-full text-ink"
-      >
-        <ChevronUp size={26} strokeWidth={2} />
-      </button>
-    </div>
-  )
-}
-
 function Midden({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 pb-8">{children}</div>
 }
@@ -194,48 +212,7 @@ function LesBlokken({ les, p, onKlaar }: { les: Les; p: (t: string) => string; o
     // De opdracht staat bewust niet hier maar op het scherm na de oefeningen,
     // anders krijg je hem twee keer te zien.
   ]
-  const [zichtbaar, setZichtbaar] = useState(1)
-  const alles = zichtbaar >= blokken.length
-  const volgende = () => {
-    hapticTap()
-    if (alles) onKlaar()
-    else setZichtbaar((n) => Math.min(n + 1, blokken.length))
-  }
-  const swipe = useSwipeOmhoog(volgende)
-
-  // Wat er al stond schuift rustig mee omhoog in plaats van te verspringen.
-  // De stapel staat gecentreerd, dus bij een nieuw blok springt alles de halve
-  // hoogte omhoog; die sprong draaien we terug en animeren we uit.
-  const stapel = useRef<HTMLDivElement>(null)
-  const vorigeHoogte = useRef(0)
-  useLayoutEffect(() => {
-    const el = stapel.current
-    if (!el) return
-    const nu = el.offsetHeight
-    const delta = nu - vorigeHoogte.current
-    vorigeHoogte.current = nu
-    if (delta > 0 && zichtbaar > 1) {
-      el.animate(
-        [{ transform: `translateY(${delta / 2}px)` }, { transform: 'none' }],
-        { duration: 820, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
-      )
-    }
-  }, [zichtbaar])
-
-  return (
-    <>
-      {/* Gecentreerd: wat relevant is hoort midden in beeld te staan. Nieuwe
-          blokken schuiven er van onder bij en duwen de rest kalm omhoog. */}
-      <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 py-4" {...swipe}>
-        <div ref={stapel} className="flex flex-col gap-4">
-          {blokken.slice(0, zichtbaar).map((b, n) => (
-            <div key={n} className={n === zichtbaar - 1 ? 'blok-in' : undefined}>{b}</div>
-          ))}
-        </div>
-      </div>
-      <SwipeHint onClick={volgende} />
-    </>
-  )
+  return <BlokkenStapel blokken={blokken} onKlaar={onKlaar} />
 }
 
 function Kaart({ kop, children }: { kop: string; children: React.ReactNode }) {

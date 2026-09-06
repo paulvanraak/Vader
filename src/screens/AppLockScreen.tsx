@@ -72,7 +72,7 @@ export function AppLockScreen({ onUnlocked, onFallback }: { onUnlocked: () => vo
 
   if (lockedOut) {
     return (
-      <div className="flex h-full flex-col justify-center gap-5 bg-page px-7">
+      <div className="animate-dissolve flex h-full flex-col justify-center gap-5 bg-page px-7">
         <h1 className="font-serif text-h1 text-ink">Te vaak geprobeerd</h1>
         <p className="text-body-lg leading-relaxed text-ink-muted">
           Log opnieuw in met een code uit je mail. Je gegevens en voortgang blijven gewoon staan.
@@ -89,7 +89,7 @@ export function AppLockScreen({ onUnlocked, onFallback }: { onUnlocked: () => vo
   }
 
   return (
-    <div className="flex h-full flex-col justify-center gap-8 bg-page px-7">
+    <div className="animate-dissolve flex h-full flex-col justify-center gap-8 bg-page px-7">
       <div>
         <h1 className="stack-in font-serif text-h1 text-ink">FatherFlow is vergrendeld</h1>
         {mode === 'biometric' && biometricFailed && (

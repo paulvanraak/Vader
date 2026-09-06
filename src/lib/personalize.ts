@@ -37,9 +37,16 @@ export function personalizeText(text: string, child: ChildProfile | null): strin
   const name = child?.name?.trim()
   const p = PRONOUNS[child?.gender === 'dochter' ? 'dochter' : 'zoon']
 
+  // Zonder naam viel {naam} terug op "hem". Dat gaat mis zodra de naam vooraan
+  // een zin staat — "hem was er niet" — en net zo goed na een voorzetsel bij de
+  // andere kant van de keuze. "je zoon" en "je dochter" kloppen in beide
+  // posities; alleen de hoofdletter aan het begin van een zin moet je zelf
+  // zetten, want die krijg je bij een echte naam gratis.
+  const naamVal = name || `je ${p.kind}`
   return text
-    .replaceAll('{naam_bezit}', name ? possessive(name) : p.zijn)
-    .replaceAll('{naam}', name || p.hem)
+    .replaceAll('{naam_bezit}', name ? possessive(name) : `je ${p.kind}s`)
+    .replace(/(^|[.!?]\s+)\{naam\}/g, (_m, voor: string) => voor + capitalize(naamVal))
+    .replaceAll('{naam}', naamVal)
     .replace(TOKEN_PATTERN, (match, token: string) => {
       const lower = token.toLowerCase() as keyof typeof p
       const value = p[lower]

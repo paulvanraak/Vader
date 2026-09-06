@@ -46,7 +46,7 @@ export function ChildrenQuestion({ onNext }: { onNext: () => void }) {
   }
 
   return (
-    <div className="flex h-full flex-col justify-between px-6 py-10">
+    <div className="animate-dissolve flex h-full flex-col justify-between px-6 py-10">
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto text-left">
         <div className="stack-in">
           <h1 className="font-serif text-h1 font-semibold text-ink">Over wie gaat het?</h1>
