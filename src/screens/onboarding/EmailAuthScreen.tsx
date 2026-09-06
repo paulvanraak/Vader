@@ -88,7 +88,7 @@ export function EmailAuthScreen({ onNext }: { onNext: () => void }) {
 
   if (step === 'code') {
     return (
-      <div className="relative flex h-full flex-col justify-between bg-page px-7 py-10">
+      <div className="animate-dissolve relative flex h-full flex-col justify-between bg-page px-7 py-10">
       {DevSkipLogin && (
         <Suspense fallback={null}>
           <DevSkipLogin onDone={onNext} />
@@ -151,7 +151,7 @@ export function EmailAuthScreen({ onNext }: { onNext: () => void }) {
   }
 
   return (
-    <div className="relative flex h-full flex-col justify-between bg-page px-7 py-10">
+    <div className="animate-dissolve relative flex h-full flex-col justify-between bg-page px-7 py-10">
       {DevSkipLogin && (
         <Suspense fallback={null}>
           <DevSkipLogin onDone={onNext} />

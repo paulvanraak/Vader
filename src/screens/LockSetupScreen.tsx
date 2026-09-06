@@ -63,7 +63,7 @@ export function LockSetupScreen({ userId, label, onDone }: { userId: string; lab
 
   if (mode === 'pin') {
     return (
-      <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
+      <div className="animate-dissolve flex h-full flex-col justify-between bg-page px-7 py-10">
         <div className="flex flex-1 flex-col justify-center gap-5">
           <h1 className="font-serif text-[32px] font-semibold text-ink">Kies een pincode</h1>
           <p className="text-body text-ink-muted">Zes cijfers. Die blijven op dit toestel en gaan nergens heen.</p>
@@ -98,7 +98,7 @@ export function LockSetupScreen({ userId, label, onDone }: { userId: string; lab
   }
 
   return (
-    <div className="flex h-full flex-col justify-between bg-page px-7 py-10">
+    <div className="animate-dissolve flex h-full flex-col justify-between bg-page px-7 py-10">
       <div className="flex flex-1 flex-col justify-center gap-5">
         <h1 className="stack-in font-serif text-[32px] font-semibold text-ink">App vergrendelen?</h1>
         <p className="stack-in stack-delay-1 text-body-lg leading-relaxed text-ink-muted">

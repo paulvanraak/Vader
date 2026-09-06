@@ -17,7 +17,7 @@ const LESSEN: Les[] = [
     spiegel:
       'Welke regel van vroeger vond jij het meest oneerlijk? En weet je nu waarom je ouders hem hadden?',
     thuismissie: {
-      actie: 'Leg deze week bij één regel uit waaróm hij er is.',
+      actie: 'Leg bij één regel uit waaróm hij er is.',
       waarom:
         'Niet onderhandelen, alleen uitleggen. Een regel met een reden is nog steeds een regel, ' +
         'maar {hij} hoort er iets anders in.',
@@ -40,7 +40,7 @@ const LESSEN: Les[] = [
     spiegel:
       'Waarin luister jij écht naar {naam}? En zou {hij} dat ook zo noemen als je het {hem} vroeg?',
     thuismissie: {
-      actie: 'Laat {hem} deze week één keer een regel bijstellen die er niet zoveel toe doet.',
+      actie: 'Laat {hem} één keer een regel bijstellen die er niet zoveel toe doet.',
       waarom:
         'Klein en concreet. Niet omdat de regel fout was, maar omdat {hij} merkt dat wat {hij} ' +
         'zegt ergens landt.',
@@ -87,7 +87,7 @@ const LESSEN: Les[] = [
       'Wat gebeurt er in jou als {hij} zegt dat je oneerlijk bent? En hoeveel van jouw reactie ' +
       'gaat daarover in plaats van over de regel?',
     thuismissie: {
-      actie: 'Herhaal deze week één nee kalm, zonder opnieuw uit te leggen.',
+      actie: 'Herhaal één nee kalm, zonder opnieuw uit te leggen.',
       waarom:
         'Eén uitleg is genoeg. Elke volgende opent de discussie opnieuw, en dan zit je een half ' +
         'uur later nog te praten over de vraag of het wel eerlijk is.',

@@ -11,6 +11,11 @@ import { THEMAS } from '../content/themas'
  * krijg je ze; hier vertel je hoe het ging — op het moment dat je het echt
  * gedaan hebt, of niet.
  *
+ * Afvinken en antwoorden zijn één handeling. Je tikt het rondje aan zoals bij
+ * elke lijst, en dan klappen de antwoorden open; je keuze is meteen het vinkje.
+ * Er zat een aparte "hoe ging het?"-link onder, en dat waren twee stappen voor
+ * één ding — en een vinkje dat losstond van wat er echt gebeurd was.
+ *
  * "Niet gelukt" en "was er niet" zijn volwaardige antwoorden. Een lijst waar je
  * alleen ja op kunt zeggen, leert liegen.
  */
@@ -65,44 +70,46 @@ export function ThemaMissies() {
           {lessen.map((les) => {
             const status = ritme.missies[les.id]
             const open = status === 'in_checklist'
+            const uitgeklapt = open && openId === les.id
             return (
               <div key={les.id} className="rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken">
-                <div className="flex items-start gap-3">
+                {/* Het rondje is de knop. Aantikken vraagt hoe het ging; het
+                    antwoord zet het vinkje. Een afgerond item is geen knop
+                    meer: dan valt er niets meer te kiezen. */}
+                <button
+                  type="button"
+                  disabled={!open}
+                  aria-expanded={open ? uitgeklapt : undefined}
+                  onClick={() => { hapticTap(); setOpenId(uitgeklapt ? null : les.id) }}
+                  className="flex w-full items-start gap-3 text-left"
+                >
                   <span
-                    className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border-2 ${
-                      open ? 'border-ink-faint text-transparent' : 'border-ink bg-ink text-page'
+                    className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border-2 transition ${
+                      open
+                        ? `border-ink-faint text-transparent ${uitgeklapt ? 'bg-surface-sunken' : ''}`
+                        : 'border-ink bg-ink text-page'
                     }`}
                   >
                     <Check size={14} strokeWidth={3} />
                   </span>
-                  <div className="flex-1">
-                    <p className={`text-body-lg ${open ? 'text-ink' : 'text-ink-muted line-through'}`}>
+                  <span className="flex-1">
+                    <span className={`block text-body-lg ${open ? 'text-ink' : 'text-ink-muted line-through'}`}>
                       {p(les.thuismissie.actie)}
-                    </p>
-                    {!open && (
-                      <p className="mt-1 text-caption text-ink-muted">{LABEL[status] ?? ''}</p>
-                    )}
-                  </div>
-                </div>
+                    </span>
+                    <span className="mt-1 block text-caption text-ink-muted">
+                      {open ? (uitgeklapt ? 'Hoe ging het?' : 'Tik aan om af te vinken') : (LABEL[status] ?? '')}
+                    </span>
+                  </span>
+                </button>
 
-                {open && openId !== les.id && (
-                  <button
-                    type="button"
-                    onClick={() => { hapticTap(); setOpenId(les.id) }}
-                    className="mt-3 text-body font-bold text-primary-600 underline underline-offset-2"
-                  >
-                    Hoe ging het?
-                  </button>
-                )}
-
-                {open && openId === les.id && (
+                {uitgeklapt && (
                   <div className="mt-3 flex flex-col gap-2">
                     {ANTWOORDEN.map((a) => (
                       <button
                         key={a.waarde}
                         type="button"
                         onClick={() => antwoord(les.id, a.waarde)}
-                        className="rounded-md bg-surface-sunken px-3 py-2.5 text-left text-body text-ink"
+                        className="blok-in rounded-md bg-surface-sunken px-3 py-2.5 text-left text-body text-ink"
                       >
                         {p(a.label)}
                       </button>

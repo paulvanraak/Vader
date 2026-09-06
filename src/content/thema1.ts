@@ -18,7 +18,7 @@ export const THEMA1_LESSEN: Les[] = [
       'Denk aan de laatste keer dat {naam} je uit zichzelf iets vertelde dat er voor {hem} toe ' +
       'deed. Weet je nog waar je was, en wat je aan het doen was?',
     thuismissie: {
-      actie: 'Loop deze week één keer {zijn} kamer in zonder reden.',
+      actie: 'Loop één keer {zijn} kamer in zonder reden.',
       waarom:
         'Geen vraag, geen boodschap. Alleen even zijn. Dat lijkt niks doen en is het ' +
         'tegenovergestelde: je maakt jezelf beschikbaar zonder dat er iets tegenover hoeft te staan.',
@@ -61,7 +61,7 @@ export const THEMA1_LESSEN: Les[] = [
       'Die uitweg ís waarom het gesprek kan ontstaan.',
     spiegel:
       'Waar zijn jullie samen zonder dat er iets van jullie verwacht wordt? Als je daar geen ' +
-      'antwoord op hebt, is dat het werk van deze week.',
+      'antwoord op hebt, is dat je werk.',
     thuismissie: {
       actie: 'Begin één gesprek terwijl je samen iets anders doet.',
       waarom:
@@ -85,7 +85,7 @@ export const THEMA1_LESSEN: Les[] = [
     spiegel:
       'Wat zou er moeten gebeuren voordat jij denkt: het werkt? En is dat een eerlijke maat?',
     thuismissie: {
-      actie: 'Doe deze week één ding uit de vorige drie missies nog een keer.',
+      actie: 'Doe één ding uit de vorige drie opdrachten nog een keer.',
       waarom: 'Niet iets nieuws. Hetzelfde, nog een keer, zonder resultaat te verwachten.',
     },
   },

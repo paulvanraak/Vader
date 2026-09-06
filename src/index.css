@@ -423,6 +423,45 @@ body {
   animation: fase-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* --- Hoofdstukwissel binnen een deel --------------------------------------
+   Van de les naar de oefeningen, en van de oefeningen naar de opdracht. Wat er
+   stond gaat omhoog het beeld uit, het nieuwe komt van onder het scherm in.
+   Alleen het inhoudsvlak beweegt: de balk bovenin blijft staan, anders trekt
+   het hele scherm mee en voelt het als scrollen in plaats van als een wissel.
+   Percentages en niet pixels, zodat het op elke schermhoogte van de onderrand
+   komt in plaats van van een vaste afstand. */
+
+@keyframes hoofdstuk-uit {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+}
+
+.hoofdstuk-uit {
+  animation: hoofdstuk-uit 0.34s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes hoofdstuk-in {
+  from {
+    opacity: 0;
+    transform: translateY(46%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Trager dan hij eruit gaat. Een nieuw hoofdstuk mag aankomen, niet inklappen. */
+.hoofdstuk-in {
+  animation: hoofdstuk-in 0.92s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Het lichte pijltje dat de swipe aankondigt. Ademt, dringt niet aan. */
 @keyframes pijl-adem {
   0%, 100% {
@@ -443,6 +482,8 @@ body {
   .blok-in,
   .blok-uit,
   .fase-in,
+  .hoofdstuk-in,
+  .hoofdstuk-uit,
   .pijl-adem {
     animation: none;
   }
