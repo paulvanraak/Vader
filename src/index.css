@@ -372,3 +372,57 @@ body {
     opacity: 0;
   }
 }
+
+/* --- Thema-speler: blokken schuiven van onder in, één voor één ------------ */
+
+@keyframes blok-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.blok-in {
+  animation: blok-in 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes blok-uit {
+  to {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+}
+
+.blok-uit {
+  animation: blok-uit 0.32s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+/* Het faseschild dat na het zwart bovenin komt staan. */
+@keyframes fase-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    letter-spacing: 0.24em;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    letter-spacing: 0.08em;
+  }
+}
+
+.fase-in {
+  animation: fase-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blok-in,
+  .blok-uit,
+  .fase-in {
+    animation: none;
+  }
+}

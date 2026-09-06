@@ -25,6 +25,7 @@ import { AddChild } from './screens/AddChild'
 import { ChildrenQuestion } from './screens/onboarding/ChildrenQuestion'
 import { Les } from './screens/Les'
 import { Thema1 } from './screens/Thema1'
+import { Pad } from './screens/Pad'
 import { AdminLayout } from './screens/admin/AdminLayout'
 import { AdminWorlds } from './screens/admin/AdminWorlds'
 import { AdminWorldLessons } from './screens/admin/AdminWorldLessons'
@@ -186,6 +187,7 @@ function MainApp() {
     <Routes>
       <Route path="/les/:id" element={<Les />} />
       <Route path="/thema1" element={<Thema1 />} />
+      <Route path="/pad" element={<Pad />} />
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
       <Route path="/specialisten" element={<Specialisten />} />
