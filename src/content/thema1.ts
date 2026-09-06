@@ -1,81 +1,4 @@
-/**
- * Thema 1 — Contact maken. Volledig uitgewerkt in de nieuwe opzet, als losse
- * content zodat er geen migratie voor nodig is en je het meteen kunt lopen.
- *
- * Raamwerk A, "de boog": vier lessen die op elkaar staan — herkennen, begrijpen,
- * proberen, volhouden. Fundament-thema, dus hier doet de volgorde er echt toe.
- *
- * Acht weken: vier weken nieuw, twee weken consolidatie met checkpoint, twee
- * weken stil. Zie docs/FatherFlow-content-werkboek.xlsx, tabblad Jaarritme.
- *
- * Geschreven voor een zoon in de band "vroeg" (11-13). Tokens als {naam} en
- * {hij} worden door src/lib/personalize.ts vervangen.
- */
-
-export type OefeningType =
-  | 'toen-en-nu'
-  | 'balans'
-  | 'waar-ging-het-mis'
-  | 'eerste-neiging'
-  | 'twee-wegen'
-  | 'een-woord'
-  | 'en-dan'
-  | 'volgorde'
-  | 'beste-aanpak'
-
-export interface Optie {
-  id: string
-  label: string
-  feedback: string
-  /** Alleen bij 'beste-aanpak'. Bij de andere types bestaat "goed" niet. */
-  correct?: boolean
-}
-
-export interface DialoogRegel {
-  spreker: 'vader' | 'kind'
-  tekst: string
-  /** De regel waar het kantelde, bij 'waar-ging-het-mis'. */
-  kantelt?: boolean
-  waarom?: string
-}
-
-export interface Oefening {
-  id: string
-  type: OefeningType
-  /** Valt er iets goed of fout te doen? Bij de helft bewust niet. */
-  scoorbaar: boolean
-  lesId: string
-  situatie: string
-  vraag: string
-  opties?: Optie[]
-  dialoog?: DialoogRegel[]
-  /** Bij 'volgorde': de juiste volgorde. Wordt geschud voor vertoning. */
-  stappen?: { tekst: string; waarom: string }[]
-  /** Bij 'twee-wegen': waar de keuze werkelijk van afhangt. */
-  afhangt?: string
-  /** Bij 'toen-en-nu': dezelfde opties worden twee keer beantwoord — eerst over
-   *  je eigen vader, dan over jezelf. De twee komen naast elkaar te staan. */
-  toen?: { vraag: string; nuVraag: string; zelfde: string; anders: string }
-  /** Bij 'balans': een schuif tussen twee polen. Geen goed antwoord, wel een
-   *  positie, en die verschuift over de weken. */
-  balans?: {
-    links: string
-    rechts: string
-    zones: { tot: number; kop: string; tekst: string }[]
-  }
-}
-
-export interface Les {
-  id: string
-  nr: number
-  fase: 'Herkennen' | 'Begrijpen' | 'Proberen' | 'Volhouden'
-  titel: string
-  haakje: string
-  inzicht: string
-  spiegel: string
-  thuismissie: { actie: string; waarom: string }
-}
-
+import type { Les, Oefening, Thema } from './types'
 
 export const THEMA1_LESSEN: Les[] = [
   {
@@ -639,25 +562,11 @@ export const THEMA1_OEFENINGEN: Oefening[] = [
   },
 ]
 
-export const THEMA1 = {
-  id: 'thema-1',
+export const THEMA1: Thema = {
+  id: 'contact',
+  nr: 1,
   titel: 'Contact maken',
   ondertitel: 'Bereikbaar blijven als {hij} zich terugtrekt',
-  raamwerk: 'A — De boog',
-  intro: {
-    kop: 'Contact maken',
-    tekst:
-      'Vier delen die op elkaar staan: zien wat er gebeurd is, begrijpen waarom, iets anders ' +
-      'proberen, en volhouden als er niet meteen iets terugkomt.\n\n' +
-      'Elke dag opent één nieuw deel. Oefenen kan zo vaak je wil — er zijn er zestien en je ' +
-      'krijgt er steeds drie, in een andere mix.',
-    belofte:
-      'Aan het eind weet je niet hoe je {naam} aan het praten krijgt. Dat kan niemand. Je weet ' +
-      'wél wat je zelf doet waardoor {hij} stopt.',
-  },
-  checkpoint: {
-    kop: 'Contact maken — afgerond',
-    tekst: 'Vier delen, zestien oefeningen. Hieronder wat je koos, niet wat je goed had.',
-    vragen: ['t1-o1', 't1-o6', 't1-o7', 't1-o10', 't1-o14'],
-  },
-} as const
+  lessen: THEMA1_LESSEN,
+  oefeningen: THEMA1_OEFENINGEN,
+}

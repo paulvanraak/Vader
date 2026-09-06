@@ -1,10 +1,15 @@
-import { useAppState } from '../state/AppStateContext'
+import { useOptionalAppState } from '../state/AppStateContext'
 import { childLabel } from '../lib/child'
 
 export function ChildSwitcher() {
-  const { children, activeChildId, setActiveChildId } = useAppState()
+  // Optioneel: zonder provider is er geen kind om tussen te wisselen, en dan
+  // hoort de schakelaar er simpelweg niet te staan in plaats van te crashen.
+  const app = useOptionalAppState()
+  const children = app?.children ?? []
+  const activeChildId = app?.activeChildId ?? null
+  const setActiveChildId = app?.setActiveChildId
 
-  if (children.length <= 1) return null
+  if (children.length <= 1 || !setActiveChildId) return null
 
   return (
     <div className="flex gap-2 overflow-x-auto px-5 pb-1 pt-4">

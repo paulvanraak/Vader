@@ -4,8 +4,8 @@ import { ArrowLeft, Check } from 'lucide-react'
 import { useOptionalAppState } from '../state/AppStateContext'
 import { personalizeText } from '../lib/personalize'
 import { hapticTap } from '../lib/haptics'
-import { laadRitme, openLessen } from '../lib/ritme'
-import { THEMA1_LESSEN } from '../content/thema1'
+import { laadRitme, bewaarRitme, kiesThema, openLessen, themaAf } from '../lib/ritme'
+import { THEMAS } from '../content/themas'
 
 /**
  * Het pad tussen thema's door.
@@ -15,21 +15,27 @@ import { THEMA1_LESSEN } from '../content/thema1'
  * dwang: de app zegt wat ze zou doen en waarom, jij beslist.
  */
 
-interface Thema {
+interface Kaart {
   id: string
   nr: number
   titel: string
   onder: string
-  route: string | null
+  /** Gebouwd of niet. Een thema uit src/content is gebouwd, de rest nog niet. */
+  gebouwd: boolean
 }
 
-const THEMAS: Thema[] = [
-  { id: 'contact', nr: 1, titel: 'Contact maken', onder: 'Bereikbaar blijven als {hij} zich terugtrekt', route: '/thema1' },
-  { id: 'escaleert', nr: 2, titel: 'Als het escaleert', onder: 'Buien, stiltes en wat erachter zit', route: null },
-  { id: 'regels', nr: 3, titel: 'Regels en ruimte', onder: 'Grenzen zonder machtsstrijd', route: null },
-  { id: 'zelfbeeld', nr: 4, titel: 'Hoe {hij} naar zichzelf kijkt', onder: 'Falen, opscheppen en vergelijken', route: null },
-  { id: 'vrienden', nr: 5, titel: 'Vrienden en de groep', onder: 'Meedoen, buitensluiten en meningen', route: null },
-  { id: 'schermen', nr: 6, titel: 'Schermen en online', onder: 'Scrollen, influencers en schermtijd', route: null },
+/** De thema's die nog geen inhoud hebben, zodat je wel ziet wat er aankomt. */
+const AANGEKONDIGD: Kaart[] = [
+  { id: 'zelfbeeld', nr: 4, titel: 'Hoe {hij} naar zichzelf kijkt', onder: 'Falen, opscheppen en vergelijken', gebouwd: false },
+  { id: 'vrienden', nr: 5, titel: 'Vrienden en de groep', onder: 'Meedoen, buitensluiten en meningen', gebouwd: false },
+  { id: 'schermen', nr: 6, titel: 'Schermen en online', onder: 'Scrollen, influencers en schermtijd', gebouwd: false },
+]
+
+const KAARTEN: Kaart[] = [
+  ...THEMAS.map((t) => ({
+    id: t.id, nr: t.nr, titel: t.titel, onder: t.ondertitel, gebouwd: true,
+  })),
+  ...AANGEKONDIGD,
 ]
 
 const ZORGEN: { label: string; thema: string; reden: string }[] = [
@@ -48,15 +54,20 @@ export function Pad() {
   const [zorg, setZorg] = useState<string | null>(null)
 
   const ritme = laadRitme()
-  const gedaan = openLessen(ritme, THEMA1_LESSEN.map((l) => l.id))
-  const contactAf = Object.keys(ritme.missies).length >= THEMA1_LESSEN.length
 
   const gekozen = ZORGEN.find((z) => z.label === zorg)
-  const aanbevolen = gekozen ? THEMAS.find((t) => t.id === gekozen.thema) : null
+  const aanbevolen = gekozen ? KAARTEN.find((t) => t.id === gekozen.thema) : null
 
-  function open(t: Thema) {
+  /**
+   * Een thema openen is hier ook het thema kiezen: je komt op home terug en
+   * daar staat vanaf nu dít themapad. Wisselen mag altijd, en wat je in een
+   * ander thema al af had blijft gewoon staan.
+   */
+  function open(t: Kaart) {
     hapticTap()
-    if (t.route) navigate(t.route)
+    if (!t.gebouwd) return
+    bewaarRitme(kiesThema(ritme, t.id))
+    navigate('/')
   }
 
   return (
@@ -98,10 +109,10 @@ export function Pad() {
             <p className="mt-2 text-body text-ink-muted">{p(gekozen.reden)}</p>
             <button
               type="button" onClick={() => open(aanbevolen)}
-              disabled={!aanbevolen.route}
+              disabled={!aanbevolen.gebouwd}
               className="mt-3 rounded-full bg-ink px-5 py-2.5 text-label text-page disabled:opacity-40"
             >
-              {aanbevolen.route ? 'Openen' : 'Nog niet gebouwd'}
+              {aanbevolen.gebouwd ? 'Openen' : 'Nog niet gebouwd'}
             </button>
           </div>
         )}
@@ -109,16 +120,19 @@ export function Pad() {
 
       <div className="flex flex-col gap-3 px-5 pb-10">
         <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">Alle thema's</p>
-        {THEMAS.map((t) => {
-          const isContact = t.id === 'contact'
-          const af = isContact && contactAf
-          const bezig = isContact && !af && gedaan > 1
+        {KAARTEN.map((t) => {
+          const thema = THEMAS.find((x) => x.id === t.id)
+          const ids = thema?.lessen.map((l) => l.id) ?? []
+          const af = thema ? themaAf(ritme, ids) : false
+          const open_ = thema ? openLessen(ritme, ids) : 1
+          const bezig = thema != null && !af && ids.some((id) => ritme.voltooid.includes(id))
+          const nu = ritme.actiefThema === t.id
           return (
             <button
-              key={t.id} type="button" onClick={() => open(t)} disabled={!t.route}
+              key={t.id} type="button" onClick={() => open(t)} disabled={!t.gebouwd}
               className={`flex items-start gap-3 rounded-md p-4 text-left transition ${
-                t.route ? 'bg-surface shadow-sm ring-1 ring-surface-sunken' : 'bg-surface/50 opacity-60'
-              } ${aanbevolen?.id === t.id ? 'ring-2 ring-ink' : ''}`}
+                t.gebouwd ? 'bg-surface shadow-sm ring-1 ring-surface-sunken' : 'bg-surface/50 opacity-60'
+              } ${aanbevolen?.id === t.id || nu ? 'ring-2 ring-ink' : ''}`}
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-ink text-body font-bold text-ink">
                 {af ? <Check size={16} strokeWidth={3} /> : t.nr}
@@ -126,12 +140,13 @@ export function Pad() {
               <span className="flex-1">
                 <span className="block text-body-lg font-bold text-ink">{p(t.titel)}</span>
                 <span className="block text-body text-ink-muted">{p(t.onder)}</span>
+                {af && <span className="mt-1 block text-caption text-ink-muted">Afgerond</span>}
                 {bezig && (
                   <span className="mt-1 block text-caption text-ink-muted">
-                    {gedaan} van {THEMA1_LESSEN.length} delen open
+                    Deel {open_} van {ids.length} staat open
                   </span>
                 )}
-                {!t.route && <span className="mt-1 block text-caption text-ink-muted">Nog niet gebouwd</span>}
+                {!t.gebouwd && <span className="mt-1 block text-caption text-ink-muted">Nog niet gebouwd</span>}
               </span>
             </button>
           )

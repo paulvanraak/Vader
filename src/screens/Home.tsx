@@ -8,7 +8,7 @@ import { useOptionalAppState } from '../state/AppStateContext'
 import { personalizeText } from '../lib/personalize'
 import { hapticTap, hapticSuccess } from '../lib/haptics'
 import { laadRitme, bewaarRitme, kiesThema, type RitmeState } from '../lib/ritme'
-import { THEMA1, THEMA1_LESSEN } from '../content/thema1'
+import { THEMAS, vindThema } from '../content/themas'
 
 /**
  * Home is het pad. Drie standen:
@@ -38,8 +38,12 @@ export function Home() {
     }
   }, [gevierd])
 
-  if (!ritme.actiefThema) {
-    return <RitmeUitleg p={p} onKies={() => bewaar(kiesThema(ritme, 'thema-1'))} />
+  // Onbekend thema-id telt als "nog niets gekozen". Dat vangt oude opgeslagen
+  // voortgang op zonder dat iemand vastloopt op een scherm dat niet bestaat.
+  const thema = vindThema(ritme.actiefThema)
+
+  if (!thema) {
+    return <RitmeUitleg p={p} onKies={(id) => bewaar(kiesThema(ritme, id))} />
   }
 
   return (
@@ -54,8 +58,9 @@ export function Home() {
         />
       )}
       <ThemaPad
+        thema={thema}
         ritme={ritme}
-        onOpen={(i) => navigate(`/thema1/${i}`)}
+        onOpen={(i) => navigate(`/thema/${thema.id}/${i}`)}
         onKlaar={() => navigate('/pad')}
       />
       <FeatureExplainer id="pad" />
@@ -66,9 +71,10 @@ export function Home() {
 function Viering({ lesId, p, streak, onSluit }: {
   lesId: string; p: (t: string) => string; streak: number; onSluit: () => void
 }) {
-  const les = THEMA1_LESSEN.find((l) => l.id === lesId)
-  const nr = THEMA1_LESSEN.findIndex((l) => l.id === lesId) + 1
-  if (!les) return null
+  const thema = THEMAS.find((t) => t.lessen.some((l) => l.id === lesId))
+  const les = thema?.lessen.find((l) => l.id === lesId)
+  if (!thema || !les) return null
+  const nr = thema.lessen.findIndex((l) => l.id === lesId) + 1
   return (
     <div className="blok-in mx-5 mt-4 rounded-md border-2 border-ink bg-surface p-5">
       <div className="flex items-center gap-2">
@@ -81,7 +87,7 @@ function Viering({ lesId, p, streak, onSluit }: {
       </div>
       <p className="mt-3 font-serif text-h3 font-semibold leading-snug text-ink">{p(les.titel)}</p>
       <p className="mt-2 text-body text-ink-muted">
-        Deel {nr} van {THEMA1_LESSEN.length}. Je opdracht staat in je checklist.
+        Deel {nr} van {thema.lessen.length}. Je opdracht staat in je checklist.
       </p>
       <div className="mt-3 flex items-center gap-2">
         <Flame size={16} className="text-accent-orange" />
@@ -98,7 +104,7 @@ function Viering({ lesId, p, streak, onSluit }: {
   )
 }
 
-function RitmeUitleg({ p, onKies }: { p: (t: string) => string; onKies: () => void }) {
+function RitmeUitleg({ p, onKies }: { p: (t: string) => string; onKies: (id: string) => void }) {
   const [stap, setStap] = useState(0)
   const blokken = [
     <div key="k">
@@ -107,21 +113,13 @@ function RitmeUitleg({ p, onKies }: { p: (t: string) => string; onKies: () => vo
         Geen cursus die je uitzit. Een ritme dat meeloopt met {p('{naam}')}.
       </p>
     </div>,
-    <Uitleg key="1" kop="Eén thema tegelijk" tekst={
-      'Je kiest zelf waar je mee begint. Een thema heeft vier delen; elk deel is een korte les, ' +
-      'drie oefeningen en één ding om thuis te doen.'
+    <Uitleg key="1" kop="Eén thema tegelijk, zo lang als jij wil" tekst={
+      'Je kiest zelf waar je begint. Een thema heeft vier delen: een korte les, drie oefeningen ' +
+      'en één ding om thuis te doen. Er staat nergens hoeveel weken je erover moet doen.'
     } />,
-    <Uitleg key="2" kop="Zo lang als jij wil" tekst={
-      'Er staat nergens hoeveel weken je erover moet doen. Doe je het in één avond, prima. ' +
-      'Spreid je het over een maand, ook prima.'
-    } />,
-    <Uitleg key="3" kop="Eén keer per dag is genoeg" tekst={
-      'Dat houdt je reeks heel. Vaker mag, maar het telt niet extra — verdeeld over meer dagen ' +
-      'werkt gewoon beter.'
-    } />,
-    <Uitleg key="4" kop="De oefeningen kennen geen goed antwoord" tekst={
-      'Bij de meeste in elk geval niet. Opvoeden werkt niet zo. Je oefent afwegen, niet het ' +
-      'juiste vakje aankruisen.'
+    <Uitleg key="2" kop="Eén keer per dag is genoeg" tekst={
+      'Dat houdt je reeks heel; vaker mag, maar telt niet extra. En de meeste oefeningen kennen ' +
+      'geen goed antwoord — je oefent afwegen, niet het juiste vakje aankruisen.'
     } />,
   ]
   const alles = stap >= blokken.length - 1
@@ -136,23 +134,26 @@ function RitmeUitleg({ p, onKies }: { p: (t: string) => string; onKies: () => vo
         </div>
 
         {alles && (
-          <div className="blok-in mt-8">
+          <div className="blok-in mt-8 flex flex-col gap-3">
             <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">
               Waar wil je beginnen?
             </p>
-            <button
-              type="button"
-              onClick={() => { hapticTap(); onKies() }}
-              className="mt-3 w-full rounded-md border-2 border-ink bg-surface p-4 text-left"
-            >
-              <span className="block text-body-lg font-bold text-ink">{p(THEMA1.titel)}</span>
-              <span className="mt-1 block text-body text-ink-muted">{p(THEMA1.ondertitel)}</span>
-              <span className="mt-2 block text-caption text-ink-muted">
-                Aanbevolen om mee te starten · 4 delen
-              </span>
-            </button>
-            <p className="mt-3 text-caption text-ink-muted">
-              De andere vijf thema's zijn nog niet gebouwd. Straks kies je hier zelf.
+            {THEMAS.map((t, i) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => { hapticTap(); onKies(t.id) }}
+                className="w-full rounded-md border-2 border-ink bg-surface p-4 text-left"
+              >
+                <span className="block text-body-lg font-bold text-ink">{p(t.titel)}</span>
+                <span className="mt-1 block text-body text-ink-muted">{p(t.ondertitel)}</span>
+                <span className="mt-2 block text-caption text-ink-muted">
+                  {i === 0 ? 'Aanbevolen om mee te starten · ' : ''}{t.lessen.length} delen
+                </span>
+              </button>
+            ))}
+            <p className="text-caption text-ink-muted">
+              Je kunt later altijd wisselen. Je voortgang blijft staan.
             </p>
           </div>
         )}

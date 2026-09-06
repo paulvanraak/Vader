@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Home, Award, ListChecks, MessageCircle, Menu as MenuIcon } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { getWorldStyle } from '../lib/worldStyles'
-import { useAppState } from '../state/AppStateContext'
 import { hapticTap } from '../lib/haptics'
 import { AppMenu } from './AppMenu'
 
@@ -37,10 +35,7 @@ function SideTab({ to, label, icon: Icon }: Tab) {
 }
 
 export function BottomNav() {
-  const { path, todayLessonId } = useAppState()
   const [menuOpen, setMenuOpen] = useState(false)
-  const todayLesson = path.find((l) => l.id === todayLessonId) ?? null
-  const style = getWorldStyle(todayLesson?.world ?? 4)
 
   return (
     <>
@@ -60,7 +55,7 @@ export function BottomNav() {
         >
           {({ isActive }) => (
             <span
-              className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition ${style.solidBg} ${
+              className={`-mt-7 flex size-16 items-center justify-center rounded-full text-neutral-white transition bg-ink ${
                 isActive ? 'ring-2 ring-surface' : ''
               }`}
             >

@@ -16,7 +16,7 @@
  * Voorlopig in localStorage. Zodra de migratie er is verhuist dit naar de
  * database; de vorm van RitmeState is daar met opzet al op voorbereid.
  */
-import type { Oefening } from '../content/thema1'
+import type { Oefening } from '../content/types'
 
 /**
  * 'in_checklist' is de open stand: de opdracht is uitgedeeld maar nog niet
