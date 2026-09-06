@@ -186,7 +186,7 @@ function MainApp() {
   return (
     <Routes>
       <Route path="/les/:id" element={<Les />} />
-      <Route path="/thema1" element={<Thema1 />} />
+      <Route path="/thema1/:deel" element={<Thema1 />} />
       <Route path="/pad" element={<Pad />} />
       <Route path="/instellingen" element={<Instellingen />} />
       <Route path="/over" element={<OverFatherFlow />} />
