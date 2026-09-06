@@ -57,9 +57,15 @@ export function IntroCarousel({ onDone }: { onDone: () => void }) {
       </p>
       <h1 className="font-serif text-h1 font-semibold leading-tight text-ink">{hoofdstuk.titel}</h1>
     </div>,
-    ...hoofdstuk.regels.map((regel, n) => (
-      <p key={n} className="text-body-lg leading-relaxed text-ink-muted">{regel}</p>
-    )),
+    // De twee regels komen samen op, niet één voor één. Ze horen bij elkaar:
+    // de tweede maakt de eerste pas af, en los na elkaar leest het als twee
+    // losse mededelingen. In een thema is elk blok een eigen gedachte en klopt
+    // die opbouw wel; hier niet.
+    <div key="r" className="flex flex-col gap-4">
+      {hoofdstuk.regels.map((regel, n) => (
+        <p key={n} className="text-body-lg leading-relaxed text-ink-muted">{regel}</p>
+      ))}
+    </div>,
   ]
 
   return (
