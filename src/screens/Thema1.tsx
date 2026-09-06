@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ChevronUp, Flame } from 'lucide-react'
 import { Button } from '../components/Button'
 import { useOptionalAppState } from '../state/AppStateContext'
@@ -7,9 +7,9 @@ import { personalizeText } from '../lib/personalize'
 import { hapticTap, hapticSuccess } from '../lib/haptics'
 import {
   laadRitme, bewaarRitme, registreerSessie, noteerOefening, noteerMissie,
-  openLessen, trekOefeningen, teVeelOpEenDag, type RitmeState,
+  trekOefeningen, teVeelOpEenDag, voltooiDeel, type RitmeState,
 } from '../lib/ritme'
-import { THEMA1, THEMA1_LESSEN, THEMA1_OEFENINGEN, type Oefening, type Les } from '../content/thema1'
+import { THEMA1_LESSEN, THEMA1_OEFENINGEN, type Oefening, type Les } from '../content/thema1'
 
 /**
  * De speler van thema 1.
@@ -26,11 +26,9 @@ import { THEMA1, THEMA1_LESSEN, THEMA1_OEFENINGEN, type Oefening, type Les } fro
  */
 
 type Fase =
-  | { soort: 'intro' }
-  | { soort: 'les'; les: Les }
-  | { soort: 'sessie'; les: Les }
-  | { soort: 'missie'; les: Les }
-  | { soort: 'klaar' }
+  | { soort: 'les' }
+  | { soort: 'sessie' }
+  | { soort: 'missie' }
 
 /** Swipe omhoog of een tik: allebei betekenen "volgende". */
 function useSwipeOmhoog(onVolgende: () => void) {
@@ -46,30 +44,31 @@ function useSwipeOmhoog(onVolgende: () => void) {
   }
 }
 
+/**
+ * Speelt één deel van een thema: de les, drie oefeningen, en de opdracht.
+ * Daarna terug naar het themapad met een viering. Zo blijf je heen en weer
+ * gaan tussen werk en overzicht, en kun je tussendoor bij je checklist,
+ * je badges en de chat.
+ */
 export function Thema1() {
   const navigate = useNavigate()
+  const { deel } = useParams()
+  const index = Math.max(0, Math.min(Number(deel ?? 0), THEMA1_LESSEN.length - 1))
+  const les = THEMA1_LESSEN[index]
+
   const activeChild = useOptionalAppState()?.activeChild ?? null
   const p = (t: string) => personalizeText(t, activeChild)
 
   const [ritme, setRitme] = useState<RitmeState>(laadRitme)
   const bewaar = (s: RitmeState) => { setRitme(s); bewaarRitme(s) }
 
-  const [lesIndex, setLesIndex] = useState(0)
-  const [fase, setFase] = useState<Fase>({ soort: 'intro' })
-  const [overgang, setOvergang] = useState<string | null>(null)
+  const [fase, setFase] = useState<Fase>({ soort: 'les' })
+  const [overgang, setOvergang] = useState<string | null>(les.fase)
 
-  const open = openLessen(ritme, THEMA1_LESSEN.map((l) => l.id))
-
-  /** De ceremonie tussen twee delen: zwart, dan de fasenaam, dan verder. */
-  function metOvergang(label: string, daarna: () => void) {
-    setOvergang(label)
-    window.setTimeout(() => { daarna(); setOvergang(null) }, 1150)
-  }
-
-  function naarLes(index: number) {
-    const les = THEMA1_LESSEN[index]
-    metOvergang(les.fase, () => { setLesIndex(index); setFase({ soort: 'les', les }) })
-  }
+  useEffect(() => {
+    const t = window.setTimeout(() => setOvergang(null), 1400)
+    return () => window.clearTimeout(t)
+  }, [])
 
   if (overgang !== null) return <Overgang label={overgang} />
 
@@ -77,55 +76,39 @@ export function Thema1() {
     <div className="flex h-full flex-col bg-page">
       <Kop
         streak={ritme.streak}
-        fase={fase.soort === 'les' || fase.soort === 'sessie' || fase.soort === 'missie' ? fase.les.fase : null}
-        deel={fase.soort === 'intro' ? 0 : lesIndex + 1}
+        fase={les.fase}
+        deel={index + 1}
         totaal={THEMA1_LESSEN.length}
         onTerug={() => navigate('/')}
       />
 
-      {fase.soort === 'intro' && (
-        <Intro p={p} open={open} onStart={() => naarLes(0)} />
-      )}
-
       {fase.soort === 'les' && (
-        <LesBlokken
-          key={fase.les.id}
-          les={fase.les}
-          p={p}
-          onKlaar={() => setFase({ soort: 'sessie', les: fase.les })}
-        />
+        <LesBlokken les={les} p={p} onKlaar={() => setFase({ soort: 'sessie' })} />
       )}
 
       {fase.soort === 'sessie' && (
         <Sessie
-          key={`s-${fase.les.id}`}
-          les={fase.les}
+          les={les}
           p={p}
           ritme={ritme}
           onOefening={(id, fout) => bewaar(noteerOefening(ritme, id, fout))}
-          onKlaar={() => {
-            bewaar(registreerSessie(ritme))
-            setFase({ soort: 'missie', les: fase.les })
-          }}
+          onKlaar={() => { bewaar(registreerSessie(ritme)); setFase({ soort: 'missie' }) }}
         />
       )}
 
       {fase.soort === 'missie' && (
         <Missie
-          key={`m-${fase.les.id}`}
-          les={fase.les}
+          les={les}
           p={p}
           teVeel={teVeelOpEenDag(ritme)}
           onVerder={() => {
-            bewaar(noteerMissie(ritme, fase.les.id, 'in_checklist'))
-            const next = lesIndex + 1
-            if (next < THEMA1_LESSEN.length) naarLes(next)
-            else metOvergang('Afgerond', () => setFase({ soort: 'klaar' }))
+            let volgende = noteerMissie(ritme, les.id, 'in_checklist')
+            volgende = voltooiDeel(volgende, les.id)
+            bewaar(volgende)
+            navigate('/', { state: { gevierd: les.id } })
           }}
         />
       )}
-
-      {fase.soort === 'klaar' && <Klaar p={p} ritme={ritme} onPad={() => navigate('/pad')} />}
     </div>
   )
 }
@@ -190,26 +173,6 @@ function SwipeHint({ onClick }: { onClick: () => void }) {
 
 function Midden({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 pb-8">{children}</div>
-}
-
-function Intro({ p, open, onStart }: { p: (t: string) => string; open: number; onStart: () => void }) {
-  return (
-    <>
-      <Midden>
-        <div className="blok-in flex flex-col gap-4">
-          <h1 className="font-serif text-h1 font-semibold text-ink">{THEMA1.intro.kop}</h1>
-          <p className="text-body-lg text-ink">{p(THEMA1.ondertitel)}</p>
-          {THEMA1.intro.tekst.split('\n\n').map((r, n) => (
-            <p key={n} className="text-body text-ink-muted">{p(r)}</p>
-          ))}
-          <p className="text-caption text-ink-muted">
-            {open} van {THEMA1_LESSEN.length} delen open · 16 oefeningen
-          </p>
-        </div>
-      </Midden>
-      <div className="pb-6"><Button onClick={onStart}>Beginnen</Button></div>
-    </>
-  )
 }
 
 function LesBlokken({ les, p, onKlaar }: { les: Les; p: (t: string) => string; onKlaar: () => void }) {
@@ -550,28 +513,3 @@ function Missie({ les, p, teVeel, onVerder }: {
     </>
   )
 }
-
-function Klaar({ p, ritme, onPad }: { p: (t: string) => string; ritme: RitmeState; onPad: () => void }) {
-  const gelukt = Object.values(ritme.missies).filter((m) => m === 'ging_goed').length
-  return (
-    <>
-      <Midden>
-        <div className="blok-in flex flex-col gap-4">
-          <h1 className="font-serif text-h1 font-semibold text-ink">{THEMA1.checkpoint.kop}</h1>
-          <p className="text-body text-ink-muted">{p(THEMA1.checkpoint.tekst)}</p>
-          <div className="rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken">
-            <p className="text-body text-ink">
-              Je rondde {Object.keys(ritme.missies).length} van de {THEMA1_LESSEN.length} delen af.
-              Daarvan gingen er {gelukt} goed.
-            </p>
-            <p className="mt-2 text-body text-ink-muted">
-              Wat je meeneemt: je merkt eerder wanneer je een antwoord afkeurt in plaats van aanneemt.
-            </p>
-          </div>
-        </div>
-      </Midden>
-      <div className="pb-6"><Button onClick={onPad}>Kies je volgende thema</Button></div>
-    </>
-  )
-}
-

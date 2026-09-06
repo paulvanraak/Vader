@@ -1,306 +1,186 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Check, Lock, Play, MessageCircle, HelpCircle, X } from 'lucide-react'
-import { isLessonUnlocked } from '../lib/worldProgress'
-import { getWorldStyle } from '../lib/worldStyles'
-import { useAppState } from '../state/AppStateContext'
-import { useContent } from '../state/ContentContext'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Check, Flame } from 'lucide-react'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 import { FeatureExplainer } from '../components/FeatureExplainer'
-import type { PathItem, ReflectieResponse } from '../lib/pathItems'
+import { ThemaPad } from './ThemaPad'
+import { useOptionalAppState } from '../state/AppStateContext'
+import { personalizeText } from '../lib/personalize'
+import { hapticTap, hapticSuccess } from '../lib/haptics'
+import { laadRitme, bewaarRitme, kiesThema, type RitmeState } from '../lib/ritme'
+import { THEMA1, THEMA1_LESSEN } from '../content/thema1'
 
-const REFLECTIE_OPTIES: { value: ReflectieResponse; label: string }[] = [
-  { value: 'ging_goed', label: 'Ging goed' },
-  { value: 'lastig', label: 'Lastig' },
-  { value: 'nog_niet', label: 'Nog niet gedaan' },
-]
-
-function ReflectieRow({ item, onOpen }: { item: PathItem; onOpen: () => void }) {
-  const isDone = item.status === 'done'
-  return (
-    <div className="flex w-full items-center gap-1.5">
-      <div className="flex w-14 shrink-0 flex-col items-center">
-        <div className="h-6 border-l-2 border-dashed border-ink-faint" />
-        <button
-          type="button"
-          onClick={onOpen}
-          aria-label={item.title}
-          className={`flex size-10 rotate-45 items-center justify-center rounded-md border-2 transition ${
-            isDone
-              ? 'border-transparent bg-success-500/20 text-success-600'
-              : 'border-dashed border-ink-faint bg-surface text-ink-muted hover:border-primary-500'
-          }`}
-        >
-          <span className="-rotate-45">
-            {isDone ? <Check size={14} strokeWidth={3} /> : <HelpCircle size={14} strokeWidth={2} />}
-          </span>
-        </button>
-      </div>
-      <p className="flex-1 truncate text-left text-[13px] italic text-ink-muted">{item.body}</p>
-    </div>
-  )
-}
-
-function VoorJouRow({ item, onOpen }: { item: PathItem; onOpen: () => void }) {
-  const isDone = item.status === 'done'
-  return (
-    <div className="flex w-full items-center gap-1.5">
-      <div className="flex w-14 shrink-0 flex-col items-center">
-        <div className="h-6 border-l-2 border-dashed border-primary-500/50" />
-        <button
-          type="button"
-          onClick={onOpen}
-          aria-label={item.title}
-          className={`flex size-14 items-center justify-center rounded-full border-4 border-transparent transition ${
-            isDone
-              ? 'bg-success-500 text-neutral-white'
-              : 'bg-primary-500/10 text-primary-600 ring-1 ring-primary-500/40 hover:ring-2'
-          }`}
-        >
-          {isDone ? <Check size={20} strokeWidth={3} /> : <MessageCircle size={18} strokeWidth={2} />}
-        </button>
-      </div>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-primary-600">Voor jou</p>
-        <p className="truncate text-[13px] text-ink-muted">{item.title}</p>
-      </div>
-    </div>
-  )
-}
-
-function ReflectieSheet({ item, onClose }: { item: PathItem; onClose: () => void }) {
-  const { resolveReflectie } = useAppState()
-  const [isSaving, setIsSaving] = useState(false)
-
-  async function choose(response: ReflectieResponse) {
-    setIsSaving(true)
-    try {
-      await resolveReflectie(item.id, response)
-      onClose()
-    } catch (err) {
-      console.error('Reflectie opslaan mislukt:', err)
-      setIsSaving(false)
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center" onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={item.title}
-        onClick={(e) => e.stopPropagation()}
-        className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 shadow-lg"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-            <HelpCircle size={22} strokeWidth={2} />
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Sluiten"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-          >
-            <X size={18} strokeWidth={2} />
-          </button>
-        </div>
-        <p className="mt-4 text-caption uppercase tracking-wide text-ink-muted">Even terugblikken</p>
-        <p className="mt-1 font-serif text-h4 font-semibold text-ink">{item.body}</p>
-        <div className="mt-5 flex flex-col gap-2">
-          {REFLECTIE_OPTIES.map((optie) => (
-            <button
-              key={optie.value}
-              type="button"
-              disabled={isSaving}
-              onClick={() => void choose(optie.value)}
-              className="rounded-md bg-surface-sunken px-4 py-3 text-body-lg font-semibold text-ink transition hover:bg-primary-500/10 disabled:opacity-50"
-            >
-              {optie.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function VoorJouSheet({ item, onClose }: { item: PathItem; onClose: () => void }) {
-  const { resolveVoorJou } = useAppState()
-  const [isSaving, setIsSaving] = useState(false)
-  const isDone = item.status === 'done'
-
-  async function markDone() {
-    setIsSaving(true)
-    try {
-      await resolveVoorJou(item.id)
-      onClose()
-    } catch (err) {
-      console.error('Voor-jou-oefening afronden mislukt:', err)
-      setIsSaving(false)
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center" onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={item.title}
-        onClick={(e) => e.stopPropagation()}
-        className="animate-dissolve w-full max-w-[420px] rounded-lg border border-surface-sunken bg-surface p-6 shadow-lg"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
-            <MessageCircle size={20} strokeWidth={2} />
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Sluiten"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-surface-sunken"
-          >
-            <X size={18} strokeWidth={2} />
-          </button>
-        </div>
-        <p className="mt-4 text-caption uppercase tracking-wide text-primary-600">Voor jou, uit je gesprek</p>
-        <p className="mt-1 font-serif text-h4 font-semibold text-ink">{item.title}</p>
-        <p className="mt-3 text-body-lg leading-relaxed text-ink-muted">{item.body}</p>
-        {!isDone && (
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={() => void markDone()}
-            className="mt-5 w-full rounded-md bg-primary-500 px-4 py-3 text-label font-bold text-neutral-white transition hover:bg-primary-600 disabled:opacity-50"
-          >
-            {isSaving ? 'Bezig...' : 'Dit hebben we geprobeerd'}
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
+/**
+ * Home is het pad. Drie standen:
+ *
+ * 1. Nog geen thema gekozen — uitleg van het ritme, en je kiest je eerste thema.
+ * 2. Een thema loopt — het themapad met de delen erin. Hier kom je na elk deel
+ *    op terug, met een viering, en van hieruit ga je ook naar je checklist,
+ *    je badges of de chat.
+ * 3. Thema af — je kiest je volgende.
+ */
 export function Home() {
   const navigate = useNavigate()
-  const { path, todayLessonId, completedLessonIds, pathItems } = useAppState()
-  const { worlds } = useContent()
-  const [activeReflectie, setActiveReflectie] = useState<PathItem | null>(null)
-  const [activeVoorJou, setActiveVoorJou] = useState<PathItem | null>(null)
+  const locatie = useLocation()
+  const activeChild = useOptionalAppState()?.activeChild ?? null
+  const p = (t: string) => personalizeText(t, activeChild)
 
-  let lastWorldId: number | null = null
-  const lastLessonId = path.length > 0 ? path[path.length - 1].id : null
-  const trailingItems = pathItems.filter(
-    (item) => !item.insertAfterLessonId || !path.some((l) => l.id === item.insertAfterLessonId),
-  )
+  const [ritme, setRitme] = useState<RitmeState>(laadRitme)
+  const bewaar = (s: RitmeState) => { setRitme(s); bewaarRitme(s) }
+
+  const gevierd = (locatie.state as { gevierd?: string } | null)?.gevierd ?? null
+  const [viering, setViering] = useState<string | null>(gevierd)
+
+  useEffect(() => {
+    if (gevierd) {
+      hapticSuccess()
+      window.history.replaceState({}, '')
+    }
+  }, [gevierd])
+
+  if (!ritme.actiefThema) {
+    return <RitmeUitleg p={p} onKies={() => bewaar(kiesThema(ritme, 'thema-1'))} />
+  }
 
   return (
     <div className="flex flex-col">
       <ChildSwitcher />
+      {viering && (
+        <Viering
+          lesId={viering}
+          p={p}
+          streak={ritme.streak}
+          onSluit={() => setViering(null)}
+        />
+      )}
+      <ThemaPad
+        ritme={ritme}
+        onOpen={(i) => navigate(`/thema1/${i}`)}
+        onKlaar={() => navigate('/pad')}
+      />
+      <FeatureExplainer id="pad" />
+    </div>
+  )
+}
 
-      {/*
-        Ingang naar thema 1 in de nieuwe opzet. Staat bovenaan zodat het te
-        vinden is zonder de URL te kennen. Het oude pad blijft eronder staan,
-        zodat je beide naast elkaar kunt bekijken.
-      */}
+function Viering({ lesId, p, streak, onSluit }: {
+  lesId: string; p: (t: string) => string; streak: number; onSluit: () => void
+}) {
+  const les = THEMA1_LESSEN.find((l) => l.id === lesId)
+  const nr = THEMA1_LESSEN.findIndex((l) => l.id === lesId) + 1
+  if (!les) return null
+  return (
+    <div className="blok-in mx-5 mt-4 rounded-md border-2 border-ink bg-surface p-5">
+      <div className="flex items-center gap-2">
+        <span className="flex size-8 items-center justify-center rounded-full bg-ink text-page">
+          <Check size={16} strokeWidth={3} />
+        </span>
+        <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">
+          {les.fase} afgerond
+        </p>
+      </div>
+      <p className="mt-3 font-serif text-h3 font-semibold leading-snug text-ink">{p(les.titel)}</p>
+      <p className="mt-2 text-body text-ink-muted">
+        Deel {nr} van {THEMA1_LESSEN.length}. Je opdracht staat in je checklist.
+      </p>
+      <div className="mt-3 flex items-center gap-2">
+        <Flame size={16} className="text-accent-orange" />
+        <span className="text-body text-ink">{streak} {streak === 1 ? 'dag' : 'dagen'} op rij</span>
+      </div>
       <button
         type="button"
-        onClick={() => navigate('/thema1')}
-        className="mx-5 mt-4 rounded-md border-2 border-ink bg-surface p-4 text-left shadow-sm transition active:scale-[0.99]"
+        onClick={() => { hapticTap(); onSluit() }}
+        className="mt-4 text-body font-bold text-primary-600 underline underline-offset-2"
       >
-        <span className="text-caption font-bold uppercase tracking-wide text-ink-muted">
-          Nieuwe opzet · 8 weken
-        </span>
-        <span className="mt-1 block font-serif text-h4 font-semibold text-ink">
-          Thema 1 — Contact maken
-        </span>
-        <span className="mt-1 block text-body text-ink-muted">
-          Vier lessen, acht oefeningen in zeven vormen, een checkpoint en twee stille weken.
-        </span>
+        Sluiten
       </button>
+    </div>
+  )
+}
 
-      <div className="flex flex-col py-5 pl-5 pr-3">
-        {path.map((lesson, index) => {
-          const world = worlds.find((w) => w.id === lesson.world)
-          const showBanner = lesson.world !== lastWorldId
-          lastWorldId = lesson.world
-          const style = getWorldStyle(lesson.world)
+function RitmeUitleg({ p, onKies }: { p: (t: string) => string; onKies: () => void }) {
+  const [stap, setStap] = useState(0)
+  const blokken = [
+    <div key="k">
+      <h1 className="font-serif text-h1 font-semibold text-ink">Zo werkt het</h1>
+      <p className="mt-2 text-body-lg text-ink">
+        Geen cursus die je uitzit. Een ritme dat meeloopt met {p('{naam}')}.
+      </p>
+    </div>,
+    <Uitleg key="1" kop="Eén thema tegelijk" tekst={
+      'Je kiest zelf waar je mee begint. Een thema heeft vier delen; elk deel is een korte les, ' +
+      'drie oefeningen en één ding om thuis te doen.'
+    } />,
+    <Uitleg key="2" kop="Zo lang als jij wil" tekst={
+      'Er staat nergens hoeveel weken je erover moet doen. Doe je het in één avond, prima. ' +
+      'Spreid je het over een maand, ook prima.'
+    } />,
+    <Uitleg key="3" kop="Eén keer per dag is genoeg" tekst={
+      'Dat houdt je reeks heel. Vaker mag, maar het telt niet extra — verdeeld over meer dagen ' +
+      'werkt gewoon beter.'
+    } />,
+    <Uitleg key="4" kop="De oefeningen kennen geen goed antwoord" tekst={
+      'Bij de meeste in elk geval niet. Opvoeden werkt niet zo. Je oefent afwegen, niet het ' +
+      'juiste vakje aankruisen.'
+    } />,
+  ]
+  const alles = stap >= blokken.length - 1
 
-          const isDone = completedLessonIds.includes(lesson.id)
-          const isCurrent = lesson.id === todayLessonId && !isDone
-          const unlocked = isLessonUnlocked(path, index, completedLessonIds)
-          const anchoredItems = pathItems.filter((item) => item.insertAfterLessonId === lesson.id)
+  return (
+    <div className="flex h-full flex-col bg-page">
+      <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 py-6">
+        <div className="flex flex-col gap-4">
+          {blokken.slice(0, stap + 1).map((b, n) => (
+            <div key={n} className={n === stap ? 'blok-in' : undefined}>{b}</div>
+          ))}
+        </div>
 
-          return (
-            <div key={lesson.id} className="flex w-full flex-col">
-              {showBanner && world && (
-                <div className={`z-10 my-6 flex w-full items-center justify-between rounded-lg py-4 pl-6 pr-5 ${style.softBg}`}>
-                  <div className="text-left">
-                    <p className="font-serif text-h2 font-semibold text-ink">{world.title}</p>
-                    <p className="text-body text-ink-muted">{world.subtitle}</p>
-                  </div>
-                  <p className={`font-serif text-display font-semibold ${style.text}`}>{world.id}</p>
-                </div>
-              )}
-
-              <div className="flex w-full items-center gap-1.5">
-                <div className="flex w-14 shrink-0 flex-col items-center">
-                  {!showBanner && (
-                    <div className="h-6 border-l-2 border-dashed" style={{ borderColor: style.accentVar }} />
-                  )}
-                  <button
-                    type="button"
-                    disabled={!unlocked}
-                    onClick={() => unlocked && navigate(`/les/${lesson.id}`)}
-                    aria-label={`Les ${index + 1}: ${lesson.title}`}
-                    className={`flex items-center justify-center rounded-full transition ${
-                      isDone
-                        ? 'size-14 bg-success-500 text-neutral-white'
-                        : isCurrent
-                          ? `size-14 ${style.solidBg} text-neutral-white`
-                          : unlocked
-                            ? `size-14 ${style.softBg} ${style.text}`
-                            : 'size-11 cursor-not-allowed bg-surface-sunken text-ink-faint'
-                    }`}
-                  >
-                    {isDone ? (
-                      <Check size={22} strokeWidth={3} />
-                    ) : isCurrent ? (
-                      <Play size={20} strokeWidth={2} fill="currentColor" />
-                    ) : unlocked ? (
-                      <span className="text-body-lg text-ink">{index + 1}</span>
-                    ) : (
-                      <Lock size={16} strokeWidth={2.5} />
-                    )}
-                  </button>
-                </div>
-                <p className="flex-1 truncate text-left text-[13px] leading-normal text-ink-muted">{lesson.title}</p>
-              </div>
-
-              {anchoredItems.map((item) =>
-                item.type === 'reflectie' ? (
-                  <ReflectieRow key={item.id} item={item} onOpen={() => setActiveReflectie(item)} />
-                ) : (
-                  <VoorJouRow key={item.id} item={item} onOpen={() => setActiveVoorJou(item)} />
-                ),
-              )}
-            </div>
-          )
-        })}
-
-        {lastLessonId &&
-          trailingItems.map((item) =>
-            item.type === 'reflectie' ? (
-              <ReflectieRow key={item.id} item={item} onOpen={() => setActiveReflectie(item)} />
-            ) : (
-              <VoorJouRow key={item.id} item={item} onOpen={() => setActiveVoorJou(item)} />
-            ),
-          )}
+        {alles && (
+          <div className="blok-in mt-8">
+            <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">
+              Waar wil je beginnen?
+            </p>
+            <button
+              type="button"
+              onClick={() => { hapticTap(); onKies() }}
+              className="mt-3 w-full rounded-md border-2 border-ink bg-surface p-4 text-left"
+            >
+              <span className="block text-body-lg font-bold text-ink">{p(THEMA1.titel)}</span>
+              <span className="mt-1 block text-body text-ink-muted">{p(THEMA1.ondertitel)}</span>
+              <span className="mt-2 block text-caption text-ink-muted">
+                Aanbevolen om mee te starten · 4 delen
+              </span>
+            </button>
+            <p className="mt-3 text-caption text-ink-muted">
+              De andere vijf thema's zijn nog niet gebouwd. Straks kies je hier zelf.
+            </p>
+          </div>
+        )}
       </div>
 
-      {activeReflectie && <ReflectieSheet item={activeReflectie} onClose={() => setActiveReflectie(null)} />}
-      {activeVoorJou && <VoorJouSheet item={activeVoorJou} onClose={() => setActiveVoorJou(null)} />}
-      <FeatureExplainer id="pad" />
+      {!alles && (
+        <div className="flex justify-center pb-8 pt-2">
+          <button
+            type="button"
+            onClick={() => { hapticTap(); setStap((n) => n + 1) }}
+            aria-label="Volgende"
+            className="pijl-adem flex size-11 items-center justify-center rounded-full text-ink"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m18 15-6-6-6 6" />
+            </svg>
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function Uitleg({ kop, tekst }: { kop: string; tekst: string }) {
+  return (
+    <div className="rounded-md bg-surface p-4 shadow-sm ring-1 ring-surface-sunken">
+      <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">{kop}</p>
+      <p className="mt-2 text-body text-ink">{tekst}</p>
     </div>
   )
 }

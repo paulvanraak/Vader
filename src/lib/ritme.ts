@@ -31,6 +31,10 @@ export type MissieAntwoord =
   | 'kind_was_er_niet'
 
 export interface RitmeState {
+  /** Welk thema loopt er nu. Null zolang er nog niet gekozen is. */
+  actiefThema: string | null
+  /** Afgeronde delen, op les-id. Bepaalt waar je staat op het themapad. */
+  voltooid: string[]
   streak: number
   laatsteActieveDag: string | null
   sessiesVandaag: number
@@ -43,7 +47,15 @@ export interface RitmeState {
 const SLEUTEL = 'fatherflow.ritme.v1'
 
 export function legeStaat(): RitmeState {
-  return { streak: 0, laatsteActieveDag: null, sessiesVandaag: 0, oefeningen: {}, missies: {} }
+  return {
+    actiefThema: null,
+    voltooid: [],
+    streak: 0,
+    laatsteActieveDag: null,
+    sessiesVandaag: 0,
+    oefeningen: {},
+    missies: {},
+  }
 }
 
 function vandaag(): string {
@@ -113,16 +125,30 @@ export function noteerMissie(s: RitmeState, lesId: string, antwoord: MissieAntwo
 }
 
 /**
- * Welke delen zijn open? Het eerste altijd; elk volgend deel zodra de missie
- * van het vorige is teruggekoppeld.
+ * Welke delen zijn open? Het eerste altijd, en daarna telkens één verder dan
+ * wat je hebt afgerond. Zo staat er op het themapad altijd precies één deel
+ * open te wachten.
  */
 export function openLessen(s: RitmeState, lesIds: string[]): number {
   let open = 1
   for (const id of lesIds) {
-    if (!s.missies[id]) break
+    if (!s.voltooid.includes(id)) break
     open += 1
   }
   return Math.min(open, lesIds.length)
+}
+
+export function kiesThema(s: RitmeState, themaId: string): RitmeState {
+  return { ...s, actiefThema: themaId }
+}
+
+export function voltooiDeel(s: RitmeState, lesId: string): RitmeState {
+  if (s.voltooid.includes(lesId)) return s
+  return { ...s, voltooid: [...s.voltooid, lesId] }
+}
+
+export function themaAf(s: RitmeState, lesIds: string[]): boolean {
+  return lesIds.every((id) => s.voltooid.includes(id))
 }
 
 /**
