@@ -81,7 +81,7 @@ function Speler({ thema }: { thema: Thema }) {
         onTerug={() => navigate('/')}
       />
 
-      <Hoofdstukwissel sleutel={fase.soort}>
+      <Wissel sleutel={fase.soort}>
         {(soort) => (
           <>
             {soort === 'les' && (
@@ -113,44 +113,54 @@ function Speler({ thema }: { thema: Thema }) {
             )}
           </>
         )}
-      </Hoofdstukwissel>
+      </Wissel>
     </div>
   )
 }
 
-const UIT_MS = 340
+/**
+ * Twee sterktes van dezelfde beweging. Een hoofdstuk komt van verder weg en
+ * neemt de tijd; tussen twee oefeningen blijf je in hetzelfde hoofdstuk, dus
+ * dat mag korter. Zelfde richting, ander gewicht.
+ */
+const WISSELS = {
+  hoofdstuk: { uit: 'hoofdstuk-uit', in: 'hoofdstuk-in', uitMs: 340 },
+  kaart: { uit: 'kaart-uit', in: 'kaart-in', uitMs: 260 },
+} as const
 
 /**
- * De wissel tussen twee hoofdstukken binnen één deel: van de les naar de
- * oefeningen, en van de oefeningen naar de opdracht.
+ * De wissel tussen twee stukken: van de les naar de oefeningen, van de ene
+ * oefening naar de volgende, en van de oefeningen naar de opdracht.
  *
  * Wat er staat gaat omhoog het beeld uit; wat komt, komt van onder het scherm
- * op. Het oude hoofdstuk blijft dus nog even hangen nadat de fase al gewisseld
- * is — vandaar dat dit een eigen kopie van de sleutel bijhoudt en niet gewoon
- * de nieuwe waarde doorgeeft. Zonder die kopie zou het nieuwe hoofdstuk naar
- * boven wegvallen in plaats van het oude.
+ * op. Het oude stuk blijft dus nog even hangen nadat de sleutel al gewisseld
+ * is — vandaar dat dit een eigen kopie bijhoudt en niet gewoon de nieuwe
+ * waarde doorgeeft. Zonder die kopie zou het níeuwe stuk naar boven wegvallen
+ * in plaats van het oude.
  */
-function Hoofdstukwissel({ sleutel, children }: {
+function Wissel({ sleutel, soort = 'hoofdstuk', children }: {
   sleutel: string
+  soort?: keyof typeof WISSELS
   children: (sleutel: string) => React.ReactNode
 }) {
+  const stand = WISSELS[soort]
   const [getoond, setGetoond] = useState(sleutel)
   const [gaatUit, setGaatUit] = useState(false)
 
   useEffect(() => {
     if (sleutel === getoond) return
     setGaatUit(true)
-    const t = window.setTimeout(() => { setGetoond(sleutel); setGaatUit(false) }, UIT_MS)
+    const t = window.setTimeout(() => { setGetoond(sleutel); setGaatUit(false) }, stand.uitMs)
     return () => window.clearTimeout(t)
-  }, [sleutel, getoond])
+  }, [sleutel, getoond, stand.uitMs])
 
   // De sleutel is bewust alleen `getoond`. Zou hij ook op het weggaan reageren,
-  // dan bouwt het oude hoofdstuk zich opnieuw op terwijl het wegschuift, en zie
-  // je de les terugspringen naar het eerste blok op weg naar buiten.
+  // dan bouwt het oude stuk zich opnieuw op terwijl het wegschuift, en zie je
+  // de les terugspringen naar het eerste blok op weg naar buiten.
   return (
     <div
       key={getoond}
-      className={`flex flex-1 flex-col overflow-hidden ${gaatUit ? 'hoofdstuk-uit' : 'hoofdstuk-in'}`}
+      className={`flex flex-1 flex-col overflow-hidden ${gaatUit ? stand.uit : stand.in}`}
     >
       {children(getoond)}
     </div>
@@ -247,15 +257,26 @@ function Sessie({ thema, les, p, ritme, onOefening, onKlaar }: {
 
   return (
     <>
-      <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 pb-4" {...swipe}>
-        <p className="mb-3 text-caption text-ink-muted">Oefening {i + 1} van {set.length}</p>
-        <OefeningKaart
-          key={set[i].id}
-          oefening={set[i]}
-          p={p}
-          onBeantwoord={(fout) => { setBeantwoord(true); onOefening(set[i].id, fout) }}
-        />
-      </div>
+      {/* Ook tussen twee oefeningen schuift het oude omhoog weg en komt het
+          nieuwe van onder op. De voet eronder beweegt niet mee: dat is
+          dezelfde regel als bij de balk bovenin. */}
+      <Wissel sleutel={String(i)} soort="kaart">
+        {(sleutel) => {
+          const oefening = set[Number(sleutel)]
+          return (
+            <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 pb-4" {...swipe}>
+              <p className="mb-3 text-caption text-ink-muted">
+                Oefening {Number(sleutel) + 1} van {set.length}
+              </p>
+              <OefeningKaart
+                oefening={oefening}
+                p={p}
+                onBeantwoord={(fout) => { setBeantwoord(true); onOefening(oefening.id, fout) }}
+              />
+            </div>
+          )
+        }}
+      </Wissel>
       {laatste ? (
         <div className="pb-6">
           <Button onClick={volgende} disabled={!beantwoord}>Klaar</Button>
@@ -263,7 +284,10 @@ function Sessie({ thema, les, p, ritme, onOefening, onKlaar }: {
       ) : beantwoord ? (
         <SwipeHint onClick={volgende} />
       ) : (
-        <div className="pb-8 pt-2" style={{ height: 60 }} />
+        // Even hoog als het pijltje dat hier komt zodra je geantwoord hebt.
+        // Stond op 60 tegen 84, en dan sprong de hele oefening 24 pixels
+        // omhoog op het moment dat je een antwoord koos.
+        <div style={{ height: 84 }} />
       )}
     </>
   )

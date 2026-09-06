@@ -462,6 +462,40 @@ body {
   animation: hoofdstuk-in 0.92s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Tussen twee oefeningen binnen dezelfde sessie. Dezelfde beweging, maar
+   korter en over een kleinere afstand: je blijft in hetzelfde hoofdstuk, dus
+   het mag niet net zo zwaar aanvoelen als de wissel naar de opdracht. */
+
+@keyframes kaart-uit {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16%);
+  }
+}
+
+.kaart-uit {
+  animation: kaart-uit 0.26s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes kaart-in {
+  from {
+    opacity: 0;
+    transform: translateY(24%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.kaart-in {
+  animation: kaart-in 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Het lichte pijltje dat de swipe aankondigt. Ademt, dringt niet aan. */
 @keyframes pijl-adem {
   0%, 100% {
@@ -484,6 +518,8 @@ body {
   .fase-in,
   .hoofdstuk-in,
   .hoofdstuk-uit,
+  .kaart-in,
+  .kaart-uit,
   .pijl-adem {
     animation: none;
   }
