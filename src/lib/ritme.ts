@@ -18,7 +18,17 @@
  */
 import type { Oefening } from '../content/thema1'
 
-export type MissieAntwoord = 'ging_goed' | 'lastig' | 'niet_gelukt' | 'kind_was_er_niet'
+/**
+ * 'in_checklist' is de open stand: de opdracht is uitgedeeld maar nog niet
+ * teruggekoppeld. Het antwoord geef je in de checklist, niet in het thema —
+ * daar hoort het thuis, want daar sta je als je het echt gedaan hebt.
+ */
+export type MissieAntwoord =
+  | 'in_checklist'
+  | 'ging_goed'
+  | 'lastig'
+  | 'niet_gelukt'
+  | 'kind_was_er_niet'
 
 export interface RitmeState {
   streak: number

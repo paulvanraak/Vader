@@ -6,6 +6,7 @@ import { useAppState } from '../state/AppStateContext'
 import { WhyModal } from '../components/WhyModal'
 import { ChildSwitcher } from '../components/ChildSwitcher'
 import { FeatureExplainer } from '../components/FeatureExplainer'
+import { ThemaMissies } from '../components/ThemaMissies'
 
 export function ProbeerDitEens() {
   const { path, doneActionIds, toggleAction, completedLessonIds, activeChild } = useAppState()
@@ -21,6 +22,7 @@ export function ProbeerDitEens() {
     <div className="flex flex-col">
       <ChildSwitcher />
       <div className="flex flex-col gap-5 px-5 pb-6 pt-4">
+        <ThemaMissies />
         <div>
           <h1 className="font-serif text-h2 font-semibold text-ink">Jouw Checklist</h1>
           <p className="mt-1 text-caption text-ink-muted">

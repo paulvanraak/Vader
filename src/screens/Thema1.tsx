@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Flame } from 'lucide-react'
+import { ArrowLeft, ChevronUp, Flame } from 'lucide-react'
 import { Button } from '../components/Button'
 import { useOptionalAppState } from '../state/AppStateContext'
 import { personalizeText } from '../lib/personalize'
 import { hapticTap, hapticSuccess } from '../lib/haptics'
 import {
   laadRitme, bewaarRitme, registreerSessie, noteerOefening, noteerMissie,
-  openLessen, trekOefeningen, teVeelOpEenDag, type RitmeState, type MissieAntwoord,
+  openLessen, trekOefeningen, teVeelOpEenDag, type RitmeState,
 } from '../lib/ritme'
 import { THEMA1, THEMA1_LESSEN, THEMA1_OEFENINGEN, type Oefening, type Les } from '../content/thema1'
 
@@ -116,9 +116,8 @@ export function Thema1() {
           les={fase.les}
           p={p}
           teVeel={teVeelOpEenDag(ritme)}
-          onAntwoord={(a) => {
-            const volgende = noteerMissie(ritme, fase.les.id, a)
-            bewaar(volgende)
+          onVerder={() => {
+            bewaar(noteerMissie(ritme, fase.les.id, 'in_checklist'))
             const next = lesIndex + 1
             if (next < THEMA1_LESSEN.length) naarLes(next)
             else metOvergang('Afgerond', () => setFase({ soort: 'klaar' }))
@@ -160,14 +159,31 @@ function Kop({ streak, fase, deel, totaal, onTerug }: {
 function Overgang({ label }: { label: string }) {
   const [toonLabel, setToonLabel] = useState(false)
   useEffect(() => {
-    const t = window.setTimeout(() => setToonLabel(true), 200)
+    // Eerst even alleen zwart. Die stilte is het halve effect.
+    const t = window.setTimeout(() => setToonLabel(true), 320)
     return () => window.clearTimeout(t)
   }, [])
   return (
-    <div className="flex h-full w-full items-start justify-center bg-ink pt-24">
+    <div className="flex h-full w-full items-center justify-center bg-ink px-8">
       {toonLabel && (
-        <p className="fase-in font-serif text-h1 font-semibold uppercase text-page">{label}</p>
+        <p className="fase-in text-center font-serif text-h1 font-semibold text-page">{label}</p>
       )}
+    </div>
+  )
+}
+
+/** Het lichte pijltje op de plek van de knop. Ook aan te tikken. */
+function SwipeHint({ onClick }: { onClick: () => void }) {
+  return (
+    <div className="flex justify-center pb-8 pt-2">
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label="Volgende"
+        className="pijl-adem flex size-11 items-center justify-center rounded-full text-ink"
+      >
+        <ChevronUp size={26} strokeWidth={2} />
+      </button>
     </div>
   )
 }
@@ -202,34 +218,49 @@ function LesBlokken({ les, p, onKlaar }: { les: Les; p: (t: string) => string; o
     <p key="h" className="text-body-lg text-ink">{p(les.haakje)}</p>,
     <Kaart key="i" kop="Inzicht">{p(les.inzicht)}</Kaart>,
     <Kaart key="s" kop="Spiegel">{p(les.spiegel)}</Kaart>,
-    <div key="m" className="rounded-md border-2 border-ink p-4">
-      <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">Doe dit</p>
-      <p className="mt-2 text-body-lg font-bold text-ink">{p(les.thuismissie.actie)}</p>
-      <p className="mt-2 text-body text-ink-muted">{p(les.thuismissie.waarom)}</p>
-    </div>,
+    // De opdracht staat bewust niet hier maar op het scherm na de oefeningen,
+    // anders krijg je hem twee keer te zien.
   ]
   const [zichtbaar, setZichtbaar] = useState(1)
   const alles = zichtbaar >= blokken.length
-  const volgende = () => { hapticTap(); setZichtbaar((n) => Math.min(n + 1, blokken.length)) }
-  const swipe = useSwipeOmhoog(() => (alles ? onKlaar() : volgende()))
+  const volgende = () => {
+    hapticTap()
+    if (alles) onKlaar()
+    else setZichtbaar((n) => Math.min(n + 1, blokken.length))
+  }
+  const swipe = useSwipeOmhoog(volgende)
+
+  // Wat er al stond schuift rustig mee omhoog in plaats van te verspringen.
+  // De stapel staat gecentreerd, dus bij een nieuw blok springt alles de halve
+  // hoogte omhoog; die sprong draaien we terug en animeren we uit.
+  const stapel = useRef<HTMLDivElement>(null)
+  const vorigeHoogte = useRef(0)
+  useLayoutEffect(() => {
+    const el = stapel.current
+    if (!el) return
+    const nu = el.offsetHeight
+    const delta = nu - vorigeHoogte.current
+    vorigeHoogte.current = nu
+    if (delta > 0 && zichtbaar > 1) {
+      el.animate(
+        [{ transform: `translateY(${delta / 2}px)` }, { transform: 'none' }],
+        { duration: 820, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+      )
+    }
+  }, [zichtbaar])
 
   return (
     <>
-      {/* Gecentreerd, niet onderaan verankerd: wat relevant is hoort midden in
-          beeld te staan. Nieuwe blokken schuiven er van onder bij, en zodra de
-          stapel te hoog wordt gaat het scherm vanzelf scrollen. */}
+      {/* Gecentreerd: wat relevant is hoort midden in beeld te staan. Nieuwe
+          blokken schuiven er van onder bij en duwen de rest kalm omhoog. */}
       <div className="flex flex-1 flex-col justify-center overflow-y-auto px-5 py-4" {...swipe}>
-        <div className="flex flex-col gap-4">
+        <div ref={stapel} className="flex flex-col gap-4">
           {blokken.slice(0, zichtbaar).map((b, n) => (
-            <div key={n} className="blok-in" style={{ animationDelay: n === zichtbaar - 1 ? '0ms' : undefined }}>
-              {b}
-            </div>
+            <div key={n} className={n === zichtbaar - 1 ? 'blok-in' : undefined}>{b}</div>
           ))}
         </div>
       </div>
-      <div className="pb-6">
-        <Button onClick={alles ? onKlaar : volgende}>{alles ? 'Oefenen' : 'Verder'}</Button>
-      </div>
+      <SwipeHint onClick={volgende} />
     </>
   )
 }
@@ -252,11 +283,14 @@ function Sessie({ les, p, ritme, onOefening, onKlaar }: {
   const [i, setI] = useState(0)
   const [beantwoord, setBeantwoord] = useState(false)
 
+  const laatste = i + 1 >= set.length
   const volgende = () => {
     hapticTap()
-    if (i + 1 < set.length) { setI(i + 1); setBeantwoord(false) } else onKlaar()
+    if (!laatste) { setI(i + 1); setBeantwoord(false) } else onKlaar()
   }
-  const swipe = useSwipeOmhoog(() => beantwoord && volgende())
+  // Binnen de sessie swipe je door; alleen aan het eind van het hoofdstuk
+  // staat er een knop, en dan is de swipe uit.
+  const swipe = useSwipeOmhoog(() => { if (beantwoord && !laatste) volgende() })
 
   return (
     <>
@@ -269,11 +303,15 @@ function Sessie({ les, p, ritme, onOefening, onKlaar }: {
           onBeantwoord={(fout) => { setBeantwoord(true); onOefening(set[i].id, fout) }}
         />
       </div>
-      <div className="pb-6">
-        <Button onClick={volgende} disabled={!beantwoord}>
-          {i + 1 < set.length ? 'Volgende' : 'Klaar'}
-        </Button>
-      </div>
+      {laatste ? (
+        <div className="pb-6">
+          <Button onClick={volgende} disabled={!beantwoord}>Klaar</Button>
+        </div>
+      ) : beantwoord ? (
+        <SwipeHint onClick={volgende} />
+      ) : (
+        <div className="pb-8 pt-2" style={{ height: 60 }} />
+      )}
     </>
   )
 }
@@ -486,41 +524,30 @@ function Feedback({ kop, tekst }: { kop: string; tekst: string }) {
   )
 }
 
-const MISSIE_OPTIES: { waarde: MissieAntwoord; label: string }[] = [
-  { waarde: 'ging_goed', label: 'Ging goed' },
-  { waarde: 'lastig', label: 'Was lastig' },
-  { waarde: 'niet_gelukt', label: 'Niet gelukt' },
-  { waarde: 'kind_was_er_niet', label: '{naam} was er niet' },
-]
-
-function Missie({ les, p, teVeel, onAntwoord }: {
-  les: Les; p: (t: string) => string; teVeel: boolean; onAntwoord: (a: MissieAntwoord) => void
+function Missie({ les, p, teVeel, onVerder }: {
+  les: Les; p: (t: string) => string; teVeel: boolean; onVerder: () => void
 }) {
   return (
-    <Midden>
-      <div className="blok-in flex flex-col gap-4">
-        <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">Terugkoppeling</p>
-        <p className="font-serif text-h3 font-semibold text-ink">{p(les.thuismissie.actie)}</p>
-        <p className="text-body text-ink-muted">
-          Hoe ging het? Elk antwoord telt, ook als het er niet van kwam. Dit opent het volgende deel.
-        </p>
-        <div className="flex flex-col gap-2">
-          {MISSIE_OPTIES.map((m) => (
-            <button
-              key={m.waarde} type="button" className={knop}
-              onClick={() => { hapticTap(); onAntwoord(m.waarde) }}
-            >
-              <span className="text-body-lg text-ink">{p(m.label)}</span>
-            </button>
-          ))}
-        </div>
-        {teVeel && (
-          <p className="text-caption text-ink-muted">
-            Je hebt vandaag al flink wat gedaan. Het mag, maar verdeeld over meer dagen werkt beter.
+    <>
+      <Midden>
+        <div className="blok-in flex flex-col gap-4">
+          <p className="text-caption font-bold uppercase tracking-wide text-ink-muted">Doe dit</p>
+          <p className="font-serif text-h3 font-semibold leading-snug text-ink">
+            {p(les.thuismissie.actie)}
           </p>
-        )}
-      </div>
-    </Midden>
+          <p className="text-body text-ink-muted">{p(les.thuismissie.waarom)}</p>
+          <p className="text-caption text-ink-muted">
+            Staat vanaf nu in je checklist. Daar vertel je hoe het ging.
+          </p>
+          {teVeel && (
+            <p className="text-caption text-ink-muted">
+              Je hebt vandaag al flink wat gedaan. Het mag, maar verdeeld over meer dagen werkt beter.
+            </p>
+          )}
+        </div>
+      </Midden>
+      <div className="pb-6"><Button onClick={onVerder}>Verder</Button></div>
+    </>
   )
 }
 
